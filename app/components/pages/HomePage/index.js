@@ -15,7 +15,7 @@ class Page extends Component {
       <div>
         <h1>HOMEPAGE</h1>
         <ul>
-          <li>{this.props.league.name}</li>
+          <li>{this.props.league ? this.props.league.name : 'x'}</li>
         </ul>
       </div>
     )

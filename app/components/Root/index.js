@@ -1,13 +1,54 @@
 import React, { Component } from 'react'
-import Header from '../Header'
+import Menu from '../Menu'
 import Footer from '../Footer'
 import DB from '../../helpers/DB'
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import classNames from 'classnames';
 
-import styles from './Root.scss'
 
 export const LeagueContext = React.createContext()
 
-import HomePage from '../pages/HomePage'
+const drawerWidth = 240;
+
+// const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    height: '100%',
+    zIndex: 1,
+    overflow: 'hidden',
+    position: 'relative',
+    display: 'flex',
+  },
+  palette: {
+    primary: {
+      light: '#00FF00',
+      main: '#FF0000',
+      dark: '#0000FF',
+      contrastText: '#000',
+    },
+    secondary: {
+      light: '#ff7961',
+      main: '#f44336',
+      dark: '#ba000d',
+      contrastText: '#000',
+    },
+  },
+  toolbar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: '0 8px',
+    ...theme.mixins.toolbar,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing.unit * 3,
+  },
+});
 
 class Root extends Component {
   constructor () {
@@ -26,6 +67,7 @@ class Root extends Component {
   }
 
   initialise (leagueShort, seasonPeriod) {
+    if (seasonPeriod.length === 0) seasonPeriod='x'
     DB.get(`/api/league/${leagueShort}/${seasonPeriod}`)
       .then(response => {
         this.setState({
@@ -35,61 +77,35 @@ class Root extends Component {
       })
   }
 
-  renderPage () {
-    if (!this.state.league) {
-      return (
-        <div>
-          <Header {...this.props} league='' season='' />
-          <div className={styles.page} >
-            <h1>League not recognised</h1>
-            <h2>Please check the URL</h2>
-          </div>
-          <Footer />
-        </div>
-      )
-    }
-
-    if (this.state.league && !this.state.season) {
-      return (
-        <div>
-          <Header {...this.props} league={this.state.league.name} season='' />
-          <div className={styles.page} >
-            <h1>Season not recognised</h1>
-            <h2>Please check the URL</h2>
-          </div>
-          <Footer />
-        </div>
-      )
-    }
-
-    console.log('root state = ', this.state)
-    return (
-      <div>
-        <Header {...this.props} league={this.state.league.name} season={this.state.season.period} />
-        <div className={styles.page}>
-          {this.props.children}
-        </div>
-        <Footer league={this.state.league.name} />
-      </div>
-    )
-  }
+  
 
   render () {
+
+    const { classes, theme } = this.props;
 
     const context = {
       league: this.state.league,
       season: this.state.season
     }
+
+    console.log('>>>SEASON>>>', this.state.season)
+
     return (
       <LeagueContext.Provider value={context}>
-        <div className={styles.outer}>
-          <div className={styles.inner}>
-            {this.renderPage()}
-          </div>
+        <div className={classes.root}>
+          
+          <Menu league={this.state.league} season={this.state.season} />
+          
+          <main className={classes.content}>
+            <div className={classes.toolbar} />
+            {this.props.children}
+          </main>
         </div>
+        
       </LeagueContext.Provider>
     )
   }
 }
 
-export default Root
+export default withStyles(styles, { withTheme: true })(Root)
+

@@ -13,9 +13,13 @@
     "start": "concurrently --kill-others \"npm run server-start\" \"npm run client-start\""
   },
   "dependencies": {
+    "@material-ui/core": "^1.2.0",
+    "@material-ui/icons": "^1.1.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "bluebird": "^3.5.1",
     "bunyan": "^1.8.12",
+    "classnames": "^2.2.5",
     "construx": "^1.0.1",
     "construx-copier": "^1.0.0",
     "eslint": "^4.19.1",

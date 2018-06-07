@@ -59,7 +59,7 @@ router.get('/api/league/:short/:seasonPeriod', (req, res, next) => {
   League.findOne({ short: req.params.short.toUpperCase() }).exec((err, league) => {
     if (err || !league) return res.json({league: null, season: null})
     Season.findOne({ league: league._id, period: req.params.seasonPeriod }, (err, season) => {
-      if (err) return res.json({league: league, season: null})
+      if (err || !season) return res.json({league: league, season: null})
       res.json({league: league, season: season})
     })
   })
