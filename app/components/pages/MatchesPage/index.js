@@ -5,36 +5,46 @@ import ReactMoment from 'react-moment'
 import Moment from 'moment'
 import { extendMoment } from 'moment-range';
 
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import List from '@material-ui/core/List';
+
+import Typography from '@material-ui/core/Typography';
+
+import { withStyles } from '@material-ui/core/styles';
 import { LeagueContext } from '../../Root'
 import DB from '../../../helpers/DB'
 
+const styles = theme => ({
+  paper: {
+    padding: theme.spacing.unit * 2,
+    textAlign: 'center',
+    color: theme.palette.text.secondary
+  }
+});
+
 class Page extends Component {
 
-  constructor () {
-    console.log('MATCHES CONSTRUCTOR')
-    super()
-    this.state = {}
-  }
-
-  componentDidMount () {
-    console.log('MATCHES DID MOUNT')
-    console.log(this.props)
-
-    this.initialise()
+  state = {
+    loaded: false
   }
 
   initialise () {
+    const { league, season } = this.props
+    if (this.state.loaded || !league || !season) return
 
-    DB.get(`/api/league/${this.props.league.short}/${this.props.season.period}/matches`)
+    DB.get(`/api/league/${league.short}/${season.period}/matches`)
       .then(response => {
         this.setState({
-          matches: response.matches
+          matches: response.matches,
+          loaded: true
         })
       })
-
   }
 
   renderCalendar () {
+
+    if (!this.props.season) return
 
     const moment = extendMoment(Moment)
 
@@ -48,7 +58,7 @@ class Page extends Component {
     const range = moment.range(startDate, endDate)
 
     return Array.from(range.by('days', { excludeEnd: true })).map(day => {
-      return <Day day={day} matches={this.matchesOnDay(day)} />
+      return <Day key={day} day={day} matches={this.matchesOnDay(day)} />
     })
   }
 
@@ -60,18 +70,35 @@ class Page extends Component {
   }
 
   renderList () {
-    return this.state.matches && this.state.matches.map(match => {
-      return (<Match match={match} />)
-    })
+
+    const { classes } = this.props;
+
+    return (
+      <List>
+      {
+        this.state.matches && this.state.matches.map(match => {
+          return (
+            <Match key={match.key} match={match} />
+          )
+        })
+      }
+      </List>
+    )
   }
 
   render () {
+
+    const { classes } = this.props;
+
+    this.initialise()
     return (
       <div>
-        <h1>{this.props.layout === 'CALENDAR' ? 'CALENDAR' : 'MATCHES'}</h1>
-        <ul>
+
+        <Typography variant="display3" gutterBottom>{this.props.layout === 'CALENDAR' ? 'CALENDAR' : 'MATCHES'}</Typography>
+
+        <Grid container spacing={8}>
         {this.props.layout === 'CALENDAR' ? this.renderCalendar() : this.renderList()}
-        </ul>
+        </Grid>
       </div>
     )
   }
@@ -87,4 +114,5 @@ class MatchesPage extends Component {
   }
 }
 
-export default MatchesPage
+export default withStyles()(MatchesPage)
+

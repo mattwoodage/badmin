@@ -37,14 +37,6 @@ const drawerWidth = 240;
 
 
 const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    height: 430,
-    zIndex: 1,
-    overflow: 'hidden',
-    position: 'relative',
-    display: 'flex',
-  },
   palette: {
     primary: {
       light: '#00FF00',
@@ -73,7 +65,7 @@ const styles = theme => ({
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
-    }),
+    })
   },
   menuButton: {
     marginLeft: 12,

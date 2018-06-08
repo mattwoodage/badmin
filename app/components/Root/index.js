@@ -17,7 +17,6 @@ const drawerWidth = 240;
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: '100%',
     zIndex: 1,
     overflow: 'hidden',
     position: 'relative',
@@ -46,20 +45,18 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
+    backgroundColor: '#fafafa',
     padding: theme.spacing.unit * 3,
   },
 });
 
 class Root extends Component {
   constructor () {
-    console.log('ROOT CONSTRUCTOR')
     super()
     this.state = {}
   }
 
   componentDidMount () {
-    console.log('ROOT DID MOUNT')
-    console.log('>>>xxx',this)
     const host = document.location.hostname
     const leagueShort = host.split('.')[0].toUpperCase()
     const seasonPeriod = document.location.pathname.split('/')[1]
@@ -80,6 +77,7 @@ class Root extends Component {
   
 
   render () {
+    console.log('ROOT RE-RENDER')
 
     const { classes, theme } = this.props;
 
@@ -87,8 +85,6 @@ class Root extends Component {
       league: this.state.league,
       season: this.state.season
     }
-
-    console.log('>>>SEASON>>>', this.state.season)
 
     return (
       <LeagueContext.Provider value={context}>

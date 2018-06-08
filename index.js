@@ -11,6 +11,7 @@ var Team = require('./app/models/Team')
 var Match = require('./app/models/Match')
 var Club = require('./app/models/Club')
 var Venue = require('./app/models/Venue')
+var Format = require('./app/models/Format')
 
 
 var options, app;
@@ -107,7 +108,6 @@ router.get('/api/league/:short/:seasonPeriod/matches', (req, res, next) => {
         .populate({ path: 'homeTeam', model: Team })
         .populate({ path: 'awayTeam', model: Team })
         .populate({ path: 'division', model: Division })
-        .populate({ path: 'venue', model: Venue })
         .sort({ startAt: 1 })
       })
     })

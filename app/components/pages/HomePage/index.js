@@ -2,18 +2,16 @@ import React, { Component } from 'react'
 import Root from '../../Root'
 
 import { LeagueContext } from '../../Root'
+import Typography from '@material-ui/core/Typography';
 
 class Page extends Component {
 
-  componentDidMount () {
-    console.log('page props', this.props)
-  }
-
   render () {
-    
+    console.log('render page......')
     return (
       <div>
-        <h1>HOMEPAGE</h1>
+        <Typography variant="display3" gutterBottom>HOMEPAGE</Typography>
+
         <ul>
           <li>{this.props.league ? this.props.league.name : 'x'}</li>
         </ul>
@@ -24,6 +22,7 @@ class Page extends Component {
 
 class HomePage extends Component {
   render () {
+    console.log('render homepage')
     return (
       <LeagueContext.Consumer>
         {props => <Page {...this.props} {...props} />}
