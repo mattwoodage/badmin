@@ -77,7 +77,6 @@ class Root extends Component {
   
 
   render () {
-    console.log('ROOT RE-RENDER')
 
     const { classes, theme } = this.props;
 

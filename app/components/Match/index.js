@@ -45,17 +45,27 @@ class Match extends Component {
   
 
   startTime () {
+    const { match, cal } = this.props
+    let startAt = String(new Date(this.props.match.startAt)).split(' ')
+    if (cal) {
+      startAt = startAt[4].split(":")
+      startAt.pop()
+    }
+    else {
+      startAt.pop()
+      startAt.pop()
+    }
     return (
-      <Moment parse="YYYY-MM-DD HH:mm">
-        {this.props.match.startAt}
-      </Moment>
+      <div>
+        <b>{match.venue.name}:</b> 
+        {startAt.join(' ')}
+      </div>
     )
   }
 
   renderIcon () {
     const { match, classes } = this.props
     let cls = classes.ladiesAvatar
-    console.log(match)
     if (match.division.labelLocal.toUpperCase().indexOf('MIXED')>-1) cls = classes.mixedAvatar
     if (match.division.labelLocal.toUpperCase().indexOf('MENS')>-1) cls = classes.mensAvatar
     return (
@@ -70,7 +80,9 @@ class Match extends Component {
     return (
       <ListItem>
         {this.renderIcon()}
-        <ListItemText primary={match.label} secondary={this.startTime()} />
+        <ListItemText secondary={this.startTime()} >
+          <b>{match.label}</b>
+        </ListItemText>
       </ListItem>
     )
   }

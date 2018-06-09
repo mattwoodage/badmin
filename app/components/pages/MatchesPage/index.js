@@ -42,6 +42,20 @@ class Page extends Component {
       })
   }
 
+  renderMonth (date) {
+    const { classes } = this.props;
+    return (
+      <Grid item xs={12}>
+        <div>
+          <Typography variant="title">
+            {date.format("MMMM")}
+          </Typography>
+        </div>
+      </Grid>
+    )
+
+  }
+
   renderCalendar () {
 
     if (!this.props.season) return
@@ -57,9 +71,20 @@ class Page extends Component {
 
     const range = moment.range(startDate, endDate)
 
-    return Array.from(range.by('days', { excludeEnd: true })).map(day => {
-      return <Day key={day} day={day} matches={this.matchesOnDay(day)} />
+    let calendar = []
+    let lastMonth = -1
+    Array.from(range.by('days', { excludeEnd: true })).map(date => {
+      let thisMonth = date.month()
+      let dayOfWeek = Number(date.format("d"))
+      if (dayOfWeek === 1 && thisMonth !== lastMonth) {
+        calendar.push(this.renderMonth(date))
+        lastMonth = thisMonth
+      }
+      
+      calendar.push(<Day key={date} date={date} matches={this.matchesOnDay(date)} />)
     })
+
+    return calendar
   }
 
   matchesOnDay (day) {

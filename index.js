@@ -13,6 +13,7 @@ var Club = require('./app/models/Club')
 var Venue = require('./app/models/Venue')
 var Format = require('./app/models/Format')
 
+var ImportData = require('./import/ImportData')
 
 var options, app;
 
@@ -46,6 +47,15 @@ app.on('start', function () {
   global.log.info('Application ready to serve requests.');
   global.log.info('Environment: %s', app.kraken.get('env:env'));
 });
+
+
+// I M P O R T 
+
+router.get('/api/league/import/:short', (req, res, next) => {
+  new ImportData(req, res)
+})
+
+
 
 // LEAGUES
 
@@ -89,6 +99,17 @@ router.get('/api/league/:short/:seasonPeriod/divisions', (req, res, next) => {
   })
 })
 
+// CLUBS
+
+router.get('/api/league/:short/:seasonPeriod/clubs', (req, res, next) => {
+  Club.find({}, (err, clubs) => {
+    if (err) return res.json({clubs: null})
+    res.json({clubs: clubs})
+  })
+  .sort({ name: 1 })
+})
+
+
 // MATCHES
 
 router.get('/api/league/:short/:seasonPeriod/matches', (req, res, next) => {
@@ -105,9 +126,8 @@ router.get('/api/league/:short/:seasonPeriod/matches', (req, res, next) => {
           if (err) return res.json({matches: null})
           res.json({matches: matches})
         })
-        .populate({ path: 'homeTeam', model: Team })
-        .populate({ path: 'awayTeam', model: Team })
         .populate({ path: 'division', model: Division })
+        .populate({ path: 'venue', model: Venue })
         .sort({ startAt: 1 })
       })
     })

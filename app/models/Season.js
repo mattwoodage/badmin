@@ -4,7 +4,11 @@ var seasonSchema = mongoose.Schema({
   label: String,
   period: String,
   current: Boolean,
-  startYear: Number
+  _old: Number,
+  league: Object,
+  startYear: Number,
+  createdAt: Date,
+  key: String
 })
 
 const Season = mongoose.model('Season', seasonSchema)

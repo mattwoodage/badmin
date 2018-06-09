@@ -1,10 +1,17 @@
 var mongoose = require('mongoose');
 
 var formatSchema = mongoose.Schema({
-  players: Number,
   label: String,
+  key: String,
+  players: Number,
+  category: String,
   short: String,
-  category: String
+  males: Boolean,
+  females: Boolean,
+  pairs: Number,
+  rubbers: Number,
+  orderOfPlay: String,
+  desc: String
 })
 
 var Format = mongoose.model('Format', formatSchema)

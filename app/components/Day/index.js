@@ -12,10 +12,8 @@ import List from '@material-ui/core/List';
 
 
 const styles = theme => ({
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary
+  list: {
+    padding: 2
   }
 });
 
@@ -24,7 +22,7 @@ class Day extends Component {
   renderMatches () {
     if (!this.props.matches) return ''
     return this.props.matches.map(match => {
-      return (<Match key={match.key} match={match} />)
+      return (<Match cal key={match.key} match={match} />)
     })
   }
 
@@ -33,17 +31,14 @@ class Day extends Component {
     return (
 
       <Grid className={overrides.day} item xs={12} sm={2}>
-        <Paper className={classes.paper}>
+        <div>
           <Typography variant="title">
-            <Moment format="dd">{this.props.day}</Moment>
+            <Moment format="DD">{this.props.date}</Moment>
           </Typography>
-          <Typography variant="subheading">
-            <Moment format="DD MMM">{this.props.day}</Moment>
-          </Typography>
-          <List>
+          <List className={overrides.list}>
             {this.renderMatches()}
           </List>
-        </Paper>
+        </div>
       </Grid>
     )
   }

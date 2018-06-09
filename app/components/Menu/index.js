@@ -219,30 +219,15 @@ class Menu extends Component {
                   <ListItemText primary="Tables" />
                 </ListItem> 
               </NavLink>
-              <ListItem button>
-                <ListItemIcon>
-                  <TableIcon />
-                </ListItemIcon>
-                <ListItemText primary="Players" />
-              </ListItem> 
-              <ListItem button>
-                <ListItemIcon>
-                  <TableIcon />
-                </ListItemIcon>
-                <ListItemText primary="Clubs" />
-              </ListItem> 
-              <ListItem button>
-                <ListItemIcon>
-                  <TableIcon />
-                </ListItemIcon>
-                <ListItemText primary="Venues" />
-              </ListItem> 
-               <ListItem button>
-                <ListItemIcon>
-                  <TableIcon />
-                </ListItemIcon>
-                <ListItemText primary="Rules" />
-              </ListItem> 
+              <NavLink activeClassName='current' to={`/${path}/clubs`} >
+                <ListItem button>
+                  <ListItemIcon>
+                    <ResultsIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Clubs" />
+                </ListItem> 
+              </NavLink>
+
             </List>
             <Divider />
               <ListItem button>
@@ -251,16 +236,6 @@ class Menu extends Component {
                 </ListItemIcon>
                 <ListItemText primary="Settings" />
               </ListItem>
-
-              <ul>
-          <li><NavLink activeClassName='current' to={`/${this.props.season}/home`} >Home</NavLink></li>
-          <li><NavLink activeClassName='current' to={`/${this.props.season}/calendar`} >Calendar</NavLink></li>
-          <li><NavLink activeClassName='current' to={`/${this.props.season}/matches`} >Matches</NavLink></li>
-          <li><NavLink activeClassName='current' to={`/${this.props.season}/tables`} >Tables</NavLink></li>
-          <li><NavLink activeClassName='current' to={`/${this.props.season}/clubs`} >Clubs</NavLink></li>
-          <li><NavLink activeClassName='current' to={`/${this.props.season}/players`} >Players</NavLink></li>
-          <li><NavLink activeClassName='current' to={`/${this.props.season}/admin`} >[ ADMIN ]</NavLink></li>
-        </ul>
 
           </SwipeableDrawer>
       </div>
