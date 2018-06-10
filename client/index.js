@@ -9,6 +9,9 @@ import HomePage from '../app/components/pages/HomePage'
 import MatchesPage from '../app/components/pages/MatchesPage'
 import CalendarPage from '../app/components/pages/CalendarPage'
 import ClubsPage from '../app/components/pages/ClubsPage'
+import PlayersPage from '../app/components/pages/PlayersPage'
+import TablesPage from '../app/components/pages/TablesPage'
+
 
 
 function onRouterUpdate () {
@@ -22,6 +25,8 @@ render((
       <Route path='/:season/calendar' component={CalendarPage} />
       <Route path='/:season/matches' component={MatchesPage} />
       <Route path='/:season/clubs' component={ClubsPage} />
+      <Route path='/:season/players' component={PlayersPage} />
+      <Route path='/:season/tables' component={TablesPage} />
     </Root>
   </BrowserRouter>
 ), document.getElementById('app'));

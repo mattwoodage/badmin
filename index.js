@@ -12,6 +12,7 @@ var Match = require('./app/models/Match')
 var Club = require('./app/models/Club')
 var Venue = require('./app/models/Venue')
 var Format = require('./app/models/Format')
+var Player = require('./app/models/Player')
 
 var ImportData = require('./import/ImportData')
 
@@ -66,8 +67,11 @@ router.get('/api/leagues', (req, res, next) => {
   })
 })
 
-router.get('/api/league/:short/:seasonPeriod', (req, res, next) => {
-  League.findOne({ short: req.params.short.toUpperCase() }).exec((err, league) => {
+router.get('/api/:seasonPeriod/seasons', (req, res, next) => {
+
+  const leagueShort = req.headers.host.split('.')[0].toUpperCase()
+
+  League.findOne({ short: leagueShort }).exec((err, league) => {
     if (err || !league) return res.json({league: null, season: null})
     Season.findOne({ league: league._id, period: req.params.seasonPeriod }, (err, season) => {
       if (err || !season) return res.json({league: league, season: null})
@@ -76,22 +80,38 @@ router.get('/api/league/:short/:seasonPeriod', (req, res, next) => {
   })
 })
 
-router.get('/api/league/import/:short', (req, res, next) => {
+router.get('/api/import-all', (req, res, next) => {
   new ImportData(req, res)
 })
 
-router.get('/api/league/:leagueID', (req, res) => {
-  res.json(req.params.league)
-})
 
 // DIVISIONS
 
-router.get('/api/league/:short/:seasonPeriod/divisions', (req, res, next) => {
-  League.findOne({ short: req.params.short.toUpperCase() }).exec((err, league) => {
+router.get('/api/:seasonPeriod/divisions', (req, res, next) => {
+  
+  const leagueShort = req.headers.host.split('.')[0].toUpperCase()
+
+  League.findOne({ short: leagueShort }).exec((err, league) => {
     if (err || !league) return res.json({divisions: null})
     Season.findOne({ league: league._id, period: req.params.seasonPeriod }, (err, season) => {
       if (err || !season) return res.json({divisions: null})
-      Division.find({ season: season._id }, (err, divisions) => {
+      
+      Division.aggregate([
+      {
+          $match: { season: season._id }
+      },
+      {
+          $sort: { labelLocal: 1 }
+      },
+      {
+          $lookup: {
+             from: "teams",
+             localField: "_id",
+             foreignField: "division",
+             as: "teams"
+          }
+      }
+      ], (err, divisions) => {
         if (err) return res.json({divisions: null})
         res.json({divisions: divisions})
       })
@@ -101,8 +121,17 @@ router.get('/api/league/:short/:seasonPeriod/divisions', (req, res, next) => {
 
 // CLUBS
 
-router.get('/api/league/:short/:seasonPeriod/clubs', (req, res, next) => {
-  Club.find({}, (err, clubs) => {
+router.get('/api/:seasonPeriod/clubs', (req, res, next) => {
+  Club.aggregate([
+    {
+        $lookup: {
+           from: "members",
+           localField: "_id",
+           foreignField: "club",
+           as: "members"
+        }
+    }
+  ], (err, clubs) => {
     if (err) return res.json({clubs: null})
     res.json({clubs: clubs})
   })
@@ -110,10 +139,24 @@ router.get('/api/league/:short/:seasonPeriod/clubs', (req, res, next) => {
 })
 
 
+// PLAYERS
+
+router.get('/api/:seasonPeriod/players', (req, res, next) => {
+  Player.find({}, (err, players) => {
+    if (err) return res.json({players: null})
+    res.json({players: players})
+  })
+  .sort({ lastName: 1 })
+})
+
+
 // MATCHES
 
-router.get('/api/league/:short/:seasonPeriod/matches', (req, res, next) => {
-  League.findOne({ short: req.params.short.toUpperCase() }).exec((err, league) => {
+router.get('/api/:seasonPeriod/matches', (req, res, next) => {
+
+  const leagueShort = req.headers.host.split('.')[0].toUpperCase()
+
+  League.findOne({ short: leagueShort }).exec((err, league) => {
     if (err || !league) return res.json({matches: null})
     Season.findOne({ league: league._id, period: req.params.seasonPeriod }, (err, season) => {
       if (err || !season) return res.json({matches: null})

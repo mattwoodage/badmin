@@ -1,18 +1,18 @@
-id,title,address1,address2,town,postcode,website,lat,lng,
-1,Badminton Wycombe,Crest Road,,High Wycombe,HP11 1UA,http://www.badmintonwycombe.co.uk,51,61193,-0,774803
-16,Loudwater Boys Club,Birfield Road,,Loudwater,HP10 9TW,,51,606542,-0,699472
-17,Herschel Sports Centre,Whitby Road,,Slough,SL1 3BW,,51,51885,-0,61076
-18,Aylesbury Grammar School,Walton Road,,Aylesbury,HP21 7RP,,51,813792,-0,801702
-19,Beaconsfield  Secondary School,Wattleton Road,,Beaconsfield,HP9 1RR,,51,603449,-0,640544
-20,Newlands Girls' School,Farm Road,,Maidenhead,SL6 5JB,,51,521636,-0,758571
-21,Magnet Leisure Centre,Holmanleaze,,Maidenhead,SL6 8AW,,51,525109,-0,717944
-22,Dr Challoner's High School,Cokes Lane,,Amersham,Hp7 9QB,,51,667296,-0,569877
-23,Crosfields School,Shinfield Road,,Reading ,RG2 9BL,,51,420848,-0,948676
-24,Meadowcroft Community Centre,147 Meadowcroft,,Aylesbury,HP19 9HH,,51,828792,-0,829173
-25,Hazlemere Community Centre,Rose Avenue,,Hazlemere,HP15 7UB,,51,647584,-0,710764
-26,Trevelyan Middle School,Wood Close,,Windsor,SL4 3JZ,,51,469022,-0,612923
-27,East Berks College,Station Road,,Langley,SL3 8BY,,51,50516,-0,544968
-28,Beaconsfield High School,Wattleton Road,,Beaconsfield,HP9 1RR,,51,603745,-0,643913
-29,Chalfont Leisure Centre,Nicol Road,,Chalfont St Peter,SL9 9LR,,51,608215,-0,569012
-30,AcademySport,Northumberland Avenue,,Reading,RG2 8DF,,51,427075,-0,96034
-32,Sir William Ramsay School,Rose Avenue,,High Wycombe,HP15 7UB,,51,6471399,-0,7109034
+id|title|address1|address2|town|postcode|website|lat|lng|
+1|Badminton Wycombe|Crest Road||High Wycombe|HP11 1UA|http://www.badmintonwycombe.co.uk|51,61193|-0,774803
+16|Loudwater Boys Club|Birfield Road||Loudwater|HP10 9TW||51,606542|-0,699472
+17|Herschel Sports Centre|Whitby Road||Slough|SL1 3BW||51,51885|-0,61076
+18|Aylesbury Grammar School|Walton Road||Aylesbury|HP21 7RP||51,813792|-0,801702
+19|Beaconsfield  Secondary School|Wattleton Road||Beaconsfield|HP9 1RR||51,603449|-0,640544
+20|Newlands Girls' School|Farm Road||Maidenhead|SL6 5JB||51,521636|-0,758571
+21|Magnet Leisure Centre|Holmanleaze||Maidenhead|SL6 8AW||51,525109|-0,717944
+22|Dr Challoner's High School|Cokes Lane||Amersham|Hp7 9QB||51,667296|-0,569877
+23|Crosfields School|Shinfield Road||Reading |RG2 9BL||51,420848|-0,948676
+24|Meadowcroft Community Centre|147 Meadowcroft||Aylesbury|HP19 9HH||51,828792|-0,829173
+25|Hazlemere Community Centre|Rose Avenue||Hazlemere|HP15 7UB||51,647584|-0,710764
+26|Trevelyan Middle School|Wood Close||Windsor|SL4 3JZ||51,469022|-0,612923
+27|East Berks College|Station Road||Langley|SL3 8BY||51,50516|-0,544968
+28|Beaconsfield High School|Wattleton Road||Beaconsfield|HP9 1RR||51,603745|-0,643913
+29|Chalfont Leisure Centre|Nicol Road||Chalfont St Peter|SL9 9LR||51,608215|-0,569012
+30|AcademySport|Northumberland Avenue||Reading|RG2 8DF||51,427075|-0,96034
+32|Sir William Ramsay School|Rose Avenue||High Wycombe|HP15 7UB||51,6471399|-0,7109034

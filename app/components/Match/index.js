@@ -57,7 +57,7 @@ class Match extends Component {
     }
     return (
       <div>
-        <b>{match.venue.name}:</b> 
+        <b>{match.venue.name}: </b> 
         {startAt.join(' ')}
       </div>
     )

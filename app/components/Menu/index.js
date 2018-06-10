@@ -33,6 +33,10 @@ import TableIcon from '@material-ui/icons/ViewList';
 import ResultsIcon from '@material-ui/icons/VerifiedUser';
 import SettingsIcon from '@material-ui/icons/Settings';
 
+import PersonIcon from '@material-ui/icons/Person';
+import PeopleIcon from '@material-ui/icons/People';
+
+
 const drawerWidth = 240;
 
 
@@ -222,9 +226,17 @@ class Menu extends Component {
               <NavLink activeClassName='current' to={`/${path}/clubs`} >
                 <ListItem button>
                   <ListItemIcon>
-                    <ResultsIcon />
+                    <PeopleIcon />
                   </ListItemIcon>
                   <ListItemText primary="Clubs" />
+                </ListItem> 
+              </NavLink>
+              <NavLink activeClassName='current' to={`/${path}/players`} >
+                <ListItem button>
+                  <ListItemIcon>
+                    <PersonIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Players" />
                 </ListItem> 
               </NavLink>
 

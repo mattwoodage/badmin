@@ -65,7 +65,7 @@ class Root extends Component {
 
   initialise (leagueShort, seasonPeriod) {
     if (seasonPeriod.length === 0) seasonPeriod='x'
-    DB.get(`/api/league/${leagueShort}/${seasonPeriod}`)
+    DB.get(`/api/${seasonPeriod}/seasons`)
       .then(response => {
         this.setState({
           league: response.league,

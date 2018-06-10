@@ -8,13 +8,13 @@ var clubSchema = mongoose.Schema({
   email: String,
   website: String,
   phone: String,
-  clubnightVenue: Object,
+  clubnightVenue: { type: mongoose.Schema.Types.ObjectId, ref: 'Venue' },
   clubnightStartAt: Date,
-  clubnightAltVenue: Object,
+  clubnightAltVenue: { type: mongoose.Schema.Types.ObjectId, ref: 'Venue' },
   clubnightAltStartAt: Date,
-  matchVenue: Object,
+  matchVenue: { type: mongoose.Schema.Types.ObjectId, ref: 'Venue' },
   matchStartAt: Date,
-  matchAltVenue: Object,
+  matchAltVenue: { type: mongoose.Schema.Types.ObjectId, ref: 'Venue' },
   matchAltStartAt: Date,
   message: String
 })

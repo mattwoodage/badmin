@@ -8,6 +8,7 @@ var Club = require('../app/models/Club')
 var Venue = require('../app/models/Venue')
 var Format = require('../app/models/Format')
 var Player = require('../app/models/Player')
+var Member = require('../app/models/Member')
 
 var fs = require('fs')
 
@@ -15,7 +16,7 @@ class ImportData {
 
   constructor(req, res) {
 
-    const leagueShort = req.params.short.toUpperCase()
+    const leagueShort = req.headers.host.split('.')[0].toUpperCase()
 
     console.log('IMPORT DATA FOR ', leagueShort)
 
@@ -47,47 +48,38 @@ class ImportData {
 
     this.processLeague()
       .then(() => {
-        this.processSeasons()
+        return this.processSeasons()
       })
       .then(() => {
-        this.processClubs()
+        return this.processDivisions()
       })
       .then(() => {
-        this.processTeams()
+        return this.processClubs()
       })
       .then(() => {
-        this.processPlayers()
+        return this.processTeams()
       })
       .then(() => {
-        this.processMatches()
+        return this.processPlayers()
       })
       .then(() => {
-        this.processDivisions()
+        return this.processClubPlayers()
+      })
+      .then(() => {
+        return this.processMatches()
       })
       .then(() => {
         console.log('****** P R O C E S S I N G       D O N E ******')
 
-
         this.res.json(this.log)
       })
-    // await this.processSeasons()
-    // await this.processVenues()
-    
-
-
-    
-
-    
   }
 
-  findOrCreate (_model, field, value) {
+  findOrCreate (_model, filter) {
     return new Promise((resolve, reject) => {
-      const filter = {}
-      filter[field] = value
       _model.findOne(filter).exec((err, found) => {
         if (err) reject(err)
         if (found) {
-          console.log('*found*')
           resolve(found)
         }
         resolve(new _model())
@@ -98,66 +90,73 @@ class ImportData {
     })
   }
 
-  saveOrUpdate (object) {
-    if (!object.createdAt) {
-      object.save((err) => {
-        if (err) {
-          console.log('*** ERROR SAVING ***', err)
-          return false
-        }
-        return true
-      })
-    } else {
-      object.update((err) => {
-        if (err) {
-          console.log('*** ERROR UPDATING ***', err)
-        }
-        return true
-      })
-    }
+  saveOrUpdate (object, modelName, log, resolve) {
+    object.save((err) => {
+      if (err) {
+        log.errors.push(err)
+      } else {
+        log.saved += 1
+      }
+      log.processed += 1
+      if (log.processed === log.total) {
+        this.log[modelName] = log
+        resolve()
+      }
+    })
   }
 
   processLeague () {
     return new Promise((resolve, reject) => {
-      this.findOrCreate(League, 'short', this.leagueShort)
+      this.findOrCreate(League, { short: this.leagueShort } )
         .then(league => {
           this.league = league
           resolve(league)
         })
         .catch(error => {
           console.error(error)
+          reject(error)
         })
     })
   }
 
-  async processSeasons () {
+  newLog (rows) {
+    return { saved: 0, processed: 0, total: rows.length-1, errors: [] }
+  }
+
+  processSeasons () {
     console.log('P R O C E S S     S E A S O N S')
     const rows = this.data['season'].split('\r\n')
     const fields = rows.shift()
 
-    this.log.seasons = { saved: 0, total: rows.length }
+    const log = this.newLog(rows)
 
-    for (var r of rows) {
-      const cols = r.split(',')
+    return new Promise((resolve, reject) => {
 
-      if (!cols[1]) return
-      const uid = this.leagueShort + ' ' + cols[1]
-      const key = uid.toLowerCase().split(' ').join('-')
-      this.findOrCreate(Season, 'key', key)
-        .then(season => {
-          season.key = key
-          season.label = uid
-          season.period = cols[1]
-          season.startYear = Number(cols[1].split('-')[0])
-          season._old = cols[0]
-          season.current = Number(cols[2]) === 0 ? false : true
-          season.league = this.league._id
+      for (var r of rows) {
+        const cols = r.split('|')
 
-          const ok = this.saveOrUpdate(season)
-          if (ok) this.log.seasons.saved += 1
+        if (!cols[1]) return
+        const uid = this.leagueShort + ' ' + cols[1]
+        const key = uid.toLowerCase().split(' ').join('-')
+        this.findOrCreate(Season, { _old: cols[0], league: this.league._id } )
+          .then(season => {
+            season.key = key
+            season.label = uid
+            season.period = cols[1]
+            season.startYear = Number(cols[1].split('-')[0])
+            season._old = cols[0]
+            season.current = Number(cols[2]) === 0 ? false : true
+            season.league = this.league._id
 
-        })
-    }
+            this.saveOrUpdate(season, 'season', log, resolve)
+              
+          })
+          .catch(error => {
+            console.error(error)
+            reject(error)
+          })
+      }
+    })
   }
 
   async processDivisions () {
@@ -165,33 +164,35 @@ class ImportData {
     const rows = this.data['division'].split('\r\n')
     const fields = rows.shift()
 
-    this.log.divisions = { saved: 0, total: rows.length }
+    const log = this.newLog(rows)
 
-    for (var r of rows) {
-      const cols = r.split(',')
+    return new Promise((resolve, reject) => {
+      for (var r of rows) {
+        const cols = r.split('|')
 
-      if (!cols[1]) return
+        if (!cols[1]) return
 
-      this.findOrCreate(Season, '_old', cols[1])
-        .then(season => {
+        this.findOrCreate(Season, { _old: cols[1], league: this.league._id })
+          .then(season => {
 
-          const uid = cols[2] + ' ' + cols[3] + ' ' + this.leagueShort + ' ' + season.period
-          const key = uid.toLowerCase().split(' ').join('-')
-          this.findOrCreate(Division, 'key', key)
-            .then(division => {
-              division.key = key
-              division.label = uid
-              division._old = cols[0]
-              division.season = season._id
-              division.labelLocal = cols[2] + ' ' + cols[3]
-              division.position = cols[3]
-              division.title = (Number(cols[3])===0) ? 'Premier' : ''
+            const uid = cols[2] + ' ' + cols[3] + ' ' + this.leagueShort + ' ' + season.period
+            const key = uid.toLowerCase().split(' ').join('-')
+            this.findOrCreate(Division, {_old: cols[0]} )
+              .then(division => {
+                division.key = key
+                division.label = uid
+                division._old = cols[0]
+                division.season = season._id
+                division.labelLocal = cols[2] + ' ' + cols[3]
+                division.position = cols[3]
+                division.title = (Number(cols[3])===0) ? 'Premier' : ''
 
-              const ok = this.saveOrUpdate(division)
-              if (ok) this.log.divisions.saved += 1
-            })
-        })
-    }
+                this.saveOrUpdate(division, 'divisions', log, resolve)
+
+              })
+          })
+      }
+    })
   }
 
   async processClubs () {
@@ -199,34 +200,39 @@ class ImportData {
     const rows = this.data['club'].split('\r\n')
     const fields = rows.shift()
 
-    for (var r of rows) {
-      const cols = r.split(',')
+    const log = this.newLog(rows)
 
-      if (!cols[1]) return
+    return new Promise((resolve, reject) => {
 
-      this.findOrCreate(Venue, '_old', cols[3])
-        .then(venue => {
+      for (var r of rows) {
+        const cols = r.split('|')
 
-        const uid = cols[1]
-        const key = uid.toLowerCase().split(' ').join('-')
-        this.findOrCreate(Club, 'key', key)
-          .then(club => {
-            club._old = cols[0]
-            club.key = key
-            club.name = cols[1]
-            club.short = cols[2]
+        if (!cols[1]) return
 
-            club.clubnightVenue = venue._id
-            club.matchVenue = venue._id
-            club.message = ''
-            club.phone = cols[10] + ":::::" + cols[11] + ":::::" + cols[3] + ":::::" + cols[4] + ":::::" + cols[5] + ":::::" + cols[6] + ":::::" + cols[7] + ":::::" + cols[12] + ":::::" + cols[13] + ":::::" + cols[14]
-            club.website = ''
-            club.email = ''
+        this.findOrCreate(Venue, { _old: cols[3] } )
+          .then(venue => {
 
-            this.saveOrUpdate(club)
-          })
-      })
-    }
+          const uid = cols[1]
+          const key = uid.toLowerCase().split(' ').join('-')
+          this.findOrCreate(Club, { _old: cols[0] } )
+            .then(club => {
+              club._old = cols[0]
+              club.key = key
+              club.name = cols[1]
+              club.short = cols[2]
+
+              club.clubnightVenue = venue._id
+              club.matchVenue = venue._id
+              club.message = ''
+              club.phone = cols[10] + ":::::" + cols[11] + ":::::" + cols[3] + ":::::" + cols[4] + ":::::" + cols[5] + ":::::" + cols[6] + ":::::" + cols[7] + ":::::" + cols[12] + ":::::" + cols[13] + ":::::" + cols[14]
+              club.website = ''
+              club.email = ''
+
+              this.saveOrUpdate(club, 'clubs', log, resolve)
+            })
+        })
+      }
+    })
   }
 
   async processTeams () {
@@ -234,34 +240,39 @@ class ImportData {
     const rows = this.data['team'].split('\r\n')
     const fields = rows.shift()
 
-    for (var r of rows) {
-      const cols = r.split(',')
+    const log = this.newLog(rows)
 
-      if (!cols[1]) return
+    return new Promise((resolve, reject) => {
 
-      this.findOrCreate(Club, '_old', cols[3])
-        .then(club => {
+      for (var r of rows) {
+        const cols = r.split('|')
 
-          this.findOrCreate(Division, '_old', cols[1])
-            .then(division => {
-              const teamName = (club.name + ' ' + cols[2]).trim()
-              const uid = teamName + ' ' + division.label
-              const key = uid.toLowerCase().split(' ').join('-')
-              this.findOrCreate(Team, 'key', key)
-                .then(team => {
-                  team._old = cols[0]
-                  team.key = key
-                  team.label = uid
-                  team.labelLocal = teamName
-                  team.division = division._id
-                  team.prefix = cols[2]
-                  team.club = club._id
+        if (!cols[1]) return
 
-                  this.saveOrUpdate(team)
-                })
-            })
-        })
-    }
+        this.findOrCreate(Club, { _old: cols[3] } )
+          .then(club => {
+
+            this.findOrCreate(Division, { _old: cols[1] } )
+              .then(division => {
+                const teamName = (club.name + ' ' + cols[2]).trim()
+                const uid = teamName + ' ' + division.label
+                const key = uid.toLowerCase().split(' ').join('-')
+                this.findOrCreate(Team, { _old: cols[0] } )
+                  .then(team => {
+                    team._old = cols[0]
+                    team.key = key
+                    team.label = uid
+                    team.labelLocal = teamName
+                    team.division = division._id
+                    team.prefix = cols[2]
+                    team.club = club._id
+
+                    this.saveOrUpdate(team, 'teams', log, resolve)
+                  })
+              })
+          })
+      }
+    })
   }
 
 
@@ -270,27 +281,77 @@ class ImportData {
     const rows = this.data['player'].split('\r\n')
     const fields = rows.shift()
 
-    for (var r of rows) {
-      const cols = r.split(',')
+    const log = this.newLog(rows)
 
-      if (!cols[1]) return
+    return new Promise((resolve, reject) => {
 
-      const uid = cols[1] + ' ' + cols[2]
-      const key = uid.toLowerCase().split(' ').join('-')
-      this.findOrCreate(Player, 'key', key)
-        .then(player => {
-          player.key = key
-          player.firstName = cols[1]
-          player.lastName = cols[2]
-          player.name = cols[1] + ' ' + cols[2].toUpperCase()
-          player._old = cols[0]
-          player.gender = cols[3]
+      for (var r of rows) {
+        const cols = r.split('|')
 
-          this.saveOrUpdate(player)
-        })
-    }
+        if (!cols[1]) return
+
+        const uid = cols[0] + ' ' + cols[1] + ' ' + cols[2]
+        const key = uid.toLowerCase().split(' ').join('-')
+        this.findOrCreate(Player, { _old: cols[0] } )
+          .then(player => {
+            player.key = key
+            player.firstName = cols[1]
+            player.lastName = cols[2]
+            player.name = cols[1] + ' ' + cols[2].toUpperCase()
+            player._old = cols[0]
+            player.gender = cols[3]
+
+            this.saveOrUpdate(player, 'players', log, resolve)
+          })
+      }
+    })
   }
 
+
+  async processClubPlayers () {
+    console.log('P R O C E S S     C L U B  P L A Y E R S -> M E M B E R S')
+    const rows = this.data['club_player'].split('\r\n')
+    const fields = rows.shift()
+
+    const log = this.newLog(rows)
+
+    return new Promise((resolve, reject) => {
+
+      for (var r of rows) {
+        const cols = r.split('|')
+
+        console.log('___________', cols)
+
+        if (!cols[1]) return
+
+        this.findOrCreate(Player, { _old: cols[0] } )
+          .then(player => {
+
+            this.findOrCreate(Club, { _old: cols[1] } )
+              .then(club => {
+
+                const uid = cols[0] + ',' + cols[1]
+                const key = uid.toLowerCase().split(' ').join('-')
+                this.findOrCreate(Member, { _old: uid } )
+                  .then(member => {
+                    member.key = key
+                    member._old = uid
+                    member.club = club._id
+                    member.player = player._id
+                    member.active = Number(cols[2]) === 1 ? true : false
+                    member.roles = cols[3]
+                    console.log('-----')
+                    console.log('-----')
+                    console.log('-----')
+                    console.log(member)
+
+                    this.saveOrUpdate(member, 'members', log, resolve)
+                  })
+              })
+          })
+      }
+    })
+  }
 
 
   async processMatches () {
@@ -298,60 +359,54 @@ class ImportData {
     const rows = this.data['match'].split('\r\n')
     const fields = rows.shift()
 
-    for (var r of rows) {
-      const cols = r.split(',')
+    const log = this.newLog(rows)
 
-      if (!cols[1]) return
+    return new Promise((resolve, reject) => {
 
-      const mths = 'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec'.split(',')
+      for (var r of rows) {
+        const cols = r.split('|')
 
-      this.findOrCreate(Division, '_old', cols[1])
-        .then(division => {
+        if (!cols[1]) return
 
-          this.findOrCreate(Venue, '_old', cols[2])
-            .then(venue => {
+        const mths = 'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec'.split(',')
 
-              this.findOrCreate(Team, '_old', cols[4])
-                .then(homeTeam => {
+        this.findOrCreate(Division, { _old: cols[1] } )
+          .then(division => {
 
-                  this.findOrCreate(Team, '_old', cols[5])
-                    .then(awayTeam => {
+            this.findOrCreate(Venue, { _old: cols[2] } )
+              .then(venue => {
 
-                      const uid = homeTeam.labelLocal + ' vs ' + awayTeam.labelLocal + ' ' + String(division.key)
-                      const key = uid.toLowerCase().split(' ').join('-')
-                      this.findOrCreate(Match, 'key', key)
-                        .then(match => {
+                this.findOrCreate(Team, { _old: cols[4] } )
+                  .then(homeTeam => {
 
-                          let dt = cols[3]
-                          dt = dt.split('.')
-                          dt[1] = mths[Number(dt[1])-1]
-                          dt = dt.join(' ')
-                          match._old = cols[0]
-                          match.key = key
-                          match.division = division._id
-                          match.venue = venue._id
-                          match.homeTeam = homeTeam._id
-                          match.awayTeam = awayTeam._id
-                          match.startAt = new Date(dt)
-                          match.label = homeTeam.labelLocal + ' vs ' + awayTeam.labelLocal
+                    this.findOrCreate(Team, { _old: cols[5] } )
+                      .then(awayTeam => {
 
-                          console.log('......................')
-                          console.log('......................')
-                          console.log('......................')
-                          console.log('......................')
-                          console.log('......................')
-                          
-                          console.log(division)
-                          console.log(match)
-                          this.saveOrUpdate(match)
-                        })
-                    })
-                })
-            })
-        })
+                        const uid = homeTeam.labelLocal + ' vs ' + awayTeam.labelLocal + ' ' + String(division.key)
+                        const key = uid.toLowerCase().split(' ').join('-')
+                        this.findOrCreate(Match, { _old: cols[0] } )
+                          .then(match => {
+                            let dt = cols[3]
+                            dt = dt.split('.')
+                            dt[1] = mths[Number(dt[1])-1]
+                            dt = dt.join(' ')
+                            match._old = cols[0]
+                            match.key = key
+                            match.division = division._id
+                            match.venue = venue._id
+                            match.homeTeam = homeTeam._id
+                            match.awayTeam = awayTeam._id
+                            match.startAt = new Date(dt)
+                            match.label = homeTeam.labelLocal + ' vs ' + awayTeam.labelLocal
 
-
-    }
+                            this.saveOrUpdate(match, 'matches', log, resolve)
+                          })
+                      })
+                  })
+              })
+          })
+      }
+    })
   }
 
 
@@ -361,32 +416,35 @@ class ImportData {
     const rows = this.data['venue'].split('\r\n')
     const fields = rows.shift()
 
-    for (var r of rows) {
-      const cols = r.split(',')
+    const log = this.newLog(rows)
 
-      if (!cols[1]) return
+    return new Promise((resolve, reject) => {
 
-      const uid = cols[1]
-      const key = cols[1].toLowerCase().split(' ').join('-')
-      this.findOrCreate(Venue, 'key', key)
-        .then(venue => {
-          venue.key = key
-          venue.name = cols[1]
-          venue._old = cols[0]
-          venue.address_1 = cols[2]
-          venue.address_2 = cols[3]
-          venue.address_3 = ''
-          venue.town = cols[4]
-          venue.postcode = cols[5].toUpperCase()
-          venue.website = cols[6]
-          venue.lat = cols[7] + ',' + cols[8]
-          venue.lng = cols[9] + ',' + cols[10]
+      for (var r of rows) {
+        const cols = r.split('|')
 
-          console.log(venue)
+        if (!cols[1]) return
 
-          this.saveOrUpdate(venue)
-        })
-    }
+        const uid = cols[1]
+        const key = cols[1].toLowerCase().split(' ').join('-')
+        this.findOrCreate(Venue, { _old: cols[0] } )
+          .then(venue => {
+            venue.key = key
+            venue.name = cols[1]
+            venue._old = cols[0]
+            venue.address_1 = cols[2]
+            venue.address_2 = cols[3]
+            venue.address_3 = ''
+            venue.town = cols[4]
+            venue.postcode = cols[5].toUpperCase()
+            venue.website = cols[6]
+            venue.lat = cols[7] + ',' + cols[8]
+            venue.lng = cols[9] + ',' + cols[10]
+
+            this.saveOrUpdate(venue, 'venues', log, resolve)
+          })
+      }
+    })
 
   }
 }

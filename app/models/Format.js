@@ -9,6 +9,7 @@ var formatSchema = mongoose.Schema({
   males: Boolean,
   females: Boolean,
   pairs: Number,
+  numMatches: Number,
   rubbers: Number,
   orderOfPlay: String,
   desc: String

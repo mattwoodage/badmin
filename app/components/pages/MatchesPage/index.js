@@ -33,7 +33,7 @@ class Page extends Component {
     const { league, season } = this.props
     if (this.state.loaded || !league || !season) return
 
-    DB.get(`/api/league/${league.short}/${season.period}/matches`)
+    DB.get(`/api/${season.period}/matches`)
       .then(response => {
         this.setState({
           matches: response.matches,

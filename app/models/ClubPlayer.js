@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
-var playerSchema = mongoose.Schema({
+var clubPlayerSchema = mongoose.Schema({
+
   name: String,
   firstName: String,
   lastName: String,
@@ -11,6 +12,6 @@ var playerSchema = mongoose.Schema({
   _old: Number
 })
 
-var Player = mongoose.model('Player', playerSchema)
+var ClubPlayer = mongoose.model('ClubPlayer', clubPlayerSchema)
 
-module.exports = Player
+module.exports = ClubPlayer

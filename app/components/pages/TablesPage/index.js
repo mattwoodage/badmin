@@ -1,33 +1,83 @@
 import React, { Component } from 'react'
-import Root from '../../Root'
+
 import Division from '../../Division'
+import ReactMoment from 'react-moment'
+import Moment from 'moment'
+import { extendMoment } from 'moment-range';
 
-class TablesPage extends Component {
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import List from '@material-ui/core/List';
 
-  teamsInDivision (division) {
-    return this.props.teams.filter(t => {
-      return String(t.division) === String(division._id)
-    })
+import Typography from '@material-ui/core/Typography';
+
+import { withStyles } from '@material-ui/core/styles';
+import { LeagueContext } from '../../Root'
+import DB from '../../../helpers/DB'
+
+const styles = theme => ({
+  paper: {
+    padding: theme.spacing.unit * 2,
+    textAlign: 'center',
+    color: theme.palette.text.secondary
+  }
+});
+
+class Page extends Component {
+
+  state = {
+    loaded: false
   }
 
-  renderDivisions () {
-    return this.props.divisions.map(division => {
-      const teams = this.teamsInDivision(division)
-      console.log('===============', teams.length)
-      return (<Division division={division} teams={teams} />)
-    })
+  initialise () {
+    const { league, season } = this.props
+    if (this.state.loaded || !league || !season) return
+
+    DB.get(`/api/${season.period}/divisions`)
+      .then(response => {
+        this.setState({
+          divisions: response.divisions,
+          loaded: true
+        })
+      })
+  }
+
+  renderTables () {
+    const { classes } = this.props;
+    return (
+      <List>
+      {
+        this.state.divisions && this.state.divisions.map(division => {
+          return (
+            <Division key={division.key} division={division} />
+          )
+        })
+      }
+      </List>
+    )
   }
 
   render () {
+    const { classes } = this.props;
+    this.initialise()
     return (
-      <Root league={this.props.league} season={this.props.season} >
-        <h1>TABLES</h1>
-        <div>
-          { this.renderDivisions() }
-        </div>
-      </Root>
+      <div>
+        <Typography variant="display3" gutterBottom>TABLES</Typography>
+        {this.renderTables()}
+      </div>
     )
   }
 }
 
-export default TablesPage
+class TablesPage extends Component {
+  render () {
+    return (
+      <LeagueContext.Consumer>
+        {props => <Page {...this.props} {...props} />}
+      </LeagueContext.Consumer>
+    )
+  }
+}
+
+export default withStyles()(TablesPage)
+
