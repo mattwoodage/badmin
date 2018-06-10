@@ -11,6 +11,7 @@ import CalendarPage from '../app/components/pages/CalendarPage'
 import ClubsPage from '../app/components/pages/ClubsPage'
 import PlayersPage from '../app/components/pages/PlayersPage'
 import TablesPage from '../app/components/pages/TablesPage'
+import GridsPage from '../app/components/pages/GridsPage'
 
 
 
@@ -27,6 +28,7 @@ render((
       <Route path='/:season/clubs' component={ClubsPage} />
       <Route path='/:season/players' component={PlayersPage} />
       <Route path='/:season/tables' component={TablesPage} />
+      <Route path='/:season/grids' component={GridsPage} />
     </Root>
   </BrowserRouter>
 ), document.getElementById('app'));

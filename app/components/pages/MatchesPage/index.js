@@ -53,7 +53,6 @@ class Page extends Component {
         </div>
       </Grid>
     )
-
   }
 
   renderCalendar () {

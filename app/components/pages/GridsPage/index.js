@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import DivisionTable from '../../DivisionTable'
+import DivisionGrid from '../../DivisionGrid'
 import ReactMoment from 'react-moment'
 import Moment from 'moment'
 import { extendMoment } from 'moment-range';
@@ -34,22 +34,33 @@ class Page extends Component {
     if (this.state.loaded || !league || !season) return
 
     DB.get(`/api/${season.period}/divisions`)
-      .then(response => {
-        this.setState({
-          divisions: response.divisions,
-          loaded: true
-        })
+      .then(divisionsResponse => {
+        DB.get(`/api/${season.period}/matches`)
+          .then(matchesResponse => {
+            this.setState({
+              divisions: divisionsResponse.divisions,
+              matches: matchesResponse.matches,
+              loaded: true
+            })
+          })
       })
   }
 
-  renderTables () {
+  matchesInDivision (division) {
+    return this.state.matches.filter(m => {
+      return m.division._id === division._id
+    })
+  }
+
+  renderGrids () {
     const { classes } = this.props;
+
     return (
       <List>
       {
         this.state.divisions && this.state.divisions.map(division => {
           return (
-            <DivisionTable key={division.key} division={division} />
+            <DivisionGrid key={division.key} matches={this.matchesInDivision(division)} division={division} />
           )
         })
       }
@@ -62,14 +73,14 @@ class Page extends Component {
     this.initialise()
     return (
       <div>
-        <Typography variant="display3" gutterBottom>TABLES</Typography>
-        {this.renderTables()}
+        <Typography variant="display3" gutterBottom>GRIDS</Typography>
+        {this.renderGrids()}
       </div>
     )
   }
 }
 
-class TablesPage extends Component {
+class GridsPage extends Component {
   render () {
     return (
       <LeagueContext.Consumer>
@@ -79,5 +90,5 @@ class TablesPage extends Component {
   }
 }
 
-export default withStyles()(TablesPage)
+export default withStyles()(GridsPage)
 

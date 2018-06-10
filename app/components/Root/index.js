@@ -74,8 +74,6 @@ class Root extends Component {
       })
   }
 
-  
-
   render () {
 
     const { classes, theme } = this.props;

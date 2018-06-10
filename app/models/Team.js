@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 
 var teamSchema = mongoose.Schema({
   labelLocal: String,
+  short: String,
   key: String,
   _old: Number,
   label: String,

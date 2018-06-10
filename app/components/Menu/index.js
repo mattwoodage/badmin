@@ -30,6 +30,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import CalendarIcon from '@material-ui/icons/DateRange';
 import EventIcon from '@material-ui/icons/Event';
 import TableIcon from '@material-ui/icons/ViewList';
+import GridIcon from '@material-ui/icons/ViewModule';
 import ResultsIcon from '@material-ui/icons/VerifiedUser';
 import SettingsIcon from '@material-ui/icons/Settings';
 
@@ -88,6 +89,7 @@ const styles = theme => ({
   drawerPaper: {
     position: 'relative',
     whiteSpace: 'nowrap',
+    height: '100%',
     width: drawerWidth,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
@@ -221,6 +223,14 @@ class Menu extends Component {
                     <TableIcon />
                   </ListItemIcon>
                   <ListItemText primary="Tables" />
+                </ListItem> 
+              </NavLink>
+              <NavLink activeClassName='current' to={`/${path}/grids`} >
+                <ListItem button>
+                  <ListItemIcon>
+                    <GridIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Grids" />
                 </ListItem> 
               </NavLink>
               <NavLink activeClassName='current' to={`/${path}/clubs`} >
