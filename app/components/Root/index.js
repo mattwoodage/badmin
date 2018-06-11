@@ -36,17 +36,10 @@ const styles = theme => ({
       contrastText: '#000',
     },
   },
-  toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    ...theme.mixins.toolbar,
-  },
   content: {
     flexGrow: 1,
+    marginTop: '130px',
     backgroundColor: '#fafafa',
-    borderLeft: '1px solid #ccc',
     padding: theme.spacing.unit * 3,
   },
 });
@@ -91,7 +84,6 @@ class Root extends Component {
           <Menu league={this.state.league} season={this.state.season} />
           
           <main className={classes.content}>
-            <div className={classes.toolbar} />
             {this.props.children}
           </main>
         </div>

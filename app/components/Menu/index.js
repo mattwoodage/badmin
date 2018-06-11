@@ -37,6 +37,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import PersonIcon from '@material-ui/icons/Person';
 import PeopleIcon from '@material-ui/icons/People';
 
+import Logo from '../../images/hwba_logo.png';
 
 const drawerWidth = 240;
 
@@ -56,41 +57,41 @@ const styles = theme => ({
       contrastText: '#000',
     },
   },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    backgroundColor: yellow['A700']
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    })
+  header: {
+    position: 'fixed',
+    width: '100%',
+    backgroundColor: yellow['A700'],
+    zIndex: '1000',
+    padding: '20 20',
+    paddingTop: 20,
+    textAlign: 'center'
   },
   menuButton: {
-    marginLeft: 12,
-    marginRight: 36,
+    position: 'absolute',
+    left: 12,
+    top: 12,
   },
   hide: {
     display: 'none',
   },
   toolbar: {
-    display: 'flex',
+
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: '0 8px',
-    ...theme.mixins.toolbar,
+    ...theme.mixins.toolbar
+  },
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: 'auto',
   },
   drawerPaper: {
     position: 'relative',
     whiteSpace: 'nowrap',
     height: '100%',
-    width: drawerWidth,
+    width: '200px',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -102,13 +103,13 @@ const styles = theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    width: theme.spacing.unit * 7,
+    width: drawerWidth,
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing.unit * 9,
     },
   },
   content: {
-    flexGrow: 1,
+    marginTop: '60px',
     padding: theme.spacing.unit * 3,
   },
 });
@@ -133,6 +134,7 @@ class Menu extends Component {
 
   drawerOnClose = () => {
     console.log('closed')
+    this.setState({ open: false });
   }
 
   render () {
@@ -146,11 +148,8 @@ class Menu extends Component {
 
     return (
       <div>
-        <AppBar
-          position="absolute"
-          className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
-        >
-          <Toolbar disableGutters={!this.state.open}>
+        <div className={classes.header}>
+          
             <IconButton
               color='inherit'
               aria-label="open drawer"
@@ -159,108 +158,100 @@ class Menu extends Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="title" color='inherit' noWrap>
-              {leagueName}
-              <b>
-              {' : ' + path}
-              </b>
-            </Typography>
-          </Toolbar>
-        </AppBar>
+            <img width="270" src={Logo} />
+        </div>
 
       <SwipeableDrawer
-        variant="permanent"
-        classes={{
-          paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
-        }}
+
         open={this.state.open}
         onOpen={this.drawerOnOpen}
         onClose={this.drawerOnClose}
 
       >
-            <div className={classes.toolbar}>
-              <IconButton onClick={this.handleDrawerClose}>
-                {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-              </IconButton>
-            </div>
-            <Divider />
-            <List>
-              <NavLink activeClassName='current' to={`/${path}/home`} >
-                <ListItem button>
-                  <ListItemIcon>
-                    <HomeIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Homepage" />
-                </ListItem>
-              </NavLink>
-              <NavLink activeClassName='current' to={`/${path}/calendar`} >
-                <ListItem button>
-                  <ListItemIcon>
-                    <CalendarIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Calendar" />
-                </ListItem>
-              </NavLink>
-              <NavLink activeClassName='current' to={`/${path}/matches`} >
-                <ListItem button>
-                  <ListItemIcon>
-                    <EventIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Matches" />
-                </ListItem> 
-              </NavLink>
-              <NavLink activeClassName='current' to={`/${path}/results`} >
-                <ListItem button>
-                  <ListItemIcon>
-                    <ResultsIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Results" />
-                </ListItem> 
-              </NavLink>
-              <NavLink activeClassName='current' to={`/${path}/tables`} >
-                <ListItem button>
-                  <ListItemIcon>
-                    <TableIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Tables" />
-                </ListItem> 
-              </NavLink>
-              <NavLink activeClassName='current' to={`/${path}/grids`} >
-                <ListItem button>
-                  <ListItemIcon>
-                    <GridIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Grids" />
-                </ListItem> 
-              </NavLink>
-              <NavLink activeClassName='current' to={`/${path}/clubs`} >
-                <ListItem button>
-                  <ListItemIcon>
-                    <PeopleIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Clubs" />
-                </ListItem> 
-              </NavLink>
-              <NavLink activeClassName='current' to={`/${path}/players`} >
-                <ListItem button>
-                  <ListItemIcon>
-                    <PersonIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Players" />
-                </ListItem> 
-              </NavLink>
-
-            </List>
-            <Divider />
+        <div className={classes.list}>
+          <div className={classes.toolbar}>
+            <IconButton onClick={this.handleDrawerClose}>
+              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </IconButton>
+          </div>
+          <Divider />
+          <List>
+            <NavLink activeClassName='current' to={`/${path}/home`} >
               <ListItem button>
                 <ListItemIcon>
-                  <SettingsIcon />
+                  <HomeIcon />
                 </ListItemIcon>
-                <ListItemText primary="Settings" />
+                <ListItemText primary="Homepage" />
               </ListItem>
+            </NavLink>
+            <NavLink activeClassName='current' to={`/${path}/calendar`} >
+              <ListItem button>
+                <ListItemIcon>
+                  <CalendarIcon />
+                </ListItemIcon>
+                <ListItemText primary="Calendar" />
+              </ListItem>
+            </NavLink>
+            <NavLink activeClassName='current' to={`/${path}/matches`} >
+              <ListItem button>
+                <ListItemIcon>
+                  <EventIcon />
+                </ListItemIcon>
+                <ListItemText primary="Matches" />
+              </ListItem> 
+            </NavLink>
+            <NavLink activeClassName='current' to={`/${path}/results`} >
+              <ListItem button>
+                <ListItemIcon>
+                  <ResultsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Results" />
+              </ListItem> 
+            </NavLink>
+            <NavLink activeClassName='current' to={`/${path}/tables`} >
+              <ListItem button>
+                <ListItemIcon>
+                  <TableIcon />
+                </ListItemIcon>
+                <ListItemText primary="Tables" />
+              </ListItem> 
+            </NavLink>
+            <NavLink activeClassName='current' to={`/${path}/grids`} >
+              <ListItem button>
+                <ListItemIcon>
+                  <GridIcon />
+                </ListItemIcon>
+                <ListItemText primary="Grids" />
+              </ListItem> 
+            </NavLink>
+            <NavLink activeClassName='current' to={`/${path}/clubs`} >
+              <ListItem button>
+                <ListItemIcon>
+                  <PeopleIcon />
+                </ListItemIcon>
+                <ListItemText primary="Clubs" />
+              </ListItem> 
+            </NavLink>
+            <NavLink activeClassName='current' to={`/${path}/players`} >
+              <ListItem button>
+                <ListItemIcon>
+                  <PersonIcon />
+                </ListItemIcon>
+                <ListItemText primary="Players" />
+              </ListItem> 
+            </NavLink>
 
-          </SwipeableDrawer>
-      </div>
+          </List>
+          <Divider />
+          <ListItem button>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Settings" />
+          </ListItem>
+        </div>
+      </SwipeableDrawer>
+    </div>
 
 
 
