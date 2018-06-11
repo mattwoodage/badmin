@@ -48,7 +48,7 @@ class Page extends Component {
       <Grid item xs={12}>
         <div>
           <Typography variant="title">
-            {date.format("MMMM")}
+            {date.format("MMMM YYYY")}
           </Typography>
         </div>
       </Grid>

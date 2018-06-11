@@ -46,6 +46,7 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     backgroundColor: '#fafafa',
+    borderLeft: '1px solid #ccc',
     padding: theme.spacing.unit * 3,
   },
 });

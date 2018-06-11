@@ -1,21 +1,21 @@
 var mongoose = require('mongoose');
 
-var matchSchema = mongoose.Schema({
-  label: String,
-  startAt: Date,
-  division: Object,
-  homeTeam: Object,
-  awayTeam: Object,
-  numCourts: Number,
-  venue: Object,
-  startAt: Date,
-  key: String,
-  _old: Number
+var scoreCardSchema = mongoose.Schema({
+  match: Object,
+
+  enteredAt: Date,
+  enteredBy: Object,
+  enteredByTeam: Object,
+  confirmedAt: Date,
+  confirmedBy: Object,
+  confirmedByTeam: Object,
+  status: Number
+
 })
 
-var Match = mongoose.model('Match', matchSchema)
+var ScoreCard = mongoose.model('ScoreCard', scoreCardSchema)
 
-module.exports =  Match
+module.exports =  ScoreCard
 
 
 
