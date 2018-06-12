@@ -1,0 +1,22 @@
+@import 'reset-css';
+@import './Variables.scss';
+
+:global(.root) {
+  border:1px solid #fff;
+}
+
+:global(.content) {
+  padding: 180px 40px 40px 100px;
+  min-height: 100vh;
+  background-color: $color-inner-background;
+}
+
+:global(a.current) {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+:global(body) {
+  box-sizing: border-box;
+  background-color: $color-outer-background;
+}

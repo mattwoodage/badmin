@@ -2,47 +2,17 @@ import React, { Component } from 'react'
 import Menu from '../Menu'
 import Footer from '../Footer'
 import DB from '../../helpers/DB'
-import { withStyles } from '@material-ui/core/styles';
+
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import classNames from 'classnames';
 
+import styles from './Root.scss'
 
 export const LeagueContext = React.createContext()
 
 const drawerWidth = 240;
 
 // const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
-
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    zIndex: 1,
-    overflow: 'hidden',
-    position: 'relative',
-    display: 'flex',
-  },
-  palette: {
-    primary: {
-      light: '#00FF00',
-      main: '#FF0000',
-      dark: '#0000FF',
-      contrastText: '#000',
-    },
-    secondary: {
-      light: '#ff7961',
-      main: '#f44336',
-      dark: '#ba000d',
-      contrastText: '#000',
-    },
-  },
-  content: {
-    flexGrow: 1,
-    marginTop: '130px',
-    backgroundColor: '#fafafa',
-    padding: theme.spacing.unit * 3,
-  },
-});
 
 class Root extends Component {
   constructor () {
@@ -70,7 +40,9 @@ class Root extends Component {
 
   render () {
 
-    const { classes, theme } = this.props;
+    
+
+    console.log('.......', styles)
 
     const context = {
       league: this.state.league,
@@ -79,19 +51,18 @@ class Root extends Component {
 
     return (
       <LeagueContext.Provider value={context}>
-        <div className={classes.root}>
+        <div className='root'>
           
           <Menu league={this.state.league} season={this.state.season} />
           
-          <main className={classes.content}>
+          <div className='content'>
             {this.props.children}
-          </main>
+          </div>
         </div>
-        
       </LeagueContext.Provider>
     )
   }
 }
 
-export default withStyles(styles, { withTheme: true })(Root)
+export default Root
 

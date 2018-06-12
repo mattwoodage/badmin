@@ -62,9 +62,7 @@ const styles = theme => ({
     width: '100%',
     backgroundColor: yellow['A700'],
     zIndex: '1000',
-    padding: '20 20',
-    paddingTop: 20,
-    textAlign: 'center'
+    padding: '20 20 20 100'
   },
   menuButton: {
     position: 'absolute',

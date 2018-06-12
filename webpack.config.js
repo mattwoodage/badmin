@@ -43,11 +43,15 @@ var config = {
             loader: "style-loader"
           },
           {
-            loader: "css-loader",
+            loader: "css-loader"
+          },
+          {
+            loader: "sass-loader",
             options: {
               modules: true,
               importLoaders: 1,
               localIdentName: "[name]_[local]_[hash:base64]",
+              include: /flexboxgrid/,
               sourceMap: true,
               minimize: true
             }

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import styles from './Header.scss'
-import Button from '@material-ui/core/Button'
 
 class Header extends Component {
 
@@ -24,10 +23,6 @@ class Header extends Component {
           <li><NavLink activeClassName='current' to={`/${this.props.season}/players`} >Players</NavLink></li>
           <li><NavLink activeClassName='current' to={`/${this.props.season}/admin`} >[ ADMIN ]</NavLink></li>
         </ul>
-
-        <Button variant="contained" color="primary">
-      Hello World
-    </Button>
     
       </div>
 
