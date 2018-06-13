@@ -1,5 +1,8 @@
-.outer {
-  background: #ffd400;
-  width: 100%;
-  padding: 10px 50px;
+@import 'reset-css';
+@import '../../styles/Variables.scss';
+
+:local(.footer) {
+  background-color: $color-primary;
+  padding: 20px 20px 20px 100px;
+  margin-bottom:50px;
 }

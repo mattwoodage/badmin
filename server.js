@@ -15,8 +15,8 @@ var mongoLogger = function(coll, method, query, doc) {
 
 mongoose.set('debug', true); // mongoose.set('debug', mongoLogger)
 
-mongoose.connect(mongoString, function(error, db) {
-  if (error) {
+mongoose.connect(mongoString, function(err, db) {
+  if (err) {
     global.log.error(err);
   } else {
     global.log.info('Connected to MongoDB');

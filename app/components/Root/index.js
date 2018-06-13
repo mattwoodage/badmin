@@ -6,7 +6,7 @@ import DB from '../../helpers/DB'
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
-import styles from './Root.scss'
+import styles from './Root.css'
 
 export const LeagueContext = React.createContext()
 
@@ -40,10 +40,6 @@ class Root extends Component {
 
   render () {
 
-    
-
-    console.log('.......', styles)
-
     const context = {
       league: this.state.league,
       season: this.state.season
@@ -51,12 +47,16 @@ class Root extends Component {
 
     return (
       <LeagueContext.Provider value={context}>
-        <div className='root'>
-          
-          <Menu league={this.state.league} season={this.state.season} />
-          
-          <div className='content'>
-            {this.props.children}
+        <div className={styles.outer}>
+          <div className={styles.inner}>
+            
+            <Menu league={this.state.league} season={this.state.season} />
+            
+            <div className={styles.content}>
+              {this.props.children}
+            </div>
+
+            <Footer league={this.state.league} />
           </div>
         </div>
       </LeagueContext.Provider>

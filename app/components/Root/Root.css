@@ -1,12 +1,17 @@
 @import 'reset-css';
-@import './Variables.scss';
+@import '../../styles/Variables.scss';
 
-:global(.root) {
-  border:1px solid #fff;
+:local(.outer) {
+  width:100%;
 }
 
-:global(.content) {
-  padding: 180px 40px 40px 100px;
+:local(.inner) {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+:local(.content) {
+  padding: 40px 70px;
   min-height: 100vh;
   background-color: $color-inner-background;
 }

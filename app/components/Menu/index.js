@@ -23,6 +23,8 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 
+import styles from './Menu.css'
+
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Save from '@material-ui/icons/Save';
@@ -42,7 +44,7 @@ import Logo from '../../images/hwba_logo.png';
 const drawerWidth = 240;
 
 
-const styles = theme => ({
+const classes = theme => ({
   palette: {
     primary: {
       light: '#00FF00',
@@ -56,31 +58,6 @@ const styles = theme => ({
       dark: '#ba000d',
       contrastText: '#000',
     },
-  },
-  header: {
-    position: 'fixed',
-    width: '100%',
-    backgroundColor: yellow['A700'],
-    zIndex: '1000',
-    padding: '20 20 20 100'
-  },
-  menuButton: {
-    position: 'absolute',
-    left: 12,
-    top: 12,
-  },
-  hide: {
-    display: 'none',
-  },
-  toolbar: {
-
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    ...theme.mixins.toolbar
-  },
-  list: {
-    width: 250,
   },
   fullList: {
     width: 'auto',
@@ -105,11 +82,7 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing.unit * 9,
     },
-  },
-  content: {
-    marginTop: '60px',
-    padding: theme.spacing.unit * 3,
-  },
+  }
 });
 
 class Menu extends Component {
@@ -146,17 +119,16 @@ class Menu extends Component {
 
     return (
       <div>
-        <div className={classes.header}>
-          
+        <div className={styles.header}>
+          <div className={styles.menuButtonContainer}>
             <IconButton
-              color='inherit'
               aria-label="open drawer"
               onClick={this.handleDrawerOpen}
-              className={classNames(classes.menuButton, this.state.open && classes.hide)}
-            >
+              className={styles.menuButton}>
               <MenuIcon />
             </IconButton>
-            <img width="270" src={Logo} />
+          </div>
+          <img width="270" src={Logo} />
         </div>
 
       <SwipeableDrawer
@@ -166,10 +138,10 @@ class Menu extends Component {
         onClose={this.drawerOnClose}
 
       >
-        <div className={classes.list}>
-          <div className={classes.toolbar}>
+        <div className={styles.list}>
+          <div className={styles.toolbar}>
             <IconButton onClick={this.handleDrawerClose}>
-              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+              <ChevronRightIcon />
             </IconButton>
           </div>
           <Divider />
@@ -257,5 +229,5 @@ class Menu extends Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(Menu)
+export default Menu
 

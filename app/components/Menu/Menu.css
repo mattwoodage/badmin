@@ -1,0 +1,29 @@
+@import 'reset-css';
+@import '../../styles/Variables.scss';
+
+:local(.header) {
+  background-color: $color-primary;
+  padding: 20px 20px 20px 70px;
+  position: relative;
+}
+
+:local(.menuButton) {
+  background-color: $color-primary;
+}
+
+:local(.menuButtonContainer) {
+  position: fixed;
+  margin: -10px 0px 0px -60px;
+}
+
+:local(.hide) {
+  display: none;
+}
+
+:local(.list) {
+  width: 250px;
+}
+
+:local(.toolbar) {
+  padding: 0 8px;
+}
