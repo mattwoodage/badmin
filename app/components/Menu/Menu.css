@@ -3,12 +3,43 @@
 
 :local(.header) {
   background-color: $color-primary;
-  padding: 20px 20px 20px 70px;
+  padding: 20px 20px 0px 70px;
   position: relative;
 }
 
 :local(.menuButton) {
   background-color: $color-primary;
+}
+
+
+:local(.horizList) {
+  li {
+    display:inline-block;
+    margin-top: 15px;
+    margin-right: 1px;
+
+    a {
+      display:inline-block;
+      padding: 4px 10px;
+      width:74px;
+      text-align:center;
+      text-decoration: none;
+    }
+  }
+}
+
+:local(.horizItem) {
+  color: $color-inner-background;
+  background-color: $color-outer-background /*rgba( $color-inner-background, 0.5 )*/
+}
+
+:local(.horizCurrent) {
+  color: $color-outer-background;
+  background-color: $color-inner-background
+}
+
+:local(.vertCurrent) {
+  background-color: $color-primary !important;
 }
 
 :local(.menuButtonContainer) {

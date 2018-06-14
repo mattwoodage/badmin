@@ -25,3 +25,11 @@
   box-sizing: border-box;
   background-color: $color-outer-background;
 }
+
+:global(*) {
+  box-sizing: border-box;
+}
+
+:global(a), :global(span), :global(div) {
+  font: 14px/19px Arial, sans-serif
+}

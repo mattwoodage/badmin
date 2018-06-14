@@ -85,6 +85,46 @@ const classes = theme => ({
   }
 });
 
+
+const pages = [
+  {
+    name: 'Home',
+    icon: <HomeIcon />
+  },
+  {
+    name: 'Calendar',
+    icon: <CalendarIcon />
+  },
+  {
+    name: 'Matches',
+    icon: <EventIcon />
+  },
+  {
+    name: 'Results',
+    icon: <ResultsIcon />
+  },
+  {
+    name: 'Tables',
+    icon: <TableIcon />
+  },
+  {
+    name: 'Grids',
+    icon: <GridIcon />
+  },
+  {
+    name: 'Clubs',
+    icon: <PeopleIcon />
+  },
+  {
+    name: 'Players',
+    icon: <PersonIcon />
+  },
+  {
+    name: 'Settings',
+    icon: <SettingsIcon />
+  }
+]
+
 class Menu extends Component {
 
   state = {
@@ -108,13 +148,42 @@ class Menu extends Component {
     this.setState({ open: false });
   }
 
+  path = () => {
+    const { season } = this.props;
+    return season ? season.period : '2017-18'
+  }
+
+  renderHorizontalMenu = () => {
+    return pages.map(p => {
+      return (
+        <li>
+          <NavLink className={styles.horizItem} activeClassName={styles.horizCurrent} to={`/${this.path()}/${p.name.toLowerCase()}`} >
+            {p.name.toLowerCase()}
+          </NavLink>
+        </li>
+      )
+    })
+  }
+
+  renderVerticalMenu = () => {
+    return pages.map(p => {
+      console.log(p)
+      return (
+        <ListItem component={NavLink} activeClassName={styles.vertCurrent} to={`/${this.path()}/${p.name.toLowerCase()}`} button>
+
+            <ListItemIcon>
+              {p.icon}
+            </ListItemIcon>
+            <ListItemText primary={p.name} />
+
+        </ListItem>
+      )
+    })
+  }
+
   render () {
-
-    const { classes, theme, league, season, isLoggedIn } = this.props;
-
+    const { classes, theme, league, isLoggedIn } = this.props;
     const leagueName = league ? league.name : 'League Not Found'
-    const path = season ? season.period : '2017-18'
-
     return (
       <div>
         <div className={styles.header}>
@@ -128,102 +197,29 @@ class Menu extends Component {
           </div>
           <img width="270" src={Logo} />
           { isLoggedIn ? '[LOGGED IN]' : '[x]' }
+          <ul className={styles.horizList}>
+            {this.renderHorizontalMenu()}
+          </ul>
         </div>
 
-      <SwipeableDrawer
-
-        open={this.state.open}
-        onOpen={this.drawerOnOpen}
-        onClose={this.drawerOnClose}
-
-      >
-        <div className={styles.list}>
-          <div className={styles.toolbar}>
-            <IconButton onClick={this.handleDrawerClose}>
-              <ChevronRightIcon />
-            </IconButton>
+        <SwipeableDrawer
+          open={this.state.open}
+          onOpen={this.drawerOnOpen}
+          onClose={this.drawerOnClose}
+        >
+          <div className={styles.list}>
+            <div className={styles.toolbar}>
+              <IconButton onClick={this.handleDrawerClose}>
+                <ChevronRightIcon />
+              </IconButton>
+            </div>
+            <Divider />
+            <List>
+              {this.renderVerticalMenu()}
+            </List>
           </div>
-          <Divider />
-          <List>
-            <NavLink activeClassName='current' to={`/${path}/home`} >
-              <ListItem button>
-                <ListItemIcon>
-                  <HomeIcon />
-                </ListItemIcon>
-                <ListItemText primary="Homepage" />
-              </ListItem>
-            </NavLink>
-            <NavLink activeClassName='current' to={`/${path}/calendar`} >
-              <ListItem button>
-                <ListItemIcon>
-                  <CalendarIcon />
-                </ListItemIcon>
-                <ListItemText primary="Calendar" />
-              </ListItem>
-            </NavLink>
-            <NavLink activeClassName='current' to={`/${path}/matches`} >
-              <ListItem button>
-                <ListItemIcon>
-                  <EventIcon />
-                </ListItemIcon>
-                <ListItemText primary="Matches" />
-              </ListItem> 
-            </NavLink>
-            <NavLink activeClassName='current' to={`/${path}/results`} >
-              <ListItem button>
-                <ListItemIcon>
-                  <ResultsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Results" />
-              </ListItem> 
-            </NavLink>
-            <NavLink activeClassName='current' to={`/${path}/tables`} >
-              <ListItem button>
-                <ListItemIcon>
-                  <TableIcon />
-                </ListItemIcon>
-                <ListItemText primary="Tables" />
-              </ListItem> 
-            </NavLink>
-            <NavLink activeClassName='current' to={`/${path}/grids`} >
-              <ListItem button>
-                <ListItemIcon>
-                  <GridIcon />
-                </ListItemIcon>
-                <ListItemText primary="Grids" />
-              </ListItem> 
-            </NavLink>
-            <NavLink activeClassName='current' to={`/${path}/clubs`} >
-              <ListItem button>
-                <ListItemIcon>
-                  <PeopleIcon />
-                </ListItemIcon>
-                <ListItemText primary="Clubs" />
-              </ListItem> 
-            </NavLink>
-            <NavLink activeClassName='current' to={`/${path}/players`} >
-              <ListItem button>
-                <ListItemIcon>
-                  <PersonIcon />
-                </ListItemIcon>
-                <ListItemText primary="Players" />
-              </ListItem> 
-            </NavLink>
-
-          </List>
-          <Divider />
-          <ListItem button>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-          </ListItem>
-        </div>
-      </SwipeableDrawer>
-    </div>
-
-
-
+        </SwipeableDrawer>
+      </div>
     )
   }
 }
