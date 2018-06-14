@@ -4,6 +4,10 @@ import Root from '../../Root'
 import { LeagueContext } from '../../Root'
 import Typography from '@material-ui/core/Typography';
 
+import Login from '../../Login'
+import Register from '../../Register'
+
+
 class Page extends Component {
 
   render () {
@@ -15,6 +19,12 @@ class Page extends Component {
         <ul>
           <li>{this.props.league ? this.props.league.name : 'x'}</li>
         </ul>
+
+        <h1>Login</h1>
+        <Login />
+        <hr />
+        <h1>Register</h1>
+        <Register />
       </div>
     )
   }
