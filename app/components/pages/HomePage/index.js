@@ -10,7 +10,28 @@ import Register from '../../Register'
 
 class Page extends Component {
 
+  renderLogIn () {
+    const { isLoggedIn, username, logout } = this.props;
+    if (!isLoggedIn) {
+      return (
+        <div>
+          <h1>Login</h1>
+          <Login />
+        </div>
+      ) 
+    } else {
+      return (
+        <div>
+          <h1>Logged in as {username}</h1>
+          <button onClick={logout}>Log Out</button>
+        </div>
+      )
+    }
+      
+  }
+
   render () {
+  
     console.log('render page......')
     return (
       <div>
@@ -19,9 +40,7 @@ class Page extends Component {
         <ul>
           <li>{this.props.league ? this.props.league.name : 'x'}</li>
         </ul>
-
-        <h1>Login</h1>
-        <Login />
+        {this.renderLogIn()}
         <hr />
         <h1>Register</h1>
         <Register />

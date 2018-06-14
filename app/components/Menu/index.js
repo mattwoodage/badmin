@@ -110,9 +110,7 @@ class Menu extends Component {
 
   render () {
 
-    const { classes, theme, league, season } = this.props;
-
-    console.log('SEASON = ', season)
+    const { classes, theme, league, season, isLoggedIn } = this.props;
 
     const leagueName = league ? league.name : 'League Not Found'
     const path = season ? season.period : '2017-18'
@@ -129,6 +127,7 @@ class Menu extends Component {
             </IconButton>
           </div>
           <img width="270" src={Logo} />
+          { isLoggedIn ? '[LOGGED IN]' : '[x]' }
         </div>
 
       <SwipeableDrawer

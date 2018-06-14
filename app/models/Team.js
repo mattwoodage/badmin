@@ -11,6 +11,4 @@ var teamSchema = mongoose.Schema({
   division: Object
 })
 
-var Team = mongoose.model('Team', teamSchema)
-
-module.exports = Team
+module.exports = mongoose.model('Team', teamSchema)

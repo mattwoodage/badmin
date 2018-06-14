@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
-import './Login.scss';
+import styles from './Login.scss';
+import { LeagueContext } from '../Root'
 
-class Login extends Component {
+class LoginWithContext extends Component {
 
   constructor() {
     super();
@@ -22,27 +22,16 @@ class Login extends Component {
 
   onSubmit = (e) => {
     e.preventDefault();
-
+    const { login } = this.props
     const { username, password } = this.state;
-
-    axios.post('/api/auth/login', { username, password })
-      .then((result) => {
-        localStorage.setItem('jwtToken', result.data.token);
-        this.setState({ message: '' });
-        this.props.history.push('/')
-      })
-      .catch((error) => {
-        if(error.response.status === 401) {
-          this.setState({ message: 'Login failed. Username or password not match' });
-        }
-      });
+    login(username, password)
   }
 
   render() {
     const { username, password, message } = this.state;
     return (
-      <div class="container">
-        <form class="form-signin" onSubmit={this.onSubmit}>
+      <div className={styles.container}>
+        <form className="form-signin" onSubmit={this.onSubmit}>
           {message !== '' &&
             <div class="alert alert-warning alert-dismissible" role="alert">
               { message }
@@ -60,6 +49,16 @@ class Login extends Component {
         </form>
       </div>
     );
+  }
+}
+
+class Login extends Component {
+  render () {
+    return (
+      <LeagueContext.Consumer>
+        {props => <LoginWithContext {...this.props} {...props} />}
+      </LeagueContext.Consumer>
+    )
   }
 }
 

@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import Menu from '../Menu'
 import Footer from '../Footer'
 import DB from '../../helpers/DB'
-
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import axios from 'axios'
+import Grid from '@material-ui/core/Grid'
+import Paper from '@material-ui/core/Paper'
 
 import styles from './Root.css'
 
@@ -17,7 +17,10 @@ const drawerWidth = 240;
 class Root extends Component {
   constructor () {
     super()
-    this.state = {}
+    this.state = {
+      isLoggedIn: false,
+      username: ''
+    }
   }
 
   componentDidMount () {
@@ -25,6 +28,7 @@ class Root extends Component {
     const leagueShort = host.split('.')[0].toUpperCase()
     const seasonPeriod = document.location.pathname.split('/')[1]
     this.initialise(leagueShort, seasonPeriod)
+    this.checkLogin()
   }
 
   initialise (leagueShort, seasonPeriod) {
@@ -38,11 +42,62 @@ class Root extends Component {
       })
   }
 
-  render () {
+  checkLogin = () => {
+    console.log('check login...')
+    const token = localStorage.getItem('jwtToken')
+    const username = localStorage.getItem('username')
+    console.log(token, username)
+    if (token && username) {
+      this.doLogIn(username)
+    }
+  }
 
+  doLogIn = (username) => {
+    console.log('do log in')
+    this.setState({
+      username: username,
+      isLoggedIn: true
+    })
+    console.log(this.state)
+  }
+
+  doLogOut = () => {
+    this.setState({
+      isLoggedIn: false
+    })
+  }
+
+  render () {
     const context = {
       league: this.state.league,
-      season: this.state.season
+      season: this.state.season,
+      login: (username, password) => {
+        axios.post('/api/auth/login', { username, password })
+          .then((result) => {
+            console.log('a')
+            localStorage.setItem('jwtToken', result.data.token);
+            console.log('b')
+            localStorage.setItem('username', username);
+            console.log('c')
+            axios.defaults.headers.common['Authorization'] = result.data.token;
+            console.log('d')
+            this.doLogIn(username)
+            console.log('e')
+          })
+          .catch((error) => {
+            if(error.response.status === 401) {
+              this.doLogOut()
+            }
+          });
+      },
+      logout: () => {
+        console.log('xxxxx')
+        localStorage.removeItem('jwtToken');
+        this.doLogOut()
+      },
+      isLoggedIn: this.state.isLoggedIn,
+      username: this.state.username,
+      user: {}
     }
 
     return (
@@ -50,7 +105,7 @@ class Root extends Component {
         <div className={styles.outer}>
           <div className={styles.inner}>
             
-            <Menu league={this.state.league} season={this.state.season} />
+            <Menu isLoggedIn={this.state.isLoggedIn} league={this.state.league} season={this.state.season} />
             
             <div className={styles.content}>
               {this.props.children}

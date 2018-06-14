@@ -50,6 +50,8 @@ app.use(express.static(__dirname + '/public')); // set the static files location
 global.log = require('./app/lib/logger');
 global.appRoot = path.resolve(__dirname);
 
+app.use(express.json())
+
 global.kraken = app.kraken;
 app.use(kraken(options));
 app.on('start', function () {
@@ -107,7 +109,10 @@ router.post('/api/auth/login', function(req, res) {
   });
 });
 
-router.post('/api/auth/register', function(req, res) {
+router.post('/api/auth/register', (req, res) => {
+
+  console.log('req', req)
+
   if (!req.body.username || !req.body.password) {
     res.json({success: false, msg: 'Please pass username and password.'});
   } else {
