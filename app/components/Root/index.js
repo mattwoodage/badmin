@@ -5,7 +5,7 @@ import DB from '../../helpers/DB'
 import axios from 'axios'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
-
+import {Helmet} from "react-helmet";
 import styles from './Root.css'
 
 export const LeagueContext = React.createContext()
@@ -19,7 +19,10 @@ class Root extends Component {
     super()
     this.state = {
       isLoggedIn: false,
-      username: ''
+      nickname: '',
+      loginError: {},
+      loginLoading: false,
+      registerLoading: false
     }
   }
 
@@ -45,25 +48,35 @@ class Root extends Component {
   checkLogin = () => {
     console.log('check login...')
     const token = localStorage.getItem('jwtToken')
-    const username = localStorage.getItem('username')
-    console.log(token, username)
-    if (token && username) {
-      this.doLogIn(username)
+    const nickname = localStorage.getItem('nickname')
+    console.log(token, nickname)
+    if (token && nickname) {
+      this.doLogIn(nickname)
     }
   }
 
-  doLogIn = (username) => {
+  doLogIn = (nickname) => {
     console.log('do log in')
     this.setState({
-      username: username,
-      isLoggedIn: true
+      nickname: nickname,
+      isLoggedIn: true,
+      loginLoading: false
     })
-    console.log(this.state)
   }
 
   doLogOut = () => {
+    localStorage.removeItem('jwtToken');    
     this.setState({
-      isLoggedIn: false
+      isLoggedIn: false,
+      loginError: {}
+    })
+  }
+
+  doRegister = (email) => {
+    console.log('do register')
+    this.setState({
+      email: email,
+      registerLoading: false
     })
   }
 
@@ -71,41 +84,69 @@ class Root extends Component {
     const context = {
       league: this.state.league,
       season: this.state.season,
-      login: (username, password) => {
-        axios.post('/api/auth/login', { username, password })
+      login: (email, password) => {
+        this.setState({
+          loginLoading: true
+        })
+        axios.post('/api/auth/login', { email, password })
           .then((result) => {
-            console.log('a')
+            const nickname = result.data.nickname
             localStorage.setItem('jwtToken', result.data.token);
-            console.log('b')
-            localStorage.setItem('username', username);
-            console.log('c')
+            localStorage.setItem('nickname', nickname);
             axios.defaults.headers.common['Authorization'] = result.data.token;
-            console.log('d')
-            this.doLogIn(username)
-            console.log('e')
+            this.doLogIn(nickname)
           })
           .catch((error) => {
+            console.log('error = ', error.response)
             if(error.response.status === 401) {
-              this.doLogOut()
+              this.setState({
+                loginError: error.response.data,
+                loginLoading: false
+              })
             }
+
           });
       },
-      logout: () => {
-        console.log('xxxxx')
-        localStorage.removeItem('jwtToken');
-        this.doLogOut()
+      register: (nickname, email, password) => {
+        this.setState({
+          registerLoading: true
+        })
+        axios.post('/api/auth/register', { nickname, email, password })
+          .then((result) => {
+            this.doRegister(email)
+          })
+          .catch((error) => {
+            console.log('error = ', error.response)
+            if(error.response.status === 401) {
+              this.setState({
+                registerError: error.response.data,
+                registerLoading: false
+              })
+            }
+
+          });
       },
       isLoggedIn: this.state.isLoggedIn,
-      username: this.state.username,
+      nickname: this.state.nickname,
+      loginError: this.state.loginError,
+      loginLoading: this.state.loginLoading,
+      registerError: this.state.registerError,
+      registerLoading: this.state.registerLoading,
       user: {}
     }
 
     return (
       <LeagueContext.Provider value={context}>
+        {
+          this.state.league && 
+          <Helmet>
+            <title>{this.state.league.name}</title>
+          </Helmet>
+        }
         <div className={styles.outer}>
           <div className={styles.inner}>
             
-            <Menu isLoggedIn={this.state.isLoggedIn} league={this.state.league} season={this.state.season} />
+            <Menu isLoggedIn={this.state.isLoggedIn} doLogOut={this.doLogOut} nickname={this.state.nickname} league={this.state.league} season={this.state.season} />
             
             <div className={styles.content}>
               {this.props.children}

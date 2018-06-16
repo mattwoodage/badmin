@@ -87,12 +87,12 @@ router.get('/api/league/import/:short', (req, res, next) => {
 
 router.post('/api/auth/login', function(req, res) {
   User.findOne({
-    username: req.body.username
+    email: req.body.email
   }, function(err, user) {
     if (err) throw err;
 
     if (!user) {
-      res.status(401).send({success: false, msg: 'Authentication failed. User not found.'});
+      res.status(401).send({success: false, field: 'email', msg: 'Email not found'});
     } else {
       // check if password matches
       user.comparePassword(req.body.password, function (err, isMatch) {
@@ -100,9 +100,9 @@ router.post('/api/auth/login', function(req, res) {
           // if user is found and password is right create a token
           var token = jwt.sign(user.toJSON(), settings.secret);
           // return the information including token as JSON
-          res.json({success: true, token: 'JWT ' + token});
+          res.json({success: true, nickname: user.nickname, token: 'JWT ' + token});
         } else {
-          res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
+          res.status(401).send({success: false, field: 'password', msg: 'Wrong password'});
         }
       });
     }
@@ -111,19 +111,23 @@ router.post('/api/auth/login', function(req, res) {
 
 router.post('/api/auth/register', (req, res) => {
 
-  console.log('req', req)
-
-  if (!req.body.username || !req.body.password) {
-    res.json({success: false, msg: 'Please pass username and password.'});
+  if (!req.body.nickname) {
+    res.status(401).send({success: false, field: 'nickname', msg: 'Please enter a nickname'});
+  } else if (!req.body.email) {
+    res.status(401).send({success: false, field: 'email', msg: 'Please enter a valid email address'});
+  } else if (!req.body.password || req.body.password.length < 6) {
+    res.status(401).send({success: false, field: 'password', msg: 'Please enter a password (6 chars or more)'});
   } else {
     var newUser = new User({
-      username: req.body.username,
-      password: req.body.password
+      email: req.body.email,
+      password: req.body.password,
+      nickname: req.body.nickname
     });
     // save the user
     newUser.save(function(err) {
       if (err) {
-        return res.json({success: false, msg: 'Username already exists.'});
+        console.log(err)
+        return res.status(401).send({success: false, field: 'email', msg: 'Sorry this email already exists.'});
       }
       res.json({success: true, msg: 'Successful created new user.'});
     });

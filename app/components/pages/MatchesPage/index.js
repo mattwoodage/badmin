@@ -4,6 +4,7 @@ import Day from '../../Day'
 import ReactMoment from 'react-moment'
 import Moment from 'moment'
 import { extendMoment } from 'moment-range';
+import Panel from '../../Panel'
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -116,14 +117,14 @@ class Page extends Component {
 
     this.initialise()
     return (
-      <div>
+      <Panel>
 
         <Typography variant="display3" gutterBottom>{this.props.layout === 'CALENDAR' ? 'CALENDAR' : 'MATCHES'}</Typography>
 
         <Grid container spacing={8}>
         {this.props.layout === 'CALENDAR' ? this.renderCalendar() : this.renderList()}
         </Grid>
-      </div>
+      </Panel>
     )
   }
 }

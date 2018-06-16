@@ -1,5 +1,5 @@
 @import 'reset-css';
-@import '../../styles/Variables.scss';
+@import '../../styles/global.scss';
 
 :local(.outer) {
   width:100%;
@@ -11,7 +11,7 @@
 }
 
 :local(.content) {
-  padding: 40px 70px;
+  padding: 0px;
   min-height: 100vh;
   background-color: $color-inner-background;
 }
@@ -31,5 +31,5 @@
 }
 
 :global(a), :global(span), :global(div) {
-  font: 14px/19px Arial, sans-serif
+  font: 14px/19px Arial, sans-serif !important
 }

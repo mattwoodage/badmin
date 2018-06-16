@@ -4,6 +4,7 @@ import Player from '../../Player'
 import ReactMoment from 'react-moment'
 import Moment from 'moment'
 import { extendMoment } from 'moment-range';
+import Panel from '../../Panel'
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -61,12 +62,12 @@ class Page extends Component {
     const { classes } = this.props;
     this.initialise()
     return (
-      <div>
+      <Panel>
         <Typography variant="display3" gutterBottom>PLAYERS</Typography>
         <Grid container spacing={8}>
         {this.renderList()}
         </Grid>
-      </div>
+      </Panel>
     )
   }
 }

@@ -2,14 +2,19 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import '../Login/Login.scss';
+import { LeagueContext } from '../Root'
+import styles from '../Login/Login.scss';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-class Create extends Component {
+class RegisterWithContext extends Component {
 
   constructor() {
     super();
     this.state = {
-      username: '',
+      nickname: '',
+      email: '',
       password: ''
     };
   }
@@ -21,30 +26,71 @@ class Create extends Component {
 
   onSubmit = (e) => {
     e.preventDefault();
-
-    const { username, password } = this.state;
-
-    axios.post('/api/auth/register', { username, password })
-      .then((result) => {
-        this.props.history.push("/login")
-      });
+    const { register } = this.props
+    const { nickname, email, password } = this.state;
+    register(nickname, email, password)
   }
 
   render() {
-    const { username, password } = this.state;
+    const { nickname, email, password } = this.state;
+    const { registerError, registerLoading } = this.props;
+
     return (
-      <div class="container">
-        <form class="form-signin" onSubmit={this.onSubmit}>
-          <h2 class="form-signin-heading">Register</h2>
-          <label for="inputEmail" class="sr-only">Email address</label>
-          <input type="email" class="form-control" placeholder="Email address" name="username" value={username} onChange={this.onChange} required/>
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" class="form-control" placeholder="Password" name="password" value={password} onChange={this.onChange} required/>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+      <div>
+        <form onSubmit={this.onSubmit}>
+
+          <TextField
+            error={ registerError && registerError.field === 'nickname'}
+            name="nickname"
+            label="nickname"
+            className={styles.textField}
+            value={nickname}
+            onChange={this.onChange}
+            margin="normal"
+            helperText={ registerError && registerError.field === 'nickname' ? registerError.msg : '' }
+            required
+          />
+
+          <TextField
+            error={ registerError && registerError.field === 'email'}
+            name="email"
+            label="email"
+            className={styles.textField}
+            value={email}
+            onChange={this.onChange}
+            margin="normal"
+            helperText={ registerError && registerError.field === 'email' ? registerError.msg : '' }
+            required
+          />
+
+          <TextField
+            error={ registerError && registerError.field === 'password'}
+            name="password"
+            label="password"
+            className={styles.textField}
+            value={password}
+            onChange={this.onChange}
+            margin="normal"
+            helperText={ registerError && registerError.field === 'password' ? registerError.msg : '' }
+            required
+          />
+
+          <Button disabled={ registerLoading } type="submit" variant="contained" color="primary">Register</Button>
+          { registerLoading && <CircularProgress className={styles.loader} /> }
         </form>
       </div>
     );
   }
 }
 
-export default Create;
+class Register extends Component {
+  render () {
+    return (
+      <LeagueContext.Consumer>
+        {props => <RegisterWithContext {...this.props} {...props} />}
+      </LeagueContext.Consumer>
+    )
+  }
+}
+
+export default Register;

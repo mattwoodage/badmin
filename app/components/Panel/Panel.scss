@@ -1,0 +1,17 @@
+@import 'reset-css';
+@import '../../styles/global.scss';
+
+:local(.default) {
+  padding: 40px 70px;
+  background-color: $color-inner-background;
+}
+
+:local(.high) {
+  padding: 40px 70px;
+  background-color: $color-high-background;
+}
+
+:local(.low) {
+  padding: 40px 70px;
+  background-color: $color-low-background;
+}

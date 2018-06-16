@@ -6,6 +6,8 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 
 import classNames from 'classnames';
 
+import CurrentUser from '../CurrentUser'
+
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 
@@ -35,6 +37,7 @@ import TableIcon from '@material-ui/icons/ViewList';
 import GridIcon from '@material-ui/icons/ViewModule';
 import ResultsIcon from '@material-ui/icons/VerifiedUser';
 import SettingsIcon from '@material-ui/icons/Settings';
+import LockIcon from '@material-ui/icons/Lock';
 
 import PersonIcon from '@material-ui/icons/Person';
 import PeopleIcon from '@material-ui/icons/People';
@@ -122,6 +125,10 @@ const pages = [
   {
     name: 'Settings',
     icon: <SettingsIcon />
+  },
+  {
+    name: 'Login',
+    icon: <LockIcon />
   }
 ]
 
@@ -167,7 +174,6 @@ class Menu extends Component {
 
   renderVerticalMenu = () => {
     return pages.map(p => {
-      console.log(p)
       return (
         <ListItem component={NavLink} activeClassName={styles.vertCurrent} to={`/${this.path()}/${p.name.toLowerCase()}`} button>
 
@@ -182,7 +188,7 @@ class Menu extends Component {
   }
 
   render () {
-    const { classes, theme, league, isLoggedIn } = this.props;
+    const { classes, theme, league, isLoggedIn, nickname, doLogOut } = this.props;
     const leagueName = league ? league.name : 'League Not Found'
     return (
       <div>
@@ -196,7 +202,9 @@ class Menu extends Component {
             </IconButton>
           </div>
           <img width="270" src={Logo} />
-          { isLoggedIn ? '[LOGGED IN]' : '[x]' }
+          <div className={styles.currentUser} >
+            <CurrentUser doLogOut={doLogOut} isLoggedIn={isLoggedIn} nickname={nickname} />
+          </div>
           <ul className={styles.horizList}>
             {this.renderHorizontalMenu()}
           </ul>

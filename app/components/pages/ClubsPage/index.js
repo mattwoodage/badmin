@@ -8,6 +8,7 @@ import { extendMoment } from 'moment-range';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
+import Panel from '../../Panel'
 
 import Typography from '@material-ui/core/Typography';
 
@@ -61,12 +62,12 @@ class Page extends Component {
     const { classes } = this.props;
     this.initialise()
     return (
-      <div>
+      <Panel>
         <Typography variant="display3" gutterBottom>CLUBS</Typography>
         <Grid container spacing={8}>
         {this.renderList()}
         </Grid>
-      </div>
+      </Panel>
     )
   }
 }

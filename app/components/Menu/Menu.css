@@ -1,5 +1,5 @@
 @import 'reset-css';
-@import '../../styles/Variables.scss';
+@import '../../styles/global.scss';
 
 :local(.header) {
   background-color: $color-primary;
@@ -11,6 +11,12 @@
   background-color: $color-primary;
 }
 
+:local(.currentUser) {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
 
 :local(.horizList) {
   li {
@@ -19,6 +25,7 @@
     margin-right: 1px;
 
     a {
+      font-family: 'OpenSansLight';
       display:inline-block;
       padding: 4px 10px;
       width:74px;
