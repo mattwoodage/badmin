@@ -6,23 +6,17 @@ import Moment from 'moment'
 import { extendMoment } from 'moment-range';
 import Panel from '../../Panel'
 
+import styles from './Matches.scss'
+
+
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 
 import Typography from '@material-ui/core/Typography';
 
-import { withStyles } from '@material-ui/core/styles';
 import { LeagueContext } from '../../Root'
 import DB from '../../../helpers/DB'
-
-const styles = theme => ({
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary
-  }
-});
 
 class Page extends Component {
 
@@ -40,6 +34,7 @@ class Page extends Component {
           matches: response.matches,
           loaded: true
         })
+        this.props.stopLoad()
       })
   }
 
@@ -48,7 +43,7 @@ class Page extends Component {
     return (
       <Grid item xs={12}>
         <div>
-          <Typography variant="title">
+          <Typography variant="display1">
             {date.format("MMMM YYYY")}
           </Typography>
         </div>
@@ -81,7 +76,7 @@ class Page extends Component {
         lastMonth = thisMonth
       }
       
-      calendar.push(<Day key={date} date={date} matches={this.matchesOnDay(date)} />)
+      calendar.push(<Day dayOfWeek={dayOfWeek} key={date} date={date} matches={this.matchesOnDay(date)} />)
     })
 
     return calendar
@@ -112,16 +107,16 @@ class Page extends Component {
   }
 
   render () {
+    this.initialise()
 
     const { classes } = this.props;
 
-    this.initialise()
     return (
       <Panel>
 
         <Typography variant="display3" gutterBottom>{this.props.layout === 'CALENDAR' ? 'CALENDAR' : 'MATCHES'}</Typography>
 
-        <Grid container spacing={8}>
+        <Grid className={styles.calendar} container spacing={8}>
         {this.props.layout === 'CALENDAR' ? this.renderCalendar() : this.renderList()}
         </Grid>
       </Panel>
@@ -139,5 +134,5 @@ class MatchesPage extends Component {
   }
 }
 
-export default withStyles()(MatchesPage)
+export default MatchesPage
 

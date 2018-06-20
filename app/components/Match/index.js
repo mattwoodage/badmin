@@ -14,27 +14,11 @@ import pink from '@material-ui/core/colors/pink';
 
 import FolderIcon from '@material-ui/icons/Folder';
 
+import matchStyles from './Match.scss';
+
 Moment.globalFormat = 'D MMM YYYY HH:mm'
 
 const styles = {
-  avatar: {
-    margin: 10,
-  },
-  mensAvatar: {
-    margin: 0,
-    color: '#fff',
-    backgroundColor: lightBlue[200],
-  },
-  mixedAvatar: {
-    margin: 0,
-    color: '#fff',
-    backgroundColor: lightGreen[300],
-  },
-  ladiesAvatar: {
-    margin: 0,
-    color: '#fff',
-    backgroundColor: pink[200],
-  },
   row: {
     display: 'flex',
     justifyContent: 'center',
@@ -56,34 +40,35 @@ class Match extends Component {
       startAt.pop()
     }
     return (
-      <div>
-        <b>{match.venue.name}: </b> 
-        {startAt.join(' ')}
+      <div className={matchStyles.time}>
+        {startAt.join(':')}
       </div>
     )
   }
 
-  renderIcon () {
-    const { match, classes } = this.props
-    let cls = classes.ladiesAvatar
-    if (match.division.labelLocal.toUpperCase().indexOf('MIXED')>-1) cls = classes.mixedAvatar
-    if (match.division.labelLocal.toUpperCase().indexOf('MENS')>-1) cls = classes.mensAvatar
-    return (
-      <Avatar className={cls}>
-        {match.division.position}
-      </Avatar>
-    ) 
-  }
-
   render () {
-    const { match } = this.props
+
+    const { match, classes } = this.props
+    let cls = matchStyles.ladiesMatch
+    if (match.division.labelLocal.toUpperCase().indexOf('MIXED')>-1) cls = matchStyles.mixedMatch
+    if (match.division.labelLocal.toUpperCase().indexOf('MENS')>-1) cls = matchStyles.mensMatch
+
     return (
-      <ListItem>
-        {this.renderIcon()}
-        <ListItemText secondary={this.startTime()} >
+      <div className={cls}>
+        <div>
+          <div className={matchStyles.div}>
+            {match.division.labelLocal}
+          </div>
+          {this.startTime()}
+        </div>
+
+        <div className={matchStyles.content} >
           <b>{match.label}</b>
-        </ListItemText>
-      </ListItem>
+          
+        </div>
+        <div className={matchStyles.venue} >{match.venue.name}</div>
+        
+      </div>
     )
   }
 }

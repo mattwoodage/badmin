@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Menu from '../Menu'
 import Footer from '../Footer'
+
 import DB from '../../helpers/DB'
 import axios from 'axios'
 import Grid from '@material-ui/core/Grid'
@@ -21,6 +22,7 @@ class Root extends Component {
       isLoggedIn: false,
       nickname: '',
       loginError: {},
+      loading: true,
       loginLoading: false,
       registerLoading: false
     }
@@ -38,6 +40,7 @@ class Root extends Component {
     if (seasonPeriod.length === 0) seasonPeriod='x'
     DB.get(`/api/${seasonPeriod}/seasons`)
       .then(response => {
+        console.log('-league loaded-')
         this.setState({
           league: response.league,
           season: response.season
@@ -84,6 +87,18 @@ class Root extends Component {
     const context = {
       league: this.state.league,
       season: this.state.season,
+      startLoad: () => {
+        console.log('-- start load --')
+        this.setState({
+          loading: true
+        })
+      },
+      stopLoad: () => {
+        console.log('-- stop load --')
+        this.setState({
+          loading: false
+        })
+      },
       login: (email, password) => {
         this.setState({
           loginLoading: true
@@ -129,6 +144,7 @@ class Root extends Component {
       isLoggedIn: this.state.isLoggedIn,
       nickname: this.state.nickname,
       loginError: this.state.loginError,
+      loading: this.state.loading,
       loginLoading: this.state.loginLoading,
       registerError: this.state.registerError,
       registerLoading: this.state.registerLoading,
@@ -146,7 +162,7 @@ class Root extends Component {
         <div className={styles.outer}>
           <div className={styles.inner}>
             
-            <Menu isLoggedIn={this.state.isLoggedIn} doLogOut={this.doLogOut} nickname={this.state.nickname} league={this.state.league} season={this.state.season} />
+            <Menu loading={this.state.loading} isLoggedIn={this.state.isLoggedIn} doLogOut={this.doLogOut} nickname={this.state.nickname} league={this.state.league} season={this.state.season} />
             
             <div className={styles.content}>
               {this.props.children}

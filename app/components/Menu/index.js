@@ -11,6 +11,8 @@ import CurrentUser from '../CurrentUser'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 
+import Loader from '../Loader'
+
 import yellow from '@material-ui/core/colors/yellow';
 import grey from '@material-ui/core/colors/grey';
 
@@ -208,7 +210,11 @@ class Menu extends Component {
           <ul className={styles.horizList}>
             {this.renderHorizontalMenu()}
           </ul>
+
+          <Loader loading={this.props.loading} />
         </div>
+
+        
 
         <SwipeableDrawer
           open={this.state.open}
