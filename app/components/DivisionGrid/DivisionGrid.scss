@@ -1,9 +1,20 @@
+@import 'reset-css';
+@import '../../styles/global.scss';
+
+@mixin _table {
+  border: none;
+  td,th {
+    background: $color-high-background;
+  }
+}
+
+
 th, td {
   padding:4px 12px 4px 12px !important;
-  border-right: 1px solid #ddd !important;
   width:10%;
   text-align: center !important;
 }
+
 
 .team {
   text-align: right !important;
@@ -12,3 +23,43 @@ th, td {
 .block {
   background: linear-gradient(to top left, #fff calc(50% - 1px), #aaa, #fff calc(50% + 1px) )
 }
+
+:local(.time) {
+  display: block;
+  font-size: 11px;
+}
+
+:local(.tableMixed) {
+  @include _table;
+  td,th {
+    border: 1px solid $color-mixed-background;
+  }
+}
+
+:local(.tableMens) {
+  @include _table;
+  td,th {
+    border: 1px solid $color-mens-background;
+  }
+}
+
+:local(.tableLadies) {
+  @include _table;
+  td,th {
+    border: 1px solid $color-ladies-background;
+  }
+}
+
+:local(.cellMixed) {
+  background: $color-mixed-background !important;
+}
+
+:local(.cellMens) {
+  background: $color-mens-background !important;
+
+}
+
+:local(.cellLadies) {
+  background: $color-ladies-background !important;
+}
+

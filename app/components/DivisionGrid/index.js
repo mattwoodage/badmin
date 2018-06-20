@@ -21,27 +21,16 @@ import pink from '@material-ui/core/colors/pink';
 
 
 const styles = theme => ({
-  paper: {
-    padding: 0,
-    color: theme.palette.text.secondary
-  },
-  row: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  },
-  ladies: {
-    color: '#ffffff',
-    backgroundColor: pink[200]
-  },
-  mens: {
-    color: '#ffffff',
-    backgroundColor: lightBlue[200]
-  },
-  mixed: {
-    color: '#ffffff',
-    backgroundColor: lightGreen[300]
-  }
+  // paper: {
+  //   padding: 0,
+  //   color: theme.palette.text.secondary
+  // },
+  // row: {
+  //   '&:nth-of-type(odd)': {
+  //     backgroundColor: theme.palette.background.default,
+  //   },
+  // },
+  
 });
 
 class DivisionGrid extends Component {
@@ -49,26 +38,31 @@ class DivisionGrid extends Component {
   renderTeams () {
     const { classes, division } = this.props;
 
-    const divClass = division.labelLocal.split(' ')[0].toLowerCase()
-    console.log('////', divClass)
+    const divClass = division.labelLocal.split(' ')[0]
+
+    console.log(divClass)
+
+    const tableClass = overrides['table' + divClass]
+    const cellClass = overrides['cell' + divClass]
+
     return (
-      <Table className={classes.table}>
+      <Table className={tableClass}>
         <TableHead>
-          <TableRow className={classes[divClass]}>
-            <TableCell >
-              <Typography className={classes[divClass]} variant="title">{division.labelLocal}</Typography>
+          <TableRow>
+            <TableCell  className={cellClass}>
+              <Typography variant="title">{division.labelLocal}</Typography>
             </TableCell>
-            <TableCell colspan={division.teams.length} >
+            <TableCell  className={cellClass} colspan={division.teams.length} >
               <Typography className={classes[divClass]}>AWAY TEAM</Typography>
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow>
-            <TableCell className={classes[divClass]}>HOME TEAM</TableCell>
+          <TableRow >
+            <TableCell className={cellClass}>HOME TEAM</TableCell>
             {
               division.teams.map(team => {
-                return (<TableCell key={team._id}>{team.labelLocal}</TableCell>)
+                return (<TableCell className={cellClass} key={team._id}>{team.labelLocal}</TableCell>)
               })
             }
           </TableRow>
@@ -76,12 +70,12 @@ class DivisionGrid extends Component {
             division.teams.map((homeTeam, h) => {
               return (
                 <TableRow className={classes.row}>
-                  <TableCell className={overrides.team} key={homeTeam._id}>{homeTeam.labelLocal}</TableCell>
+                  <TableCell className={cellClass} key={homeTeam._id}>{homeTeam.labelLocal}</TableCell>
                   {
                     division.teams.map((awayTeam, a) => {
-                      const cls = (h === a) ? {className: classes[divClass]} : {}
+                      const cls = (h === a) ? {className: cellClass} : {}
                       const match = this.getMatch(homeTeam, awayTeam)
-                      console.log("::::", match)
+        
                       return (
                         <TableCell {...cls} key={awayTeam._id}>
                         {match ? this.displayMatch(match) : ''}
@@ -109,7 +103,12 @@ class DivisionGrid extends Component {
   }
 
   displayMatch (match) {
-    return <Moment format="Do MMM">{match.startAt}</Moment>
+    return (
+      <span>
+        <Moment format="Do MMM">{match.startAt}</Moment>
+        <Moment className={overrides.time} format="HH:mm">{match.startAt}</Moment>
+      </span>
+    )
   }
 
   render () {
@@ -117,10 +116,10 @@ class DivisionGrid extends Component {
 
     return (
       <div>
-        <Paper className={classes.paper}>
+        <div>
           
           { this.renderTeams() }
-        </Paper>
+        </div>
         <br /><br />
       </div>
     )

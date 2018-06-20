@@ -21,7 +21,8 @@ import DB from '../../../helpers/DB'
 class Page extends Component {
 
   state = {
-    loaded: false
+    loaded: false,
+    calendar: ''
   }
 
   initialise () {
@@ -35,7 +36,10 @@ class Page extends Component {
           loaded: true
         })
         this.props.stopLoad()
+        this.buildCalendar()
       })
+
+      
   }
 
   renderMonth (date) {
@@ -51,7 +55,7 @@ class Page extends Component {
     )
   }
 
-  renderCalendar () {
+  buildCalendar () {
 
     if (!this.props.season) return
 
@@ -75,11 +79,12 @@ class Page extends Component {
         calendar.push(this.renderMonth(date))
         lastMonth = thisMonth
       }
-      
       calendar.push(<Day dayOfWeek={dayOfWeek} key={date} date={date} matches={this.matchesOnDay(date)} />)
     })
 
-    return calendar
+    this.setState({
+      calendar: calendar
+    })
   }
 
   matchesOnDay (day) {
@@ -117,7 +122,7 @@ class Page extends Component {
         <Typography variant="display3" gutterBottom>{this.props.layout === 'CALENDAR' ? 'CALENDAR' : 'MATCHES'}</Typography>
 
         <Grid className={styles.calendar} container spacing={8}>
-        {this.props.layout === 'CALENDAR' ? this.renderCalendar() : this.renderList()}
+        {this.props.layout === 'CALENDAR' ? this.state.calendar : this.renderList()}
         </Grid>
       </Panel>
     )

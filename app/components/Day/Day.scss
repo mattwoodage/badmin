@@ -1,4 +1,4 @@
-@media (min-width: 850px) {
+@media (min-width: 900px) {
   :local(.day) {
       max-width: 14.285% !important;
       flex-basis: 14.285% !important;
@@ -10,6 +10,10 @@
   border:1px solid #f4f4f4;
   margin:0 -1 -1 0;
   display: inline;
+
+  h2 {
+    font-size:13px;
+  }
 }
 
 :local(.day0) {
