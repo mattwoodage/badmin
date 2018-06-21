@@ -13,6 +13,7 @@ import PlayersPage from '../app/components/pages/PlayersPage'
 import TablesPage from '../app/components/pages/TablesPage'
 import GridsPage from '../app/components/pages/GridsPage'
 import LoginPage from '../app/components/pages/LoginPage'
+import MatchPage from '../app/components/pages/MatchPage'
 
 
 
@@ -29,6 +30,7 @@ render((
       <Route path='/:season/clubs' component={ClubsPage} />
       <Route path='/:season/players' component={PlayersPage} />
       <Route path='/:season/tables' component={TablesPage} />
+      <Route path='/:season/match/:match' component={MatchPage} />
       <Route path='/:season/grids' component={GridsPage} />
       <Route path='/:season/login' component={LoginPage} />
     </Root>

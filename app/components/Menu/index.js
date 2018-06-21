@@ -37,7 +37,6 @@ import CalendarIcon from '@material-ui/icons/DateRange';
 import EventIcon from '@material-ui/icons/Event';
 import TableIcon from '@material-ui/icons/ViewList';
 import GridIcon from '@material-ui/icons/ViewModule';
-import ResultsIcon from '@material-ui/icons/VerifiedUser';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LockIcon from '@material-ui/icons/Lock';
 
@@ -105,16 +104,12 @@ const pages = [
     icon: <EventIcon />
   },
   {
-    name: 'Results',
-    icon: <ResultsIcon />
+    name: 'Grids',
+    icon: <GridIcon />
   },
   {
     name: 'Tables',
     icon: <TableIcon />
-  },
-  {
-    name: 'Grids',
-    icon: <GridIcon />
   },
   {
     name: 'Clubs',

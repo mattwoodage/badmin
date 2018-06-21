@@ -262,6 +262,21 @@ router.get('/api/:seasonPeriod/matches', (req, res, next) => {
   })
 })
 
+
+// MATCH
+
+router.get('/api/:seasonPeriod/match/:match', (req, res, next) => {
+
+  const leagueShort = req.headers.host.split('.')[0].toUpperCase()
+
+  Match.findOne({_id: req.params.match}, (err, match) => {
+    if (err) return res.json({match: null})
+    res.json({match: match})
+  })
+  .populate({ path: 'division', model: Division })
+  .populate({ path: 'venue', model: Venue })
+})
+
 // // router.post('/', (req, res) => {
 // //   const question = new Question(req.body);
 // //   question.save((err, question) => {

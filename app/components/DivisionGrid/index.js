@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import { NavLink } from 'react-router-dom'
 
 import overrides from './DivisionGrid.scss'
 
@@ -105,8 +106,10 @@ class DivisionGrid extends Component {
   displayMatch (match) {
     return (
       <span>
-        <Moment format="Do MMM">{match.startAt}</Moment>
-        <Moment className={overrides.time} format="HH:mm">{match.startAt}</Moment>
+        <NavLink to={`./match/${match._id}`} >
+          <Moment format="Do MMM">{match.startAt}</Moment>
+          <Moment className={overrides.time} format="HH:mm">{match.startAt}</Moment>
+        </NavLink>
       </span>
     )
   }

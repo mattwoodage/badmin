@@ -1,0 +1,20 @@
+@import 'reset-css';
+@import '../../styles/global.scss';
+
+:local(.notification) {
+  background-color: $color-primary;
+  border-radius:30px;
+  width:100%;
+  padding: 10px 20px;
+  position: relative;
+  margin-top: 10px;
+  overflow:hidden;
+
+  svg {
+    margin: 0 10px 0 0;
+    vertical-align: bottom;
+  }
+  h2 {
+    display: inline;
+  }
+}

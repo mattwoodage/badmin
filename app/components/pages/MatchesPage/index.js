@@ -35,6 +35,7 @@ class Page extends Component {
           matches: response.matches,
           loaded: true
         })
+        console.log(response.matches)
         this.props.stopLoad()
         this.buildCalendar()
       })
