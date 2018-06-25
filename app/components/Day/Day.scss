@@ -1,28 +1,101 @@
+@import 'reset-css';
+@import '../../styles/global.scss';
+
+
+
 @media (min-width: 900px) {
   :local(.day) {
       max-width: 14.285% !important;
       flex-basis: 14.285% !important;
   }
+  :local(.weekday) {
+    display: none !important;
+  } 
+}
+
+@mixin _borderLeft {
+  @media (min-width: 850px) {
+    border-left: 2px solid #ccc;
+  }
+}
+
+@mixin _borderRight {
+  @media (min-width: 850px) {
+    border-right: 2px solid #ccc;
+  }
+}
+
+@mixin _borderTop {
+  @media (min-width: 850px) {
+    border-top: 2px solid #ccc;
+  }
+}
+
+@mixin _borderBottom {
+  @media (min-width: 850px) {
+    border-bottom: 2px solid #ccc;
+  }
 }
 
 :local(.day) {
-  background-color:#fff;
+  background-color: #fff;
   border:1px solid #f4f4f4;
   margin:0 -1 -1 0;
   display: inline;
-
+  min-height:100px;
   h2 {
     font-size:13px;
   }
 }
 
+:local(.day1) { // mondays
+  @include _borderLeft;
+}
 :local(.day0) {
   background-color:#fcfcfc;
+  @include _borderRight;
 }
+:local(.day6) {
+  background-color:#fcfcfc;
+  
+}
+
+:local(.firstWeek) {
+  @include _borderTop;
+}
+
+:local(.lastWeek) {
+  @include _borderBottom;
+}
+
+:local(.firstDayOfMonth) {
+  @include _borderLeft;
+}
+
+:local(.lastDayOfMonth) {
+  @include _borderRight;
+}
+
 :local(.day6) {
   background-color:#fcfcfc;
 }
 
+:local(.today) {
+  background-color: $color-primary !important;
+}
+
 .list li {
   padding: 0 !important
+}
+
+:local(.before) {
+  opacity: 0.6;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+:local(.after) {
+  opacity: 0.6;
+  border-left: none !important;
+  border-right: none !important;
 }

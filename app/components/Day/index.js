@@ -21,15 +21,29 @@ class Day extends Component {
   }
 
   render () {
-    const { classes } = this.props;
+    const { classes, before, after, firstDayOfMonth, lastDayOfMonth, firstWeek, lastWeek, today } = this.props;
 
-    const cls = styles.day + ' ' + styles['day' + this.props.dayOfWeek]
+    let cls = styles.day + ' ' + styles['day' + this.props.dayOfWeek]
 
-    const fmt = this.props.date.date() === 1 ? 'ddd DD MMM' : 'ddd DD'
+    if (before) cls += ' ' + styles.before
+    if (after) cls += ' ' + styles.after
+
+    if (firstDayOfMonth) cls += ' ' + styles.firstDayOfMonth
+    if (lastDayOfMonth) cls += ' ' + styles.lastDayOfMonth
+
+    if (firstWeek) cls += ' ' + styles.firstWeek
+    if (lastWeek) cls += ' ' + styles.lastWeek
+    if (today) cls += ' ' + styles.today 
+
+    const fmt = this.props.date.date() === 1 ? 'DD MMM' : 'DD'
 
     return (
 
       <Grid className={cls} item xs={12}>
+
+        <Typography className={styles.weekday} variant="title">
+          <Moment format='ddd'>{this.props.date}</Moment>
+        </Typography>
 
         <Typography variant="title">
           <Moment format={fmt}>{this.props.date}</Moment>

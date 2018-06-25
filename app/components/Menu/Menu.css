@@ -57,6 +57,12 @@
   margin: -10px 0px 0px -60px;
 }
 
+:local(.selectSeason) {
+  position: absolute;
+  right:20px;
+  bottom:20px;
+}
+
 :local(.hide) {
   display: none;
 }

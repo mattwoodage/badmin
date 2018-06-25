@@ -33,3 +33,13 @@
 :global(a), :global(span), :global(div) {
   font: 14px/19px Arial, sans-serif !important
 }
+
+:global(a) {
+  color: $color-link;
+  text-decoration: none;
+}
+
+:global(a:hover) {
+  color: $color-link-hover;
+  text-decoration: none;
+}

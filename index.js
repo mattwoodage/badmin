@@ -158,9 +158,18 @@ router.get('/api/:seasonPeriod/seasons', (req, res, next) => {
 
   League.findOne({ short: leagueShort }).exec((err, league) => {
     if (err || !league) return res.json({league: null, season: null})
-    Season.findOne({ league: league._id, period: req.params.seasonPeriod }, (err, season) => {
-      if (err || !season) return res.json({league: league, season: null})
-      res.json({league: league, season: season})
+    Season.find({ league: league._id }, (err, seasons) => {
+      if (err || !seasons) return res.json({league: league, seasons: []})
+
+      const season = seasons.find((s) => {
+        if (s.period === req.params.seasonPeriod) return s
+      })
+
+      seasons = seasons.map((s) => {
+        return s.period
+      })
+
+      res.json({league: league, season: season, seasons: seasons})
     })
   })
 })

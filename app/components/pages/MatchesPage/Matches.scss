@@ -3,3 +3,31 @@
 :local(.calendar) {
   border-collapse: collapse;
 }
+
+:local(.monthLink) {
+  margin-right: 10px !important;
+}
+
+:local(.monthName) {
+  padding-bottom: 20px;
+}
+
+:local(.menu) {
+  margin: 20px 0px;
+  background: #fff;
+}
+
+
+@media (min-width: 900px) {
+  :local(.weekday) {
+      color: #666;
+      max-width: 14.285% !important;
+      flex-basis: 14.285% !important;
+  }
+}
+
+@media (max-width: 900px) {
+  :local(.weekday) {
+    display: none;
+  }
+}

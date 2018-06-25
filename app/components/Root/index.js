@@ -43,7 +43,8 @@ class Root extends Component {
         console.log('-league loaded-')
         this.setState({
           league: response.league,
-          season: response.season
+          season: response.season,
+          seasons: response.seasons
         })
       })
   }
@@ -87,6 +88,7 @@ class Root extends Component {
     const context = {
       league: this.state.league,
       season: this.state.season,
+      seasons: this.state.seasons,
       startLoad: () => {
         console.log('-- start load --')
         this.setState({
@@ -162,7 +164,7 @@ class Root extends Component {
         <div className={styles.outer}>
           <div className={styles.inner}>
             
-            <Menu loading={this.state.loading} isLoggedIn={this.state.isLoggedIn} doLogOut={this.doLogOut} nickname={this.state.nickname} league={this.state.league} season={this.state.season} />
+            <Menu loading={this.state.loading} isLoggedIn={this.state.isLoggedIn} doLogOut={this.doLogOut} nickname={this.state.nickname} league={this.state.league} season={this.state.season} seasons={this.state.seasons} />
             
             <div className={styles.content}>
               {this.props.children}

@@ -43,10 +43,17 @@ import LockIcon from '@material-ui/icons/Lock';
 import PersonIcon from '@material-ui/icons/Person';
 import PeopleIcon from '@material-ui/icons/People';
 
-import Logo from '../../images/hwba_logo.png';
+import LogoHWBA from '../../images/hwba_logo.png';
+import LogoRBA from '../../images/rba_logo.png';
+import LogoWMBL from '../../images/wmbl_logo.png';
 
 const drawerWidth = 240;
 
+const logos = {
+  hwba: LogoHWBA,
+  rba: LogoRBA,
+  wmbl: LogoWMBL 
+}
 
 const classes = theme => ({
   palette: {
@@ -184,6 +191,23 @@ class Menu extends Component {
     })
   }
 
+  selectSeason = (e) => {
+    document.location = '/' + e.target.value
+  }
+
+  renderSeasons = () => {
+    const { season, seasons } = this.props;
+    if (!seasons) return
+    return (
+      <select className={styles.selectSeason} onChange={this.selectSeason}>
+        { seasons.map((s) => {
+          return <option selected={(season.period === s)}>{s}</option>
+          })
+        }
+      </select>
+    )
+  }
+
   render () {
     const { classes, theme, league, isLoggedIn, nickname, doLogOut } = this.props;
     const leagueName = league ? league.name : 'League Not Found'
@@ -198,7 +222,7 @@ class Menu extends Component {
               <MenuIcon />
             </IconButton>
           </div>
-          <img width="270" src={Logo} />
+          { league && <img width="270" src={logos[league.short.toLowerCase()]} /> }
           <div className={styles.currentUser} >
             <CurrentUser doLogOut={doLogOut} isLoggedIn={isLoggedIn} nickname={nickname} />
           </div>
@@ -207,9 +231,10 @@ class Menu extends Component {
           </ul>
 
           <Loader loading={this.props.loading} />
+
+          {this.renderSeasons()}
         </div>
 
-        
 
         <SwipeableDrawer
           open={this.state.open}
