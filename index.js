@@ -78,6 +78,7 @@ function getToken (headers) {
 // I M P O R T 
 
 router.get('/api/league/import/:short', (req, res, next) => {
+  req.setTimeout(6000000)
   new ImportData(req, res)
 })
 

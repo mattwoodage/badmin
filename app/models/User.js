@@ -27,6 +27,10 @@ var UserSchema = new Schema({
         type: Boolean,
         default: false
     },
+    superadmin: {
+        type: Boolean,
+        default: false
+    },
     lastLoggedIn: {
         type: Date
     }
