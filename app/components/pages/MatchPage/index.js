@@ -24,7 +24,8 @@ class Page extends Component {
   state = {
     loaded: false,
     error: false,
-    match: undefined
+    match: undefined,
+    cards: []
   }
 
   initialise () {
@@ -39,6 +40,7 @@ class Page extends Component {
         if (response.match) {
           this.setState({
             match: response.match,
+            cards: response.cards,
             loaded: true
           })
         }
@@ -55,11 +57,44 @@ class Page extends Component {
   }
 
 
+  renderCards () {
+    const cards = this.state.cards
+    return Object.keys(cards).map(key => {
+      return this.renderScoreCard(cards[key])
+    })
+  }
+
+  renderScoreCard (card) {
+    return (
+      <div>
+      {card.enteredBy.email}
+      {this.renderRubbers(card.scores)}
+      </div>
+    )
+  }
+
+  renderRubbers (scores) {
+    return scores.map(score => {
+      return (
+        <div>
+          {"Rubber " + score.rubberNum + ", Game " + score.gameNum + " = PTS " + score.points + " " + (score.isHomeTeam ? 'H' : 'A')}
+          <div>
+            {score.players.map(plyr => {
+              return (plyr.name)
+            })}
+          </div>
+        </div>
+        )
+
+    })
+
+  }
+
   render () {
     this.initialise()
 
     console.log(this.state.match)
-
+    console.log(this.state.cards)
     if (this.state.error) return <Panel><Notification text='Match not found' /></Panel>
 
     if (!this.state.match) return <Panel>Loading...</Panel>
@@ -70,7 +105,7 @@ class Page extends Component {
         <Typography variant="display2" gutterBottom>{this.state.match.label}</Typography>
         <div>{this.state.match.venue.name}</div>
         <div>{this.state.match.startAt}</div>
-        
+        {this.renderCards()}
       </Panel>
     )
   }

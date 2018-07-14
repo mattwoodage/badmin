@@ -10,6 +10,7 @@ var matchSchema = mongoose.Schema({
   venue: Object,
   startAt: Date,
   key: String,
+  scoreCards: [ { type: mongoose.Schema.Types.ObjectId, ref: 'ScoreCard' } ],
   _old: Number
 })
 

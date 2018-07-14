@@ -21,6 +21,8 @@ var Club = require('./app/models/Club')
 var Venue = require('./app/models/Venue')
 var Format = require('./app/models/Format')
 var Player = require('./app/models/Player')
+var ScoreCard = require('./app/models/ScoreCard')
+var Score = require('./app/models/Score')
 
 var ImportData = require('./import/ImportData')
 
@@ -281,8 +283,33 @@ router.get('/api/:seasonPeriod/match/:match', (req, res, next) => {
 
   Match.findOne({_id: req.params.match}, (err, match) => {
     if (err) return res.json({match: null})
-    res.json({match: match})
+    ScoreCard.find({ match: match._id }, (err, scoreCards) => {
+      if (err) return res.json({match: match, e:1})
+      const cards = {}
+      const cardsArray = scoreCards.map((c) => {
+
+        cards[c._id] = c
+        cards[c._id].scores = []
+        return c._id
+      })
+      Score.find({scoreCard: { $in: cardsArray }}, (err, scores) => {
+        if (err) return res.json({match: match, e:2})
+        scores.map((score) => {
+          console.log(score, score.players.length)
+          cards[score.scoreCard].scores.push(score)
+        })
+        res.json({match: match, cards:cards})
+      })
+      .populate({ path: 'players', model: Player })
+
+      .sort({ rubberNum: 1, gameNum: 1, isHomeTeam: -1 })
+      
+    })
+    .populate({ path: 'confirmedBy', model: User })
+    .populate({ path: 'enteredBy', model: User })
   })
+  .populate({ path: 'awayTeam', model: Team })
+  .populate({ path: 'homeTeam', model: Team })
   .populate({ path: 'division', model: Division })
   .populate({ path: 'venue', model: Venue })
 })

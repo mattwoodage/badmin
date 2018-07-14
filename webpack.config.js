@@ -7,7 +7,8 @@ var APP_DIR = path.resolve(__dirname, 'client');
 
 const htmlPlugin = new HtmlWebPackPlugin({
   template: "./index.html",
-  filename: "./index.html"
+  filename: "./index.html",
+  favicon: 'favicon.ico'
 });
 
 var config = {
@@ -57,7 +58,7 @@ var config = {
             }
           }
         ]
-      }
+      },{ test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
     ]
   },
   plugins: [htmlPlugin]

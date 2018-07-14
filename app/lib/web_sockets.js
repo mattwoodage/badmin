@@ -6,7 +6,7 @@ function WebSockets() {
   var token = '';
 
   // TODO: Add event type
-  this.EVENT_TYPE = 'badbad';
+  this.EVENT_TYPE = 'badmin';
 
   // TODO: Define message types
   this.MESSAGE_TYPE = {};

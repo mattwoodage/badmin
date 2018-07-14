@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var scoreCardSchema = mongoose.Schema({
-  match: Object,
+  match: { type: mongoose.Schema.Types.ObjectId, ref: 'Match' },
   key: String,
   _old: Number,
   enteredAt: Date,
@@ -16,8 +16,9 @@ var scoreCardSchema = mongoose.Schema({
   totalPoints: Number,
   totalAttendance: Number,
   leaguePoints: Number,
-  status: Number // 1 = CONFIRMED (all old ones)   0 = SUPERCEDED
-
+  scores: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Score' } ],
+  status: Number, // 1 = CONFIRMED (all old ones)   0 = SUPERCEDED
+  rubbers: Array
 })
 
 var ScoreCard = mongoose.model('ScoreCard', scoreCardSchema)

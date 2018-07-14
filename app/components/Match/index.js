@@ -7,6 +7,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { withStyles } from '@material-ui/core/styles';
 import Hidden from '@material-ui/core/Hidden';
 import ImageIcon from '@material-ui/icons/Image';
+import { NavLink } from 'react-router-dom'
 
 import lightBlue from '@material-ui/core/colors/lightBlue';
 import lightGreen from '@material-ui/core/colors/lightGreen';
@@ -55,19 +56,20 @@ class Match extends Component {
 
     return (
       <div className={cls}>
-        <div>
-          <div className={matchStyles.div}>
-            {match.division.labelLocal}
-          </div>
-          {this.startTime()}
-        </div>
+        <NavLink to={`./match/${match._id}`} >
+          <span>
+            <span className={matchStyles.div}>
+              {match.division.labelLocal}
+            </span>
+            {this.startTime()}
+          </span>
 
-        <div className={matchStyles.content} >
-          <b>{match.label}</b>
-          
-        </div>
-        <div className={matchStyles.venue} >{match.venue.name}</div>
-        
+          <span className={matchStyles.content} >
+            <b>{match.label}</b>
+            
+          </span>
+          <span className={matchStyles.venue} >{match.venue.name}</span>
+        </NavLink>
       </div>
     )
   }

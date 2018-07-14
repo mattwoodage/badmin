@@ -1,4 +1,4 @@
-# badbad
+# badmin
 
 Badminton Admin
 
