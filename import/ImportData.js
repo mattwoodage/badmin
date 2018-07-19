@@ -8,7 +8,7 @@ var ScoreCard = require('../app/models/ScoreCard')
 var Score = require('../app/models/Score')
 var Club = require('../app/models/Club')
 var Venue = require('../app/models/Venue')
-var Format = require('../app/models/Format')
+
 var Player = require('../app/models/Player')
 var Member = require('../app/models/Member')
 var User = require('../app/models/User')
@@ -52,27 +52,27 @@ class ImportData {
     console.log('****** P R O C E S S    A L L ******')
 
     this.processLeague()
-      .then(() => {
-        this.processSuperadmin()
-          .then(() => {
-            // this.processSeasons()
-            //   .then(() => {
-            //     this.processDivisions()
-            //       .then(() => {
-            //         this.processVenues()
-            //           .then(() => {
-            //             this.processClubs()
-            //               .then(() => {
-            //                 this.processTeams()
-            //                   .then(() => {
-            //                     this.processPlayers()
-            //                       .then(() => {
-            //                         this.processClubPlayers()
-            //                           .then(() => {
-            //                             this.processMatches()
-            //                               .then(() => {
-                                            this.processRubbers()
-                                              .then(() => {
+      // .then(() => {
+      //   this.processSuperadmin()
+      //     .then(() => {
+      //       this.processSeasons()
+               .then(() => {
+                  this.processDivisions()
+      //             .then(() => {
+      //               this.processVenues()
+      //                 .then(() => {
+      //                   this.processClubs()
+      //                     .then(() => {
+      //                       this.processTeams()
+      //                         .then(() => {
+      //                           this.processPlayers()
+      //                             .then(() => {
+      //                               this.processClubPlayers()
+      //                                 .then(() => {
+      //                                   this.processMatches()
+      //                                     .then(() => {
+      //                                       this.processRubbers()
+                                               .then(() => {
                                                 console.log('****** P R O C E S S I N G       D O N E ******')
 
                                                 setTimeout(() => {
@@ -82,16 +82,16 @@ class ImportData {
                                               .catch(error => {
                                                 console.error('processAll:', error)
                                               })
-              //                             })
-              //                         })
-              //                     })
-              //                 })
-              //             })
-              //         })
-              //     })
-              // })
-          })
-      })
+          //                                 })
+          //                             })
+          //                         })
+          //                     })
+          //                 })
+                       })
+          //         })
+          //     })
+          // })
+      // })
   }
 
   findOrCreate (_model, filter) {
@@ -138,7 +138,10 @@ class ImportData {
       this.findOrCreate(League, { short: this.leagueShort } )
         .then(league => {
           this.league = league
-          resolve(league)
+          this.saveOrUpdate(league, 'league', log)
+            .then((result) => {
+              resolve()
+            })
         })
         .catch(error => {
           console.error(error)
@@ -235,10 +238,45 @@ class ImportData {
                 division.key = key
                 division.label = uid
                 division._old = cols[0]
+                division._fmt = cols[7]
                 division.season = season._id
                 division.labelLocal = cols[2] + ' ' + cols[3]
                 division.position = cols[3]
-                division.title = (Number(cols[3])===0) ? 'Premier' : ''
+                division.alias = (Number(cols[3])===0) ? 'Premier' : ''
+
+                division.category = cols[10]
+                division.short = ""
+                division.males = cols[9].indexOf('M')>-1 || cols[9].indexOf('O')>-1
+                division.females = cols[9].indexOf('F')>-1 || cols[9].indexOf('O')>-1
+                division.numPlayers = cols[4]
+                division.numPerSide = 2
+                division.numRubbers = cols[5]
+                division.numGamesPerRubber = cols[6]
+                division.numMatches = parseInt(cols[11] || 1)
+                  
+                if (cols[9].indexOf('O')>-1) {
+                  division.genders = "OOOOOOOOOO".substr(0,parseInt(cols[4]))
+                }
+                else if (cols[9]=="FM") {
+                  division.genders = "FMFMFMFMFMFMFMFM".substr(0,parseInt(cols[4]))
+                }
+                else if (cols[9]=="M") {
+                  division.genders = "MMMMMMMMMMMM".substr(0,parseInt(cols[4]))
+                }
+                else if (cols[9]=="F") {
+                  division.genders = "FFFFFFFFFFFF".substr(0,parseInt(cols[4]))
+                }
+                division.orderOfPlay = this.getOrderOfPlay(parseInt(cols[7]))
+                division.color = cols[8]
+                division.desc = ""
+
+                division.ptsWinBy2 = cols[13]
+                division.ptsWinBy1 = cols[14]
+                division.ptsDraw = cols[18]
+                division.ptsLoseBy1 = cols[16]
+                division.ptsLoseBy2 = cols[15]
+                division.ptsFullTeam = cols[17]
+                division.canDraw = cols[19]
 
                 this.saveOrUpdate(division, 'divisions', log)
                   .then((result) => {
@@ -249,6 +287,79 @@ class ImportData {
           })
       }
     })
+  }
+
+  getOrderOfPlay(fmt) {
+    let o = []
+    if (fmt== 1) {
+      o.push("1212")
+      o.push("3434")
+      o.push("2314")
+      o.push("1423")
+      o.push("1313")
+      o.push("2424")
+      o.push("1414")
+      o.push("2323")
+    }
+    if (fmt == 2) {
+      o.push("1212")
+      o.push("3434")
+      o.push("5656")
+      o.push("3412")
+      o.push("1256")
+      o.push("5634")
+      o.push("3456")
+      o.push("5612")
+      o.push("1234")
+    }
+    if (fmt == 3) {
+      o.push("1212")
+      o.push("3434")
+      o.push("1234")
+      o.push("3412")
+      o.push("1313")
+      o.push("2424")
+      o.push("1324")
+      o.push("2413")
+    }
+    if (fmt == 4) {
+      o.push("1212")
+      o.push("3434")
+      o.push("1234")
+      o.push("3412")
+      o.push("1414")
+      o.push("2323")
+      o.push("1423")
+      o.push("2314")
+    }
+    if (fmt == 5) {
+      o.push("1212")
+      o.push("3434")
+      o.push("5656")
+      o.push("3412")
+      o.push("5634")
+      o.push("1256")
+      o.push("5612")
+      o.push("1234")
+      o.push("3456")
+    }
+    if (fmt == 6) { //hwba ladies di 2
+      o.push("1212")
+      o.push("3434")
+      o.push("3412")
+      o.push("1234")
+      o.push("1313")
+      o.push("2424")
+    }
+    if (fmt == 7) { //reading ladies di 3
+      o.push("1212")
+      o.push("3434")
+      o.push("1234")
+      o.push("3412")
+      o.push("1313")
+      o.push("2424")
+    }
+    return o
   }
 
   processClubs () {
@@ -285,7 +396,7 @@ class ImportData {
               club.email = ''
 
               this.saveOrUpdate(club, 'clubs', log)
-                .then((resumlt) => {
+                .then((result) => {
                   if (result.done) resolve()
                 })
             })

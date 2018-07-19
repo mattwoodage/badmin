@@ -6,6 +6,8 @@ import Moment from 'moment'
 import { extendMoment } from 'moment-range';
 import Panel from '../../Panel'
 import Notification from '../../Notification'
+import MatchCard from '../../MatchCard'
+
 
 import styles from './Match.scss'
 
@@ -67,28 +69,13 @@ class Page extends Component {
   renderScoreCard (card) {
     return (
       <div>
-      {card.enteredBy.email}
-      {this.renderRubbers(card.scores)}
+        <MatchCard match={this.state.match} card={card}/>
+        <br /><br />
       </div>
     )
   }
 
-  renderRubbers (scores) {
-    return scores.map(score => {
-      return (
-        <div>
-          {"Rubber " + score.rubberNum + ", Game " + score.gameNum + " = PTS " + score.points + " " + (score.isHomeTeam ? 'H' : 'A')}
-          <div>
-            {score.players.map(plyr => {
-              return (plyr.name)
-            })}
-          </div>
-        </div>
-        )
-
-    })
-
-  }
+  
 
   render () {
     this.initialise()

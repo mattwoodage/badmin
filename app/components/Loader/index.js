@@ -9,10 +9,14 @@ class Loader extends Component {
 
     const style = this.props.loading ? { opacity:0.3 } : {}
 
+    // return (
+    //   <div className="loading animated fadeIn">
+    //     <div className="bg" style={style}></div>
+    //   </div>
+    // );
+
     return (
-      <div className="loading animated fadeIn">
-        <div className="bg" style={style}></div>
-      </div>
+      <span>loading: {this.props.loading}</span>
     );
   }
 }
