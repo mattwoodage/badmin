@@ -62,6 +62,17 @@ class MatchCard extends Component {
     })
   }
 
+  renderRubber (card, rubber, oop) {
+    
+    const scores = card.scores.filter(score => score.rubberNum === rubber)
+    return (
+      <div>{oop} = {rubber}
+      {JSON.stringify(scores)}
+
+      </div>
+    )
+  }
+
   render () {
 
     const { match, classes, card } = this.props
@@ -75,18 +86,18 @@ class MatchCard extends Component {
 
           <span>
             <span className={matchStyles.div}>
-              {match.division.labelLocal}
+     
             </span>
             {this.startTime()}
+            <br />
+            {
+              match.division.orderOfPlay.map((oop, rubber) => {
+                return this.renderRubber(card, rubber+1, oop)
+              })
+            }
           </span>
 
-          <span className={matchStyles.content} >
-            <b>{match.label}</b>
-            
-          </span>
-          <span className={matchStyles.venue} >{match.venue.name}</span>
 
-          
           {this.renderRubbers(card.scores)}
 
 
