@@ -52,12 +52,12 @@ class ImportData {
     console.log('****** P R O C E S S    A L L ******')
 
     this.processLeague()
-      // .then(() => {
-      //   this.processSuperadmin()
+       .then(() => {
+         this.processSuperadmin()
       //     .then(() => {
       //       this.processSeasons()
-               .then(() => {
-                  this.processDivisions()
+      //         .then(() => {
+      //            this.processDivisions()
       //             .then(() => {
       //               this.processVenues()
       //                 .then(() => {
@@ -71,7 +71,7 @@ class ImportData {
       //                                 .then(() => {
       //                                   this.processMatches()
       //                                     .then(() => {
-      //                                       this.processRubbers()
+                                             this.processRubbers()
                                                .then(() => {
                                                 console.log('****** P R O C E S S I N G       D O N E ******')
 
@@ -87,11 +87,11 @@ class ImportData {
           //                         })
           //                     })
           //                 })
-                       })
+          //             })
           //         })
           //     })
           // })
-      // })
+      })
   }
 
   findOrCreate (_model, filter) {
@@ -649,12 +649,33 @@ class ImportData {
                               scoreCard.confirmedByTeam = undefined,
                               scoreCard.status = 1
 
+                              if (cols[2] == 1) {
+                                scoreCard.homePlayers = [player_h1._id, player_h2._id]
+                                scoreCard.awayPlayers = [player_a1._id, player_a2._id]
+                              }
+                              else if (cols[2] == 2) {
+                                scoreCard.homePlayers.push(player_h1._id)
+                                scoreCard.homePlayers.push(player_h2._id)
+                                scoreCard.awayPlayers.push(player_a1._id)
+                                scoreCard.awayPlayers.push(player_a2._id)
+                              }
+                              else if (cols[2] == 3) {
+                                if (match.division.numPlayers>4) {
+                                  scoreCard.homePlayers.push(player_h1._id)
+                                  scoreCard.homePlayers.push(player_h2._id)
+                                  scoreCard.awayPlayers.push(player_a1._id)
+                                  scoreCard.awayPlayers.push(player_a2._id)
+                                }
+                              }
+
+                              
+
+
                               const scoreCardLog = this.newLog([1])
 
                               this.saveOrUpdate(scoreCard, 'scorecards', scoreCardLog)
                                 .then((result) => {
                                   scoreCard = result.obj
-
                                   return this.processNextGame (match, scoreCard, player_h1, player_h2, player_a1, player_a2, cols, 1)
                                   .then(() => {
                                     return this.processNextGame (match, scoreCard, player_h1, player_h2, player_a1, player_a2, cols, 2)
@@ -662,8 +683,6 @@ class ImportData {
                                       return this.processNextGame (match, scoreCard, player_h1, player_h2, player_a1, player_a2, cols, 3)
                                     })
                                   })
-
-                                  //if (result.done) resolve()
                                 })
                                 .then( () => {
                                   idx += 1

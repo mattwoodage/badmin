@@ -47,29 +47,38 @@ class MatchCard extends Component {
     )
   }
 
-  renderRubbers (scores) {
-    return scores.map(score => {
-      return (
+  renderRubber (card, rubber, oop) {
+    const gamesPerRubber = this.props.match.division.numGamesPerRubber
+    const scores = card.scores.filter(score => score.rubberNum === rubber)
+    const games = Array.from(Array(gamesPerRubber).keys())
+    console.log(gamesPerRubber)
+    console.log(games)
+
+    const home = scores[0]
+    const away = scores[1]
+
+    return (
+      <div>
         <div>
-          {"Rubber " + score.rubberNum + ", Game " + score.gameNum + " = PTS " + score.points + " " + (score.isHomeTeam ? 'H' : 'A')}
-          <div>
-            {score.players.map(plyr => {
-              return (plyr.name)
-            })}
-          </div>
+          <span>{home.players.map(p => { return p.name }).join(' & ') }</span>
+          <span> v </span>
+          <span>{away.players.map(p => { return p.name }).join(' & ') }</span>
         </div>
-        )
-    })
+        {
+        games.map((idx) => {
+          const gameScores = scores.filter(score => score.gameNum === idx+1)
+          if (gameScores.length) return this.renderGame(gameScores)
+        })
+      }
+      </div>
+    )
   }
 
-  renderRubber (card, rubber, oop) {
-    
-    const scores = card.scores.filter(score => score.rubberNum === rubber)
+  renderGame (scores) {
+    const homeScore = scores[0]
+    const awayScore = scores[1]
     return (
-      <div>{oop} = {rubber}
-      {JSON.stringify(scores)}
-
-      </div>
+      <span><span>{homeScore.points}</span>:<span>{awayScore.points}</span> </span>
     )
   }
 
@@ -96,9 +105,6 @@ class MatchCard extends Component {
               })
             }
           </span>
-
-
-          {this.renderRubbers(card.scores)}
 
 
       </div>

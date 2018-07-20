@@ -299,13 +299,13 @@ router.get('/api/:seasonPeriod/match/:match', (req, res, next) => {
         })
         res.json({match: match, cards:cards})
       })
-      .populate({ path: 'players', model: Player })
-
       .sort({ rubberNum: 1, gameNum: 1, isHomeTeam: -1 })
-      
+      .populate({ path: 'players', model: Player })
     })
     .populate({ path: 'confirmedBy', model: User })
     .populate({ path: 'enteredBy', model: User })
+    .populate({ path: 'homePlayers', model: Player })
+    .populate({ path: 'awayPlayers', model: Player })
   })
   .populate({ path: 'awayTeam', model: Team })
   .populate({ path: 'homeTeam', model: Team })

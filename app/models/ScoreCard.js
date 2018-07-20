@@ -16,9 +16,11 @@ var scoreCardSchema = mongoose.Schema({
   totalPoints: Number,
   totalAttendance: Number,
   leaguePoints: Number,
+  homePlayers: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Player' } ],
+  awayPlayers: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Player' } ],
   scores: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Score' } ],
-  status: Number, // 1 = CONFIRMED (all old ones)   0 = SUPERCEDED
-  rubbers: Array
+  status: Number // 1 = CONFIRMED (all old ones)   0 = SUPERCEDED
+
 })
 
 var ScoreCard = mongoose.model('ScoreCard', scoreCardSchema)
