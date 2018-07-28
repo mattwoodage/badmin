@@ -390,6 +390,8 @@ class ImportData {
 
               club.clubnightVenue = venue._id
               club.matchVenue = venue._id
+              club.clubnightAltVenue = venue._id
+              club.matchAltVenue = venue._id
               club.message = ''
               club.phone = cols[10] + ":::::" + cols[11] + ":::::" + cols[3] + ":::::" + cols[4] + ":::::" + cols[5] + ":::::" + cols[6] + ":::::" + cols[7] + ":::::" + cols[12] + ":::::" + cols[13] + ":::::" + cols[14]
               club.website = ''
@@ -792,8 +794,8 @@ class ImportData {
             venue.town = cols[4]
             venue.postcode = cols[5].toUpperCase()
             venue.website = cols[6]
-            venue.lat = cols[7] + ',' + cols[8]
-            venue.lng = cols[9] + ',' + cols[10]
+            venue.lat = cols[7]
+            venue.lng = cols[8]
 
             this.saveOrUpdate(venue, 'venues', log)
               .then((result) => {

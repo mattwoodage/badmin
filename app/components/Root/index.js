@@ -9,6 +9,9 @@ import Paper from '@material-ui/core/Paper'
 import {Helmet} from "react-helmet";
 import styles from './Root.css'
 
+import MomentUtils from 'material-ui-pickers/utils/moment-utils';
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+
 export const LeagueContext = React.createContext()
 
 const drawerWidth = 240;
@@ -154,26 +157,28 @@ class Root extends Component {
     }
 
     return (
-      <LeagueContext.Provider value={context}>
-        {
-          this.state.league && 
-          <Helmet>
-            <title>{this.state.league.name}</title>
-          </Helmet>
-        }
-        <div className={styles.outer}>
-          <div className={styles.inner}>
-            
-            <Menu loading={this.state.loading} isLoggedIn={this.state.isLoggedIn} doLogOut={this.doLogOut} nickname={this.state.nickname} league={this.state.league} season={this.state.season} seasons={this.state.seasons} />
-            
-            <div className={styles.content}>
-              {this.props.children}
-            </div>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <LeagueContext.Provider value={context}>
+          {
+            this.state.league && 
+            <Helmet>
+              <title>{this.state.league.name}</title>
+            </Helmet>
+          }
+          <div className={styles.outer}>
+            <div className={styles.inner}>
+              
+              <Menu loading={this.state.loading} isLoggedIn={this.state.isLoggedIn} doLogOut={this.doLogOut} nickname={this.state.nickname} league={this.state.league} season={this.state.season} seasons={this.state.seasons} />
+              
+              <div className={styles.content}>
+                {this.props.children}
+              </div>
 
-            <Footer league={this.state.league} />
+              <Footer league={this.state.league} />
+            </div>
           </div>
-        </div>
-      </LeagueContext.Provider>
+        </LeagueContext.Provider>
+      </MuiPickersUtilsProvider>
     )
   }
 }

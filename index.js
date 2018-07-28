@@ -217,6 +217,7 @@ router.get('/api/:seasonPeriod/divisions', (req, res, next) => {
 
 // CLUBS
 
+// GET LIST
 router.get('/api/:seasonPeriod/clubs', (req, res, next) => {
   Club.aggregate([
     {
@@ -228,11 +229,41 @@ router.get('/api/:seasonPeriod/clubs', (req, res, next) => {
         }
     }
   ], (err, clubs) => {
-    if (err) return res.json({clubs: null})
+    if (err) return res.json({error: err})
     res.json({clubs: clubs})
   })
   .sort({ name: 1 })
 })
+
+// CLUB POST
+
+router.post('/api/:seasonPeriod/club', function(req, res) {
+
+  if (req.body._id) {
+    // edit
+
+    Club.findOneAndUpdate(
+      { _id: req.body._id },
+      { $set: req.body },
+      function(err, _club) {
+        if (err) return res.json({error: err})
+        res.status(200);
+        res.json({club:_club});
+      }
+    )
+
+  } else {
+    // create
+    const club = new Club(req.body);
+    club.save((err, _club) => {
+      if (err) return res.json({error: err})
+      res.status(201);
+      res.json(_club);
+    });
+  }
+
+});
+
 
 
 // PLAYERS
@@ -243,6 +274,18 @@ router.get('/api/:seasonPeriod/players', (req, res, next) => {
     res.json({players: players})
   })
   .sort({ lastName: 1 })
+})
+
+
+
+// VENUES
+
+router.get('/api/:seasonPeriod/venues', (req, res, next) => {
+  Venue.find({}, (err, venues) => {
+    if (err) return res.json({venues: null})
+    res.json({venues: venues})
+  })
+  .sort({ name: 1 })
 })
 
 
@@ -312,6 +355,26 @@ router.get('/api/:seasonPeriod/match/:match', (req, res, next) => {
   .populate({ path: 'division', model: Division })
   .populate({ path: 'venue', model: Venue })
 })
+
+
+
+
+
+// CLUB
+
+router.get('/api/:seasonPeriod/club/:club', (req, res, next) => {
+
+  const leagueShort = req.headers.host.split('.')[0].toUpperCase()
+
+  Club.findOne({_id: req.params.club}, (err, club) => {
+    if (err) return res.json({club: null})
+    res.json({club: club})
+  })
+
+
+})
+
+
 
 // // router.post('/', (req, res) => {
 // //   const question = new Question(req.body);

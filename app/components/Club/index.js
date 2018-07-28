@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import { NavLink } from 'react-router-dom'
 
 import styles from './Club.scss'
 
@@ -12,11 +13,9 @@ class Club extends Component {
     console.log(club)
     
     return (
-      <ListItem>
-        <ListItemText secondary={club.website} >
-          <b>{club.name}</b>
-        </ListItemText>
-      </ListItem>
+      <NavLink to={`./club/${club._id}`} >
+        <b>{club.name}</b><br />
+      </NavLink>
     )
   }
 }
