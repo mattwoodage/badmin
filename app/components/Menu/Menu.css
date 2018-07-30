@@ -2,11 +2,15 @@
 @import '../../styles/global.scss';
 
 :local(.header) {
-  background-color: $color-primary;
+  background-color: $color-archive;
   padding: 20px 20px 0px 70px;
   position: relative;
   margin-top: 10px;
   overflow:hidden;
+}
+
+:local(.current) {
+  background-color: $color-primary !important;
 }
 
 

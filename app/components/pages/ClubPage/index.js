@@ -3,6 +3,7 @@ import Club from '../../Club'
 
 import { withStyles } from '@material-ui/core/styles';
 
+import { NavLink } from 'react-router-dom'
 
 import ReactMoment from 'react-moment'
 import Moment from 'moment'
@@ -10,6 +11,7 @@ import Moment from 'moment'
 import { extendMoment } from 'moment-range';
 import Panel from '../../Panel'
 import Notification from '../../Notification'
+import Breadcrumb from '../../Breadcrumb'
 
 import styles from './Club.scss'
 
@@ -144,8 +146,10 @@ class Page extends Component {
     return (
       <Panel>
         
-        <Typography variant="display1" gutterBottom>{this.state.club.name}</Typography>
-
+        <Breadcrumb>
+          <NavLink to={'../clubs'} >Clubs</NavLink>
+          <b>{this.state.club.name}</b>
+        </Breadcrumb>
 
         <Paper className={classes.paper}>
 

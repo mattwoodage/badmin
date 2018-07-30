@@ -1,0 +1,17 @@
+@import 'reset-css';
+@import '../../styles/global.scss';
+
+:local(.breadcrumb) {
+  text-transform: uppercase;
+  margin-bottom: 20px;
+
+  a, b {
+    display: inline;
+    font-size: 33px !important;
+    margin: 0px 6px;
+  }
+
+  a {
+    color:#666;
+  }
+}

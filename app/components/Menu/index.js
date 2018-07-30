@@ -209,11 +209,15 @@ class Menu extends Component {
   }
 
   render () {
-    const { classes, theme, league, isLoggedIn, nickname, doLogOut } = this.props;
+    const { classes, season, theme, league, isLoggedIn, nickname, doLogOut } = this.props;
     const leagueName = league ? league.name : 'League Not Found'
+    let headerStyles = styles.header
+
+    if (season && season.current) headerStyles += ' ' + styles.current
+
     return (
       <div>
-        <div className={styles.header}>
+        <div className={headerStyles}>
           <div className={styles.menuButtonContainer}>
             <IconButton
               aria-label="open drawer"
