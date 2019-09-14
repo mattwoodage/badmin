@@ -14,6 +14,8 @@ import GridsPage from '../app/components/pages/GridsPage'
 import LoginPage from '../app/components/pages/LoginPage'
 import MatchPage from '../app/components/pages/MatchPage'
 import ClubPage from '../app/components/pages/ClubPage'
+import AdminPage from '../app/components/pages/AdminPage'
+
 
 function onRouterUpdate () {
   console.log('router updated!')
@@ -32,6 +34,7 @@ render((
       <Route path='/:season/club/:club' component={ClubPage} />
       <Route path='/:season/grids' component={GridsPage} />
       <Route path='/:season/login' component={LoginPage} />
+      <Route path='/:season/admin' component={AdminPage} />
     </Root>
   </BrowserRouter>
 ), document.getElementById('app'));

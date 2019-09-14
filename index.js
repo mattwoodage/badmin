@@ -23,7 +23,8 @@ var Player = require('./app/models/Player')
 var ScoreCard = require('./app/models/ScoreCard')
 var Score = require('./app/models/Score')
 
-var ImportData = require('./import/ImportData')
+var ImportData = require('./app/services/ImportData')
+var UpdateAll = require('./app/services/UpdateAll')
 
 var options, app;
 
@@ -82,6 +83,15 @@ router.get('/api/league/import/:short', (req, res, next) => {
   req.setTimeout(6000000)
   new ImportData(req, res)
 })
+
+
+// U P D A T E - A L L
+
+router.get('/api/league/update/:short/:seasonPeriod', (req, res, next) => {
+  req.setTimeout(6000000)
+  new UpdateAll(req, res)
+})
+
 
 // A U T H 
 
@@ -266,6 +276,43 @@ router.post('/api/:seasonPeriod/club', function(req, res) {
 
 
 
+// TEAM POST
+
+router.post('/api/:seasonPeriod/team', function(req, res) {
+
+  console.log('TEAM POST')
+    
+
+  if (req.body._id) {
+    // edit
+    console.log('EDIT')
+    console.log('i',req.body._id)
+    console.log('b',req.body)
+
+    Team.findOneAndUpdate(
+      { _id: req.body._id },
+      { $set: req.body },
+      function(err, _team) {
+        if (err) return res.json({error: err})
+        res.status(200);
+        res.json({team:_team});
+      }
+    )
+
+  } else {
+    // create
+    const team = new Team(req.body);
+    team.save((err, _team) => {
+      if (err) return res.json({error: err})
+      res.status(201);
+      res.json(_team);
+    });
+  }
+
+});
+
+
+
 // PLAYERS
 
 router.get('/api/:seasonPeriod/players', (req, res, next) => {
@@ -308,6 +355,7 @@ router.get('/api/:seasonPeriod/matches', (req, res, next) => {
           if (err) return res.json({matches: null})
           res.json({matches: matches})
         })
+        .populate({ path: 'scoreCard', model: ScoreCard })
         .populate({ path: 'division', model: Division })
         .populate({ path: 'venue', model: Venue })
         .sort({ startAt: 1 })
@@ -368,10 +416,29 @@ router.get('/api/:seasonPeriod/club/:club', (req, res, next) => {
 
   Club.findOne({_id: req.params.club}, (err, club) => {
     if (err) return res.json({club: null})
-    res.json({club: club})
+
+    League.findOne({ short: leagueShort }).exec((err, league) => {
+      if (err || !league) return res.json({club: null})
+
+      Season.findOne({ league: league._id, period: req.params.seasonPeriod }, (err, season) => {
+        if (err || !season) return res.json({club: null})
+
+        Division.find({ season: season._id }, (err, divisions) => {
+          if (err) return res.json({club: null})
+          const divisionsArray = divisions.map((d) => {
+            return d._id
+          })
+
+          Team.find({ club: club._id, division: { $in: divisionsArray } }, (err, teams) => {
+            if (err) return res.json({club: club, e:1})
+           
+            res.json({club: club, teams:teams})
+
+          })
+        })
+      })
+    })
   })
-
-
 })
 
 

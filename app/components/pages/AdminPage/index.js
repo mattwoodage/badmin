@@ -1,34 +1,76 @@
 import React, { Component } from 'react'
-import Root from '../../Root'
-import Club from '../../Club'
+import { withStyles } from '@material-ui/core/styles';
+import { LeagueContext } from '../../Root'
+import Panel from '../../Panel'
 
-class AdminPage extends Component {
+const materialStyles = theme => ({
+  paper: {
+    padding: 30,
+    color: theme.palette.text.secondary
+  },
+  row: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.background.default,
+    },
+  }
+});
+
+class Page extends Component {
 
   constructor () {
     super()
     this.state = {
-      active: false
+      active: false,
+      log: [new Date()]
     }
   }
 
-  start = () => {
-    console.log('starting....')
-    this.setState({active: true})
+  log = (msg) => {
+    console.log(msg)
+    const newLog = this.state.log
+    newLog.push(msg)
+    this.setState({
+      log: newLog
+    })
+  }
 
-    this.textarea.value = 'starting'
+  updateTables = () => {
+    this.log('UPDATE TABLES')
+  }
+
+  start = () => {
+    this.log('starting....')
+    this.setState({active: true})
+    this.updateTables()
   }
 
   render () {
+    const log = this.state.log.join('-----')
     return (
-      <Root league={this.props.league} season={this.props.season} >
+      <Panel>
         <div>
           <h1>ADMIN {this.state.active}</h1>
           <a href='#' onClick={this.start}>{this.state.active ? 'STARTED...' : 'START'}</a>
-          <textarea ref={(node) => { this.textarea = node }} />
+          <textarea cols="150" rows="200">
+          {log}
+          </textarea>
         </div>
-      </Root>
+      </Panel>
     )
   }
 }
 
-export default AdminPage
+
+class AdminPage extends Component {
+  render () {
+    return (
+      <LeagueContext.Consumer>
+        {props => <Page {...this.props} {...props} />}
+      </LeagueContext.Consumer>
+    )
+  }
+}
+
+export default withStyles(materialStyles)(AdminPage)
+
+

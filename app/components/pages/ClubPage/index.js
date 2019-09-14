@@ -13,7 +13,8 @@ import Panel from '../../Panel'
 import Notification from '../../Notification'
 import Breadcrumb from '../../Breadcrumb'
 
-import styles from './Club.scss'
+import ClubForm from '../../ClubForm'
+import TeamForm from '../../TeamForm'
 
 import Button from '@material-ui/core/Button';
 
@@ -53,53 +54,15 @@ class Page extends Component {
     error: false,
     venues: [],
     club: {},
-    submitting: false,
-    status: 0
+    teams: []
   }
 
-  handleSubmit = (evt) => {
-    evt.preventDefault()
-
-    const { season } = this.props
-
-    const _this = this
-
-    this.setState({ submitting: true, status: 0 });
-
-    fetch(`/api/${season.period}/club`,
-    {
-        method: "POST",
-        body: JSON.stringify( this.state.club ),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-    })
-    .then(function(res) {
-      _this.setState({ submitting: false, status: 1 });
-    })
-    .catch(function(err) {
-      _this.setState({ submitting: false, status: -1 });
-    })
-
-    return false
-  }
-
-  handleDateChange = (field, date) => {
-    console.log(field, date)
-    this.state.club[field] = date.toDate()
-    this.setState({ club: this.state.club });
-  }
-
-  handleChange = (field, event) => {
-    console.log(field, event)
-    this.state.club[field] = event.target.value
-    this.setState({ club: this.state.club });
-  }
-
-  initialise () {
+  componentDidMount () {
     console.log('init')
     const { season, match } = this.props
+
+    console.log(this.state.loaded,this.props)
+
     if (this.state.loaded || !season) return
     this.moment = extendMoment(Moment)
 
@@ -119,6 +82,7 @@ class Page extends Component {
         if (response.club) {
           this.setState({
             club: response.club,
+            teams: response.teams,
             loaded: true
           })
         }
@@ -133,220 +97,37 @@ class Page extends Component {
   }
 
   render () {
-    this.initialise()
 
-    const { selectedDate } = this.state;
-    const { classes } = this.props
+    console.log('render....', this.state.loaded, this.state.error)
+
+    const { club, venues } = this.state;
+    const { classes, season } = this.props
 
     if (this.state.error) return <Panel><Notification text='Club not found' /></Panel>
 
     if (!this.state.loaded) return <Panel>Loading...</Panel>
 
-    console.log(':::::',this.state.club.name)
+    
+
     return (
       <Panel>
         
         <Breadcrumb>
           <NavLink to={'../clubs'} >Clubs</NavLink>
-          <b>{this.state.club.name}</b>
+          <b>{club.name}</b>
         </Breadcrumb>
 
         <Paper className={classes.paper}>
-
-          <form onSubmit={this.handleSubmit}>
-          
-            <Grid container spacing={8}>
-
-              <Grid item xs={12} md={6}>
-                <TextField
-                  required
-                  label="Club Name"
-                  onChange={(evt) => this.handleChange('name', evt)}
-                  value={this.state.club.name}
-                  margin="normal"
-                  fullWidth
-                />
-
-                <TextField
-                  id="textarea"
-                  label="Message"
-                  multiline
-                  onChange={(evt) => this.handleChange('message', evt)}
-                  value={this.state.club.message}
-                  margin="normal"
-                  fullWidth
-                />
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <TextField
-                  required
-                  label="Short"
-                  onChange={(evt) => this.handleChange('short', evt)}
-                  value={this.state.club.short}
-                  margin="normal"
-                  fullWidth
-                />
-                <TextField
-                  label="Email"
-                  onChange={(evt) => this.handleChange('email', evt)}
-                  value={this.state.club.email}
-                  margin="normal"
-                  fullWidth
-                />
-                <TextField
-                  label="Website"
-                  onChange={(evt) => this.handleChange('website', evt)}
-                  value={this.state.club.website}
-                  margin="normal"
-                  fullWidth
-                />
-              </Grid>
-
-
-
-
-              <Grid item xs={12} md={6}>
-                <TextField
-                  select
-                  label="Club Night Venue"
-                  value={this.state.club.clubnightVenue}
-                  onChange={(evt) => this.handleChange('clubnightVenue', evt)}
-                  margin="normal"
-                  fullWidth
-                  SelectProps={{
-                    native: true
-                  }}
-                >
-                  <option key='-1' value=''></option>
-                  {this.state.venues.map(venue => (
-                    <option key={venue._id} value={venue._id}>
-                      {venue.name}
-                    </option>
-                  ))}
-                </TextField>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <DateTimePicker
-                  autoOk
-                  value={this.state.club.clubnightStartAt}
-                  onChange={(date) => this.handleDateChange('clubnightStartAt', date)}
-                  label="Club Night Date/Time"
-                  margin="normal"
-                  fullWidth
-                />
-              </Grid>
-
-
-              <Grid item xs={12} md={6}>
-                <TextField
-                  select
-                  label="Alternative Club Night Venue"
-                  value={this.state.club.clubnightAltVenue}
-                  onChange={(evt) => this.handleChange('clubnightAltVenue', evt)}
-                  margin="normal"
-                  fullWidth
-                  SelectProps={{
-                    native: true
-                  }}
-                >
-                  <option key='-1' value=''></option>
-                  {this.state.venues.map(venue => (
-                    <option key={venue._id} value={venue._id}>
-                      {venue.name}
-                    </option>
-                  ))}
-                </TextField>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <DateTimePicker
-                  autoOk
-                  value={this.state.club.clubnightAltStartAt}
-                  onChange={(date) => this.handleDateChange('clubnightAltStartAt', date)}
-                  label="Club Night Alternative Date/Time"
-                  margin="normal"
-                  fullWidth
-                />
-              </Grid>
-
-
-
-              <Grid item xs={12} md={6}>
-                <TextField
-                  select
-                  label="Match Night Venue"
-                  value={this.state.club.matchVenue}
-                  onChange={(evt) => this.handleChange('matchVenue', evt)}
-                  margin="normal"
-                  SelectProps={{
-                    native: true
-                  }}
-                  fullWidth
-                >
-                  <option key='-1' value=''></option>
-                  {this.state.venues.map(venue => (
-                    <option key={venue._id} value={venue._id}>
-                      {venue.name}
-                    </option>
-                  ))}
-                </TextField>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <DateTimePicker
-                  autoOk
-                  value={this.state.club.matchStartAt}
-                  onChange={(date) => this.handleDateChange('matchStartAt', date)}
-                  label="Match Night Date/Time"
-                  margin="normal"
-                  fullWidth
-                />
-              </Grid>
-
-
-              <Grid item xs={12} md={6}>
-                <TextField
-                  select
-                  label="Alternative Match Night Venue"
-                  value={this.state.club.matchAltVenue}
-                  onChange={(evt) => this.handleChange('matchAltVenue', evt)}
-                  margin="normal"
-                  SelectProps={{
-                    native: true
-                  }}
-                  fullWidth
-                >
-                  <option key='-1' value=''></option>
-                  {this.state.venues.map(venue => (
-                    <option key={venue._id} selected={this.state.club.matchAltVenue === venue._id} value={venue._id}>
-                      {venue.name}
-                    </option>
-                  ))}
-                </TextField>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <DateTimePicker
-                  autoOk
-                  value={this.state.club.matchnightAltStartAt}
-                  onChange={(date) => this.handleDateChange('matchnightAltStartAt', date)}
-                  label="Match Night Alternative Date/Time"
-                  margin="normal"
-                  fullWidth
-                />
-              </Grid>
-
-            </Grid>
-
-
-            <Button disabled={ this.state.submitting } type="submit" variant="contained" color="primary">Save</Button>
-            { this.state.submitting && <CircularProgress /> }
-
-          </form>
+          <ClubForm season={season} club={club} venues={venues} />
         </Paper>
 
+        <h1>teams this season</h1>
+
+        {this.state.teams.map(team => (
+          <Paper className={classes.paper}>
+            <TeamForm season={season} team={team} />
+          </Paper>
+        ))}
       </Panel>
     )
   }

@@ -39,6 +39,7 @@ import TableIcon from '@material-ui/icons/ViewList';
 import GridIcon from '@material-ui/icons/ViewModule';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LockIcon from '@material-ui/icons/Lock';
+import AdminIcon from '@material-ui/icons/Settings';
 
 import PersonIcon from '@material-ui/icons/Person';
 import PeopleIcon from '@material-ui/icons/People';
@@ -133,6 +134,10 @@ const pages = [
   {
     name: 'Login',
     icon: <LockIcon />
+  },
+  {
+    name: 'Admin',
+    icon: <AdminIcon />
   }
 ]
 
@@ -248,7 +253,7 @@ class Menu extends Component {
           <div className={styles.list}>
             <div className={styles.toolbar}>
               <IconButton onClick={this.handleDrawerClose}>
-                <ChevronRightIcon />
+                <ChevronLeftIcon />
               </IconButton>
             </div>
             <Divider />

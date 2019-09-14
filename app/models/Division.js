@@ -6,7 +6,6 @@ var divisionSchema = mongoose.Schema({
   _fmt: Number,
   labelLocal: String,
   label: String,
-  teams: [],
   season: Object,
   position: Number,
   alias: String,

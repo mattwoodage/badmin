@@ -41,11 +41,13 @@ class DivisionGrid extends Component {
 
     const divClass = division.labelLocal.split(' ')[0]
 
-    console.log(divClass)
-
     const tableClass = overrides['table' + divClass]
     const cellClass = overrides['cell' + divClass]
 
+    //teams alphabetical
+    console.log(division.teams.map(a => a.labelLocal))
+    division.teams = division.teams.sort(function(a, b){return a.labelLocal>b.labelLocal ? 1 : -1});
+    console.log(division.teams.map(a => a.labelLocal))
     return (
       <Table className={tableClass}>
         <TableHead>
@@ -104,6 +106,16 @@ class DivisionGrid extends Component {
   }
 
   displayMatch (match) {
+    if (match.scoreCard) {
+      return (
+        <span>
+          <NavLink to={`./match/${match._id}`} >
+            {match.scoreCard.homeRubbers} - {match.scoreCard.awayRubbers}
+          </NavLink>
+        </span>
+      )
+    }
+
     return (
       <span>
         <NavLink to={`./match/${match._id}`} >

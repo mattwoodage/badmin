@@ -29,6 +29,9 @@ const styles = theme => ({
 class DivisionTable extends Component {
   renderTeams () {
     const { classes, division } = this.props;
+
+    division.teams.sort(function(a, b){return b.pts-a.pts});
+
     return (
       <Table className={classes.table}>
         
@@ -68,17 +71,17 @@ class DivisionTable extends Component {
                 <TableRow className={overrides.tableBody} className={classes.row}>
                   <TableCell className={overrides.team} key={team._id}>{team.labelLocal}</TableCell>
                   
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>{team.matchesTotal}</TableCell>
+                  <TableCell>{team.matchesFull}</TableCell>
+                  <TableCell>{team.matchesWon}</TableCell>
+                  <TableCell>{team.matchesLost}</TableCell>
+                  <TableCell>{team.rubbersWon}</TableCell>
+                  <TableCell>{team.rubbersLost}</TableCell>
+                  <TableCell>{team.gamesWon}</TableCell>
+                  <TableCell>{team.gamesLost}</TableCell>
+                  <TableCell>{team.pointsWon}</TableCell>
+                  <TableCell>{team.pointsLost}</TableCell>
+                  <TableCell>{team.pts}</TableCell>
 
                 </TableRow>
               )

@@ -16,7 +16,7 @@ class Loader extends Component {
     // );
 
     return (
-      <span>loading: {this.props.loading}</span>
+      <span>loading: {this.props.loading ? 'true' : 'false'}</span>
     );
   }
 }

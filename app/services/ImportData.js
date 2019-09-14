@@ -1,17 +1,17 @@
 
-var League = require('../app/models/League')
-var Season = require('../app/models/Season')
-var Division = require('../app/models/Division')
-var Team = require('../app/models/Team')
-var Match = require('../app/models/Match')
-var ScoreCard = require('../app/models/ScoreCard')
-var Score = require('../app/models/Score')
-var Club = require('../app/models/Club')
-var Venue = require('../app/models/Venue')
+var League = require('../models/League')
+var Season = require('../models/Season')
+var Division = require('../models/Division')
+var Team = require('../models/Team')
+var Match = require('../models/Match')
+var ScoreCard = require('../models/ScoreCard')
+var Score = require('../models/Score')
+var Club = require('../models/Club')
+var Venue = require('../models/Venue')
 
-var Player = require('../app/models/Player')
-var Member = require('../app/models/Member')
-var User = require('../app/models/User')
+var Player = require('../models/Player')
+var Member = require('../models/Member')
+var User = require('../models/User')
 
 
 var fs = require('fs')
@@ -54,23 +54,23 @@ class ImportData {
     this.processLeague()
        .then(() => {
          this.processSuperadmin()
-      //     .then(() => {
-      //       this.processSeasons()
-      //         .then(() => {
-      //            this.processDivisions()
-      //             .then(() => {
-      //               this.processVenues()
-      //                 .then(() => {
-      //                   this.processClubs()
-      //                     .then(() => {
-      //                       this.processTeams()
-      //                         .then(() => {
-      //                           this.processPlayers()
-      //                             .then(() => {
-      //                               this.processClubPlayers()
-      //                                 .then(() => {
-      //                                   this.processMatches()
-      //                                     .then(() => {
+          .then(() => {
+            this.processSeasons()
+              .then(() => {
+                 this.processDivisions()
+                  .then(() => {
+                    this.processVenues()
+                      .then(() => {
+                        this.processClubs()
+                          .then(() => {
+                            this.processTeams()
+                              .then(() => {
+                                this.processPlayers()
+                                  .then(() => {
+                                    this.processClubPlayers()
+                                      .then(() => {
+                                        this.processMatches()
+                                          .then(() => {
                                              this.processRubbers()
                                                .then(() => {
                                                 console.log('****** P R O C E S S I N G       D O N E ******')
@@ -82,15 +82,15 @@ class ImportData {
                                               .catch(error => {
                                                 console.error('processAll:', error)
                                               })
-          //                                 })
-          //                             })
-          //                         })
-          //                     })
-          //                 })
-          //             })
-          //         })
-          //     })
-          // })
+                                          })
+                                      })
+                                  })
+                              })
+                          })
+                      })
+                  })
+              })
+          })
       })
   }
 
@@ -119,7 +119,6 @@ class ImportData {
           log.saved += 1
         }
         log.processed += 1
-        console.log('SAVED ', obj)
         if (log.processed === log.total) {
           this.log[modelName] = log
           resolve({obj:obj, done:true})
@@ -438,10 +437,35 @@ class ImportData {
                     team.division = division._id
                     team.prefix = cols[2]
                     team.club = club._id
+                    team.matchesWon = 0
+                    team.matchesFull = 0
+                    team.matchesLost = 0
+                    team.matchesDrawn = 0
+                    team.matchesTotal = 0
+                    team.rubbersWon = 0
+                    team.rubbersLost = 0
+                    team.rubbersDrawn = 0
+                    team.gamesWon = 0
+                    team.gamesLost = 0
+                    team.pointsWon = 0
+                    team.pointsLost = 0
+                    team.pos = 0
+                    team.pts = 0
 
+                    console.log('TEAM = ', team)
+                    
                     this.saveOrUpdate(team, 'teams', log)
                       .then((result) => {
                         if (result.done) resolve()
+                      })
+                      .catch((err) => {
+                        console.log('---------')
+                        console.log('---------')
+                        console.log('---------')
+                        console.log(err)
+                        console.log('---------')
+                        console.log('---------')
+                        console.log('---------')
                       })
                   })
               })
@@ -662,7 +686,9 @@ class ImportData {
                                 scoreCard.awayPlayers.push(player_a2._id)
                               }
                               else if (cols[2] == 3) {
+                                console.log('game 3', match.division)
                                 if (match.division.numPlayers>4) {
+                                  console.log('-')
                                   scoreCard.homePlayers.push(player_h1._id)
                                   scoreCard.homePlayers.push(player_h2._id)
                                   scoreCard.awayPlayers.push(player_a1._id)
@@ -671,9 +697,12 @@ class ImportData {
                               }
 
                               
-
+                              match.scoreCard = scoreCard._id
+                              match.save()
 
                               const scoreCardLog = this.newLog([1])
+
+                              console.log('==',scoreCard.homePlayers.length)
 
                               this.saveOrUpdate(scoreCard, 'scorecards', scoreCardLog)
                                 .then((result) => {
@@ -724,7 +753,7 @@ class ImportData {
       //home
       const homePts = cols[5+gameNum*2]
       const awayPts = cols[5+(gameNum*2)+1]
-      const homeWin = (homePts>awayPts)
+      const homeWin = (parseInt(homePts)>parseInt(awayPts))
 
       const scoreLog = this.newLog([1])
 
