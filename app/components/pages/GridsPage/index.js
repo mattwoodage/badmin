@@ -6,23 +6,8 @@ import Moment from 'moment'
 import { extendMoment } from 'moment-range';
 import Panel from '../../Panel'
 
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import List from '@material-ui/core/List';
-
-import Typography from '@material-ui/core/Typography';
-
-import { withStyles } from '@material-ui/core/styles';
 import { LeagueContext } from '../../Root'
 import DB from '../../../helpers/DB'
-
-const styles = theme => ({
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary
-  }
-});
 
 class Page extends Component {
 
@@ -57,7 +42,7 @@ class Page extends Component {
     const { classes } = this.props;
 
     return (
-      <List>
+      <div>
       {
         this.state.divisions && this.state.divisions.map(division => {
           return (
@@ -65,7 +50,7 @@ class Page extends Component {
           )
         })
       }
-      </List>
+      </div>
     )
   }
 
@@ -73,10 +58,10 @@ class Page extends Component {
     const { classes } = this.props;
     this.initialise()
     return (
-      <Panel>
-        <Typography variant="display3" gutterBottom>GRIDS</Typography>
+      <div>
+        <h1>GRIDS</h1>
         {this.renderGrids()}
-      </Panel>
+      </div>
     )
   }
 }
@@ -91,5 +76,5 @@ class GridsPage extends Component {
   }
 }
 
-export default withStyles()(GridsPage)
+export default GridsPage
 

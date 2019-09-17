@@ -13,10 +13,10 @@ class Breadcrumb extends Component {
           React.Children.map(this.props.children, (x,i) => {
             if (i === this.props.children.length-1) return x
             return (
-              <span>
+              <h1>
                 {x}
                 <ChevronRightIcon />
-              </span>
+              </h1>
             )
           })
         }

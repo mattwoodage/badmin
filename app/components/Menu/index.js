@@ -22,12 +22,11 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
 
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 
-import styles from './Menu.css'
+import styles from './Menu.scss'
 
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -173,7 +172,7 @@ class Menu extends Component {
     return pages.map(p => {
       return (
         <li>
-          <NavLink className={styles.horizItem} activeClassName={styles.horizCurrent} to={`/${this.path()}/${p.name.toLowerCase()}`} >
+          <NavLink className='horizItem' activeClassName='horizCurrent' to={`/${this.path()}/${p.name.toLowerCase()}`} >
             {p.name.toLowerCase()}
           </NavLink>
         </li>
@@ -184,7 +183,7 @@ class Menu extends Component {
   renderVerticalMenu = () => {
     return pages.map(p => {
       return (
-        <ListItem component={NavLink} activeClassName={styles.vertCurrent} to={`/${this.path()}/${p.name.toLowerCase()}`} button>
+        <ListItem component={NavLink} activeClassName='vertCurrent' to={`/${this.path()}/${p.name.toLowerCase()}`} button>
 
             <ListItemIcon>
               {p.icon}
@@ -204,7 +203,7 @@ class Menu extends Component {
     const { season, seasons } = this.props;
     if (!seasons) return
     return (
-      <select className={styles.selectSeason} onChange={this.selectSeason}>
+      <select className='selectSeason' onChange={this.selectSeason}>
         { seasons.map((s) => {
           return <option selected={(season.period === s)}>{s}</option>
           })
@@ -216,26 +215,26 @@ class Menu extends Component {
   render () {
     const { classes, season, theme, league, isLoggedIn, nickname, doLogOut } = this.props;
     const leagueName = league ? league.name : 'League Not Found'
-    let headerStyles = styles.header
+    let headerStyles = 'header'
 
-    if (season && season.current) headerStyles += ' ' + styles.current
+    if (season && season.current) headerStyles += ' current'
 
     return (
-      <div>
+      <div className='menu'>
         <div className={headerStyles}>
-          <div className={styles.menuButtonContainer}>
+          <div className='menuButtonContainer'>
             <IconButton
               aria-label="open drawer"
               onClick={this.handleDrawerOpen}
-              className={styles.menuButton}>
+              className='menuButton'>
               <MenuIcon />
             </IconButton>
           </div>
           { league && <img width="270" src={logos[league.short.toLowerCase()]} /> }
-          <div className={styles.currentUser} >
+          <div className='currentUser' >
             <CurrentUser doLogOut={doLogOut} isLoggedIn={isLoggedIn} nickname={nickname} />
           </div>
-          <ul className={styles.horizList}>
+          <ul className='horizList'>
             {this.renderHorizontalMenu()}
           </ul>
 
@@ -250,8 +249,8 @@ class Menu extends Component {
           onOpen={this.drawerOnOpen}
           onClose={this.drawerOnClose}
         >
-          <div className={styles.list}>
-            <div className={styles.toolbar}>
+          <div className='list'>
+            <div className='toolbar'>
               <IconButton onClick={this.handleDrawerClose}>
                 <ChevronLeftIcon />
               </IconButton>

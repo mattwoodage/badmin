@@ -1,30 +1,8 @@
 import React, { Component } from 'react'
 
-import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 
 import overrides from './DivisionTable.scss'
-
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-
-const styles = theme => ({
-  paper: {
-    padding: 0,
-    color: theme.palette.text.secondary
-  },
-  row: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  }
-});
 
 class DivisionTable extends Component {
   renderTeams () {
@@ -32,79 +10,81 @@ class DivisionTable extends Component {
 
     division.teams.sort(function(a, b){return b.pts-a.pts});
 
-    return (
-      <Table className={classes.table}>
-        
-        <TableHead>
-          <TableRow className={overrides.tableHead}>
-            <TableCell>
-              <Typography variant="title">{division.labelLocal}</Typography>
-            </TableCell>
-            <TableCell colSpan={4}>Matches</TableCell>
-            <TableCell colSpan={2}>Rubbers</TableCell>
-            <TableCell colSpan={2}>Games</TableCell>
-            <TableCell colSpan={2}>Points</TableCell>
-            <TableCell>PTS</TableCell>
-          </TableRow>
-        </TableHead>
+    const cellClass = 'bg-' + division.category
+    const tblClass = 'table-' + division.category
 
-        <TableHead>
-          <TableRow className={overrides.tableSubHead}>
-            <TableCell></TableCell>
-            <TableCell>Total</TableCell>
-            <TableCell>Full</TableCell>
-            <TableCell>Won</TableCell>
-            <TableCell>Lost</TableCell>
-            <TableCell>Won</TableCell>
-            <TableCell>Lost</TableCell>
-            <TableCell>Won</TableCell>
-            <TableCell>Lost</TableCell>
-            <TableCell>Won</TableCell>
-            <TableCell>Lost</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
+    return (
+      <table className={tblClass}>
+        
+        <thead>
+          <tr className={cellClass}>
+            <td>
+              <h3>{division.labelLocal}</h3>
+            </td>
+            <td colSpan={5}>Matches</td>
+            <td colSpan={3}>Rubbers</td>
+            <td colSpan={2}>Games</td>
+            <td colSpan={2}>Points</td>
+            <td>PTS</td>
+          </tr>
+        </thead>
+
+        <thead>
+          <tr className={cellClass}>
+            <td></td>
+            <td>Total</td>
+            <td>Full</td>
+            <td>Won</td>
+            <td>Drawn</td>
+            <td>Lost</td>
+            <td>Won</td>
+            <td>Drawn</td>
+            <td>Lost</td>
+            <td>Won</td>
+            <td>Lost</td>
+            <td>Won</td>
+            <td>Lost</td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
           {
             division.teams.map(team => {
               return (
-                <TableRow className={overrides.tableBody} className={classes.row}>
-                  <TableCell className={overrides.team} key={team._id}>{team.labelLocal}</TableCell>
-                  
-                  <TableCell>{team.matchesTotal}</TableCell>
-                  <TableCell>{team.matchesFull}</TableCell>
-                  <TableCell>{team.matchesWon}</TableCell>
-                  <TableCell>{team.matchesLost}</TableCell>
-                  <TableCell>{team.rubbersWon}</TableCell>
-                  <TableCell>{team.rubbersLost}</TableCell>
-                  <TableCell>{team.gamesWon}</TableCell>
-                  <TableCell>{team.gamesLost}</TableCell>
-                  <TableCell>{team.pointsWon}</TableCell>
-                  <TableCell>{team.pointsLost}</TableCell>
-                  <TableCell>{team.pts}</TableCell>
+                <tr  key={team._id}>
+                  <td className={cellClass} >{team.labelClub}</td>
+                  <td>{team.matchesTotal}</td>
+                  <td>{team.matchesFull}</td>
+                  <td>{team.matchesWon}</td>
+                  <td>{team.matchesDrawn}</td>
+                  <td>{team.matchesLost}</td>
+                  <td>{team.rubbersWon}</td>
+                  <td>{team.rubbersDrawn}</td>
+                  <td>{team.rubbersLost}</td>
+                  <td>{team.gamesWon}</td>
+                  <td>{team.gamesLost}</td>
+                  <td>{team.pointsWon}</td>
+                  <td>{team.pointsLost}</td>
+                  <td>{team.pts}</td>
 
-                </TableRow>
+                </tr>
               )
             })
           }
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
     )
   }
 
   render () {
     const { classes } = this.props;
-    console.log('----', this.props.division)
     return (
       <div>
-        <Paper className={classes.paper}>
-          
-          { this.renderTeams() }
-        </Paper>
+        { this.renderTeams() }
         <br /><br />
       </div>
     )
   }
 }
 
-export default withStyles(styles)(DivisionTable)
+export default DivisionTable

@@ -1,0 +1,84 @@
+@import 'reset-css';
+@import '../../styles/global.scss';
+
+.menu {
+  .header {
+    background-color: $color-archive;
+    padding: 20px 20px 0px 70px;
+    position: relative;
+    margin-top: 10px;
+    overflow:hidden;
+  }
+
+  .current {
+    background-color: $color-primary !important;
+  }
+
+  .menuButton {
+    background-color: $color-primary;
+  }
+
+  .currentUser {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+
+
+  .horizList {
+    li {
+      display:inline-block;
+      margin-top: 15px;
+      margin-right: 1px;
+
+      a {
+        font-family: 'OpenSansLight';
+        display:inline-block;
+        padding: 4px 10px;
+        width:74px;
+        text-align:center;
+        text-decoration: none;
+      }
+
+    }
+  }
+
+  .horizItem {
+    color: $color-inner-background;
+    background-color: $color-outer-background /*rgba( $color-inner-background, 0.5 )*/
+  }
+
+  .horizCurrent {
+    color: $color-outer-background;
+    background-color: $color-inner-background
+  }
+
+  .vertCurrent {
+    background-color: $color-primary !important;
+  }
+
+  .menuButtonContainer {
+    position: fixed;
+    margin: -10px 0px 0px -60px;
+  }
+
+  .selectSeason {
+    position: absolute;
+    right:20px;
+    bottom:20px;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  .list {
+    width: 250px;
+  }
+
+  .toolbar {
+    padding: 0 8px;
+  }
+
+}
+

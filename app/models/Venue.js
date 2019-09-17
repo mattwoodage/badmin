@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
 var venueSchema = mongoose.Schema({
   name: { type: String, unique: true, required:true },
@@ -17,4 +17,4 @@ var venueSchema = mongoose.Schema({
 
 var Venue = mongoose.model('Venue', venueSchema)
 
-module.exports =  Venue
+export default Venue

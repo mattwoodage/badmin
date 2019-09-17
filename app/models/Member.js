@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
 var memberSchema = mongoose.Schema({
   player: { type: mongoose.Schema.Types.ObjectId, ref: 'Player' },
@@ -11,4 +11,4 @@ var memberSchema = mongoose.Schema({
 
 var Member = mongoose.model('Member', memberSchema)
 
-module.exports = Member
+export default Member

@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import Club from '../../Club'
 
-import { withStyles } from '@material-ui/core/styles';
-
 import { NavLink } from 'react-router-dom'
 
 import ReactMoment from 'react-moment'
@@ -25,27 +23,9 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import List from '@material-ui/core/List';
-import CircularProgress from '@material-ui/core/CircularProgress';
-
-import Typography from '@material-ui/core/Typography';
 
 import { LeagueContext } from '../../Root'
 import DB from '../../../helpers/DB'
-
-
-const materialStyles = theme => ({
-  paper: {
-    padding: 30,
-    color: theme.palette.text.secondary
-  },
-  row: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  }
-});
 
 class Page extends Component {
 
@@ -53,6 +33,7 @@ class Page extends Component {
     loaded: false,
     error: false,
     venues: [],
+    divisions: [],
     club: {},
     teams: []
   }
@@ -60,8 +41,6 @@ class Page extends Component {
   componentDidMount () {
     console.log('init')
     const { season, match } = this.props
-
-    console.log(this.state.loaded,this.props)
 
     if (this.state.loaded || !season) return
     this.moment = extendMoment(Moment)
@@ -77,58 +56,72 @@ class Page extends Component {
         }
       })
 
-    DB.get(`/api/${season.period}/club/${clubID}`)
+    DB.get(`/api/${season.period}/divisions`)
       .then(response => {
-        if (response.club) {
+        if (response.divisions) {
           this.setState({
-            club: response.club,
-            teams: response.teams,
-            loaded: true
+            divisions: response.divisions,
           })
         }
-        else {
-          this.setState({
-            error: true,
-            loaded: true
-          })
-        }
-        this.props.stopLoad()
       })
+
+
+    if (clubID !== 'new') {
+      DB.get(`/api/${season.period}/club/${clubID}`)
+        .then(response => {
+          if (response.club) {
+
+            let teamsArray = response.teams
+            teamsArray.push({club: response.club._id})
+            this.setState({
+              club: response.club,
+              teams: teamsArray,
+              loaded: true
+            })
+          }
+          else {
+            this.setState({
+              error: true,
+              loaded: true
+            })
+          }
+          this.props.stopLoad()
+        })
+    } else {
+      this.setState({
+        loaded: true
+      })
+    }
   }
 
   render () {
 
-    console.log('render....', this.state.loaded, this.state.error)
-
-    const { club, venues } = this.state;
+    const { club, venues, teams, divisions } = this.state;
     const { classes, season } = this.props
 
     if (this.state.error) return <Panel><Notification text='Club not found' /></Panel>
 
     if (!this.state.loaded) return <Panel>Loading...</Panel>
 
-    
-
     return (
-      <Panel>
-        
+      <div>
+
         <Breadcrumb>
           <NavLink to={'../clubs'} >Clubs</NavLink>
-          <b>{club.name}</b>
+          <b>{club.name || '*NEW*'}</b>
         </Breadcrumb>
 
-        <Paper className={classes.paper}>
+        <Panel high marginBottom>  
           <ClubForm season={season} club={club} venues={venues} />
-        </Paper>
+        </Panel>
 
-        <h1>teams this season</h1>
+        <h1>Teams this season</h1>
+        
 
-        {this.state.teams.map(team => (
-          <Paper className={classes.paper}>
-            <TeamForm season={season} team={team} />
-          </Paper>
+        {teams.map(team => (
+          <TeamForm season={season} team={team} divisions={divisions}  />
         ))}
-      </Panel>
+      </div>
     )
   }
 }
@@ -143,5 +136,5 @@ class ClubPage extends Component {
   }
 }
 
-export default withStyles(materialStyles)(ClubPage)
+export default ClubPage
 

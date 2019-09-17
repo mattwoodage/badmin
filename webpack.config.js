@@ -14,7 +14,7 @@ const htmlPlugin = new HtmlWebPackPlugin({
 var config = {
 
   entry: {
-    bundle: ['babel-preset-env', APP_DIR + '/index.js']
+    bundle: ['@babel/preset-env', APP_DIR + '/index.js']
   },
   output: {
     path: BUILD_DIR,
@@ -58,10 +58,25 @@ var config = {
             }
           }
         ]
-      },{ test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
+      },{
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: BUILD_DIR + '/fonts/'
+            }
+          }
+        ]
+      }
+      
     ]
   },
-  plugins: [htmlPlugin]
+  plugins: [htmlPlugin],
+  node: {
+    fs: 'empty'
+  }
 };
 
 module.exports = config;

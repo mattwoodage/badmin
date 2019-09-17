@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
 var clubPlayerSchema = mongoose.Schema({
 
@@ -14,4 +14,4 @@ var clubPlayerSchema = mongoose.Schema({
 
 var ClubPlayer = mongoose.model('ClubPlayer', clubPlayerSchema)
 
-module.exports = ClubPlayer
+export default ClubPlayer

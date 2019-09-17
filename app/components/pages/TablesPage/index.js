@@ -10,19 +10,9 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 
-import Typography from '@material-ui/core/Typography';
-
-import { withStyles } from '@material-ui/core/styles';
 import { LeagueContext } from '../../Root'
 import DB from '../../../helpers/DB'
 
-const styles = theme => ({
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary
-  }
-});
 
 class Page extends Component {
 
@@ -62,10 +52,10 @@ class Page extends Component {
     const { classes } = this.props;
     this.initialise()
     return (
-      <Panel>
-        <Typography variant="display3" gutterBottom>TABLES</Typography>
+      <div>
+        <h1>TABLES</h1>
         {this.renderTables()}
-      </Panel>
+      </div>
     )
   }
 }
@@ -80,5 +70,5 @@ class TablesPage extends Component {
   }
 }
 
-export default withStyles()(TablesPage)
+export default TablesPage
 

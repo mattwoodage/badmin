@@ -7,10 +7,9 @@ import axios from 'axios'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import {Helmet} from "react-helmet";
-import styles from './Root.css'
-
-import MomentUtils from 'material-ui-pickers/utils/moment-utils';
-import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+import styles from './Root.scss'
+import regeneratorRuntime from "regenerator-runtime";
+import "core-js";
 
 export const LeagueContext = React.createContext()
 
@@ -25,7 +24,7 @@ class Root extends Component {
       isLoggedIn: false,
       nickname: '',
       loginError: {},
-      loading: true,
+      loading: false,
       loginLoading: false,
       registerLoading: false
     }
@@ -156,29 +155,31 @@ class Root extends Component {
       user: {}
     }
 
-    return (
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <LeagueContext.Provider value={context}>
-          {
-            this.state.league && 
-            <Helmet>
-              <title>{this.state.league.name}</title>
-            </Helmet>
-          }
-          <div className={styles.outer}>
-            <div className={styles.inner}>
-              
-              <Menu loading={this.state.loading} isLoggedIn={this.state.isLoggedIn} doLogOut={this.doLogOut} nickname={this.state.nickname} league={this.state.league} season={this.state.season} seasons={this.state.seasons} />
-              
-              <div className={styles.content}>
-                {this.props.children}
-              </div>
+    console.log('>>>>>>>', styles)
+    console.log('>>>>>>>', styles.outer)
 
-              <Footer league={this.state.league} />
+
+    return (
+      <LeagueContext.Provider value={context}>
+        {
+          this.state.league && 
+          <Helmet>
+            <title>{this.state.league.name}</title>
+          </Helmet>
+        }
+        <div className='outer'>
+          <div className='inner'>
+            
+            <Menu loading={this.state.loading} isLoggedIn={this.state.isLoggedIn} doLogOut={this.doLogOut} nickname={this.state.nickname} league={this.state.league} season={this.state.season} seasons={this.state.seasons} />
+            
+            <div className='content'>
+              {this.props.children}
             </div>
+
+            <Footer league={this.state.league} />
           </div>
-        </LeagueContext.Provider>
-      </MuiPickersUtilsProvider>
+        </div>
+      </LeagueContext.Provider>
     )
   }
 }

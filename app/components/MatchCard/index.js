@@ -4,7 +4,7 @@ import Moment from 'react-moment'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
-import { withStyles } from '@material-ui/core/styles';
+
 import Hidden from '@material-ui/core/Hidden';
 import ImageIcon from '@material-ui/icons/Image';
 import { NavLink } from 'react-router-dom'
@@ -19,12 +19,7 @@ import matchStyles from './MatchCard.scss';
 
 Moment.globalFormat = 'D MMM YYYY HH:mm'
 
-const styles = {
-  row: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-};
+
 
 class MatchCard extends Component {
   
@@ -112,4 +107,4 @@ class MatchCard extends Component {
   }
 }
 
-export default  withStyles(styles)(MatchCard)
+export default  MatchCard

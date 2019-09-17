@@ -1,17 +1,18 @@
 
-var League = require('../models/League')
-var Season = require('../models/Season')
-var Division = require('../models/Division')
-var Team = require('../models/Team')
-var Match = require('../models/Match')
-var ScoreCard = require('../models/ScoreCard')
-var Score = require('../models/Score')
-var Club = require('../models/Club')
-var Venue = require('../models/Venue')
 
-var Player = require('../models/Player')
-var Member = require('../models/Member')
-var User = require('../models/User')
+import League from '../models/League'
+import Season from '../models/Season'
+import Division from '../models/Division'
+import Team from '../models/Team'
+import Match from '../models/Match'
+import ScoreCard from '../models/ScoreCard'
+import Score from '../models/Score'
+import Club from '../models/Club'
+import Venue from '../models/Venue'
+
+import Player from '../models/Player'
+import Member from '../models/Member'
+import User from '../models/User'
 
 
 var fs = require('fs')
@@ -243,7 +244,8 @@ class ImportData {
                 division.position = cols[3]
                 division.alias = (Number(cols[3])===0) ? 'Premier' : ''
 
-                division.category = cols[10]
+                division.category = cols[2]
+                division.categoryShort = cols[10]
                 division.short = ""
                 division.males = cols[9].indexOf('M')>-1 || cols[9].indexOf('O')>-1
                 division.females = cols[9].indexOf('F')>-1 || cols[9].indexOf('O')>-1
@@ -428,12 +430,15 @@ class ImportData {
                 const teamName = (club.name + ' ' + cols[2]).trim()
                 const uid = teamName + ' ' + division.label
                 const key = uid.toLowerCase().split(' ').join('-')
+                let labelDivision = division.category
+                if (cols[2].length) labelDivision += ' ' + cols[2]
                 this.findOrCreate(Team, { _old: cols[0] } )
                   .then(team => {
                     team._old = cols[0]
                     team.key = key
                     team.label = uid
                     team.labelLocal = teamName
+                    team.labelDivision = labelDivision
                     team.division = division._id
                     team.prefix = cols[2]
                     team.club = club._id
@@ -837,5 +842,5 @@ class ImportData {
   }
 }
 
-module.exports = ImportData;
+export default ImportData;
 

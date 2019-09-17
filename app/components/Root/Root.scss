@@ -1,0 +1,135 @@
+@import 'reset-css';
+@import '../../styles/global.scss';
+
+.outer {
+  width:100%;
+}
+
+.inner {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+.content {
+  padding: 20px 70px 140px 70px;
+  min-height: 100vh;
+  background-color: $color-inner-background;
+
+  h1 {
+    font-size: 30px;
+    line-height: 70px;
+    color: #999;
+    text-transform: uppercase;
+  }
+
+  h3 {
+    font-size: 20px;
+    line-height:30px;
+  }
+
+}
+
+a.current {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+body {
+  box-sizing: border-box;
+  background-color: $color-outer-background;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a, span, div {
+  font: 14px/19px Arial, sans-serif !important
+}
+
+h1 {
+  font: 30px/40px !important
+}
+
+
+
+a {
+  color: $color-link;
+  text-decoration: none;
+}
+
+a:hover {
+  color: $color-link-hover;
+  text-decoration: none;
+}
+
+:global(h1) {
+  font-size: 30px;
+  line-height: 40px;
+}
+
+:global(h2) {
+  font-size: 20px;
+  line-height: 25px;
+}
+
+
+table {
+  width: 100%;
+  
+  thead {
+    th, td {
+      padding:4px 6px 4px 6px !important;
+      background:#f0f0f0;
+      text-align: center;
+    }
+  }
+
+  tbody {
+    th, td {
+      padding:4px 6px 4px 6px !important;
+      background-color: #fff;
+      text-align: center;
+    }
+  }
+}
+
+
+.table-Ladies {
+  border: 2px solid $color-ladies;
+  border-left:10px solid darken( $color-ladies, 10% )
+}
+
+.table-Mens {
+  border: 2px solid $color-mens;
+  border-left:10px solid darken( $color-mens, 10% )
+}
+
+.table-Mixed {
+  border: 2px solid $color-mixed;
+  border-left:10px solid darken( $color-mixed, 10% )
+}
+
+.bg-Ladies, .bg-Ladies * {
+  background-color: $color-ladies;
+}
+
+.bg-Mens, .bg-Mens * {
+  background-color: $color-mens;
+}
+
+.bg-Mixed, .bg-Mixed * {
+  background-color: $color-mixed;
+}
+
+.fg-Ladies {
+  background-color: $color-ladies;
+}
+
+.fg-Mens {
+  background-color: $color-mens;
+}
+
+.fg-Mixed {
+  background-color: $color-mixed;
+}

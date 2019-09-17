@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
 var scoreCardSchema = mongoose.Schema({
   match: { type: mongoose.Schema.Types.ObjectId, ref: 'Match' },
@@ -25,4 +25,4 @@ var scoreCardSchema = mongoose.Schema({
 
 var ScoreCard = mongoose.model('ScoreCard', scoreCardSchema)
 
-module.exports =  ScoreCard
+export default ScoreCard

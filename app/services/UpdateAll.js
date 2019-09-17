@@ -1,20 +1,20 @@
 
-var League = require('../models/League')
-var Season = require('../models/Season')
-var Division = require('../models/Division')
-var Team = require('../models/Team')
-var Match = require('../models/Match')
-var ScoreCard = require('../models/ScoreCard')
-var Score = require('../models/Score')
-var Club = require('../models/Club')
-var Venue = require('../models/Venue')
+import League from '../models/League'
+import Season from '../models/Season'
+import Division from '../models/Division'
+import Team from '../models/Team'
+import Match from '../models/Match'
+import ScoreCard from '../models/ScoreCard'
+import Score from '../models/Score'
+import Club from '../models/Club'
+import Venue from '../models/Venue'
 
-var Player = require('../models/Player')
-var Member = require('../models/Member')
-var User = require('../models/User')
+import Player from '../models/Player'
+import Member from '../models/Member'
+import User from '../models/User'
 
+import fs from 'fs'
 
-var fs = require('fs')
 
 class UpdateAll {
 
@@ -40,6 +40,9 @@ class UpdateAll {
   async processTables () {
     console.log('****** P R O C E S S    T A B L E S ******')
 
+    console.log('>>>>>', League)
+
+    
     const league = await League.findOne({ short: this.leagueShort })
 
     const season = await Season.findOne({ league: league._id, period: this.seasonPeriod })
@@ -309,5 +312,5 @@ class UpdateAll {
   
 }
 
-module.exports = UpdateAll;
+export default UpdateAll;
 

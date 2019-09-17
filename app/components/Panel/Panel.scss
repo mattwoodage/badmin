@@ -1,17 +1,30 @@
 @import 'reset-css';
 @import '../../styles/global.scss';
 
-:local(.default) {
-  padding: 40px 70px;
+.default {
+  padding: 20px 20px;
   background-color: $color-inner-background;
+  border-left:10px transparent;
 }
 
-:local(.high) {
-  padding: 40px 70px;
+.high {
+  padding: 20px 20px;
   background-color: $color-high-background;
+  border-left:10px solid #ddd;
 }
 
-:local(.low) {
-  padding: 40px 70px;
+.low {
+  padding: 20px 20px;
   background-color: $color-low-background;
+  border-left:10px solid #ddd;
+}
+
+.create {
+  padding: 20px 20px;
+  background-color: $color-create;
+  border-left:10px solid $color-primary;
+}
+
+.marginBottom {
+  margin-bottom: 20px;
 }

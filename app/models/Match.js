@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
 var matchSchema = mongoose.Schema({
   label: String,
@@ -16,4 +16,4 @@ var matchSchema = mongoose.Schema({
 
 var Match = mongoose.model('Match', matchSchema)
 
-module.exports =  Match
+export default Match

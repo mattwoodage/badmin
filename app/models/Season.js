@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
 var seasonSchema = mongoose.Schema({
   label: String,
@@ -13,4 +13,4 @@ var seasonSchema = mongoose.Schema({
 
 const Season = mongoose.model('Season', seasonSchema)
 
-module.exports = Season
+export default Season

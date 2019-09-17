@@ -1,28 +1,17 @@
 import React, { Component } from 'react'
+import { NavLink } from 'react-router-dom'
 
 import Club from '../../Club'
+
 import ReactMoment from 'react-moment'
 import Moment from 'moment'
 import { extendMoment } from 'moment-range';
 
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import List from '@material-ui/core/List';
-import Panel from '../../Panel'
+import { Container, Row, Col } from 'react-grid-system';
 
-import Typography from '@material-ui/core/Typography';
-
-import { withStyles } from '@material-ui/core/styles';
 import { LeagueContext } from '../../Root'
 import DB from '../../../helpers/DB'
 
-const styles = theme => ({
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary
-  }
-});
 
 class Page extends Component {
 
@@ -34,19 +23,25 @@ class Page extends Component {
     const { league, season } = this.props
     if (this.state.loaded || !league || !season) return
 
+    this.props.startLoad()
+
     DB.get(`/api/${season.period}/clubs`)
       .then(response => {
         this.setState({
           clubs: response.clubs,
           loaded: true
         })
+        this.props.stopLoad()
       })
   }
 
+  componentDidMount () {
+    this.initialise()
+  }
+
   renderList () {
-    const { classes } = this.props;
     return (
-      <List>
+      <div>
       {
         this.state.clubs && this.state.clubs.map(club => {
           return (
@@ -54,20 +49,17 @@ class Page extends Component {
           )
         })
       }
-      </List>
+      </div>
     )
   }
 
   render () {
-    const { classes } = this.props;
-    this.initialise()
     return (
-      <Panel>
-        <Typography variant="display3" gutterBottom>CLUBS</Typography>
-        <Grid container spacing={8}>
+      <div>
+        <h1>CLUBS</h1>
+        <NavLink to="./club/new">CREATE NEW CLUB</NavLink>
         {this.renderList()}
-        </Grid>
-      </Panel>
+      </div>
     )
   }
 }
@@ -82,5 +74,5 @@ class ClubsPage extends Component {
   }
 }
 
-export default withStyles()(ClubsPage)
+export default ClubsPage
 

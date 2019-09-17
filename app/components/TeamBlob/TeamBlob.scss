@@ -1,0 +1,27 @@
+
+
+.teamBlob {
+  display: inline-block;
+  padding: 0;
+  border-radius: 22px;
+  margin: 0 4px 0 0;
+  color: #fff;
+  font-weight: bold;
+
+  b {
+    display: inline-block;
+    width: 23px;
+    text-align: center;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 22px;
+    background-color: rgba(0,0,0,0.3);
+    font-weight: bold;
+  } 
+
+  span {
+    font-weight: bold;
+    padding: 2px 15px 2px 8px;
+    border-radius: 22px;
+  }
+}

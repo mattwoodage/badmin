@@ -1,6 +1,7 @@
 import React from 'react';
 import {render} from 'react-dom';
-import { Switch, Route, browserHistory } from 'react-router'
+import { Switch, Route } from 'react-router'
+import browserHistory from 'history/createBrowserHistory'
 import { BrowserRouter } from 'react-router-dom'
 import Root from '../app/components/Root'
 

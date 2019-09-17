@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
 var playerSchema = mongoose.Schema({
   name: String,
@@ -13,4 +13,4 @@ var playerSchema = mongoose.Schema({
 
 var Player = mongoose.model('Player', playerSchema)
 
-module.exports = Player
+export default Player

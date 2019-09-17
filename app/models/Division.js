@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
 var divisionSchema = mongoose.Schema({
   key: String,
@@ -10,6 +10,7 @@ var divisionSchema = mongoose.Schema({
   position: Number,
   alias: String,
   category: String,
+  categoryShort: String,
   short: String,
   males: Boolean,
   females: Boolean,
@@ -33,4 +34,4 @@ var divisionSchema = mongoose.Schema({
 
 var Division = mongoose.model('Division', divisionSchema)
 
-module.exports = Division
+export default Division

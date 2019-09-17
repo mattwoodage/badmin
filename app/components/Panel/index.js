@@ -6,11 +6,14 @@ import styles from './Panel.scss'
 class Panel extends Component {
   render () {
 
-    const { high, low } = this.props;
-    let cls = styles.default
+    const { high, low, create, marginBottom } = this.props;
+    let cls = 'default'
 
-    if (high) cls = styles.high
-    if (low) cls = styles.low
+    if (high) cls = 'high'
+    if (low) cls = 'low'
+    if (create) cls = 'create'
+
+    if (marginBottom) cls += ' marginBottom'
 
     return (
       <div className={cls}>

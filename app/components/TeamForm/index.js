@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Club from '../Club'
-
-import { withStyles } from '@material-ui/core/styles';
+import Panel from '../Panel'
 
 import { NavLink } from 'react-router-dom'
 
@@ -12,33 +11,22 @@ import { extendMoment } from 'moment-range';
 
 import Button from '@material-ui/core/Button';
 
-import DateTimePicker from 'material-ui-pickers/DateTimePicker';
-
 import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
 
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import List from '@material-ui/core/List';
-import CircularProgress from '@material-ui/core/CircularProgress';
-
-import Typography from '@material-ui/core/Typography';
+import { Container, Row, Col } from 'react-grid-system';
 
 import DB from '../../helpers/DB'
 
-const materialStyles = theme => ({
-  paper: {
-    padding: 30,
-    color: theme.palette.text.secondary
-  },
-  row: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  }
-});
-
 class TeamForm extends Component {
+
+  constructor () {
+    super()
+    this.state = {
+      team: {},
+      submitting: false,
+      status: 0
+    }
+  }
 
   static getDerivedStateFromProps(props, state) {
 
@@ -57,7 +45,6 @@ class TeamForm extends Component {
     const { season } = this.props
 
     const _this = this
-    console.log('------', this.state.team)
 
     this.setState({ submitting: true, status: 0 });
 
@@ -98,57 +85,57 @@ class TeamForm extends Component {
   render () {
 
     const { team, submitting } = this.state
-    
+    const { divisions } = this.props
 
-    const venues = []
-    console.log(':::TEAM::',team)
+    const btnLabel = team._id ? 'Save changes' : 'Create new' 
     
-
+    const props = team._id ? {high:true} : {create:true}
 
     return (
-      <form onSubmit={this.handleSubmit}>
-        <h2>{team.division.labelLocal}</h2>
-        <Grid container spacing={8}>
-          <Grid item xs={12} md={6}>
+      <Panel {...props} marginBottom>
+        <form onSubmit={this.handleSubmit}>
+          <Container>
+            <Row>
+              <Col md={6}>
+                <TextField
+                  select
+                  label="Division"
+                  value={team.division}
+                  onChange={(evt) => this.handleChange('division', evt)}
+                  margin="normal"
+                  fullWidth
+                  SelectProps={{
+                    native: true
+                  }}
+                >
+                  <option key='-1' value=''></option>
+                  {divisions.map(division => (
+                    <option key={division._id} value={division._id}>
+                      {division.labelLocal}
+                    </option>
+                  ))}
+                </TextField>
+              </Col>
+              <Col md={6}>
+                <TextField
+                  label="Prefix"
+                  onChange={(evt) => this.handleChange('prefix', evt)}
+                  value={team.prefix}
+                  margin="normal"
+                  fullWidth
+                />
+              </Col>
+            </Row>
 
-            <TextField
-              required 
-              label="Team labelLocal"
-              onChange={(evt) => this.handleChange('labelLoal', evt)}
-              value={team.labelLocal}
-              margin="normal"
-              fullWidth
-            />
+          </Container>
 
-            <TextField
-              label="Team Label"
-              onChange={(evt) => this.handleChange('label', evt)}
-              value={team.label}
-              margin="normal"
-              fullWidth
-            />
-          </Grid>
+          <Button disabled={ submitting } type="submit" variant="contained" color="primary">{btnLabel}</Button>
 
-          <Grid item xs={12} md={6}>
-            <TextField
-              label="Prefix"
-              onChange={(evt) => this.handleChange('prefix', evt)}
-              value={team.prefix}
-              margin="normal"
-              fullWidth
-            />
-          </Grid>
-
-        </Grid>
-
-        <Button disabled={ submitting } type="submit" variant="contained" color="primary">Save</Button>
-        { submitting && <CircularProgress /> }
-
-      </form>
-        
+        </form>
+      </Panel>
     )
   }
 }
 
-export default withStyles(materialStyles)(TeamForm)
+export default TeamForm
 
