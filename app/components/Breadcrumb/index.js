@@ -1,22 +1,26 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import styles from './Breadcrumb.scss';
-import Typography from '@material-ui/core/Typography';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import { NavLink } from 'react-router-dom'
 
 class Breadcrumb extends Component {
   render() {
     
     return (
-      <div className={styles.breadcrumb}>
+      <div className='breadcrumb'>
         {
-          React.Children.map(this.props.children, (x,i) => {
-            if (i === this.props.children.length-1) return x
+          this.props.list.map(item => {
+            if (!item.url) return (
+              <h1>{item.lbl}</h1>
+            )
             return (
-              <h1>
-                {x}
-                <ChevronRightIcon />
-              </h1>
+              <NavLink to={item.url}>
+                <h1>
+                  {item.lbl}
+                  <ChevronRightIcon />
+                </h1>
+              </NavLink>
             )
           })
         }

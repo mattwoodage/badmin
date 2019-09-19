@@ -41,6 +41,7 @@ teamSchema.pre('save', function (next) {
         if (club) {
           let lbl = club.name
           if (team.prefix.length>0) lbl += ' ' + team.prefix
+          team.labelClub = lbl
           lbl = club.short
           if (team.prefix.length>0) lbl += ' ' + team.prefix
           team.labelClubShort = lbl

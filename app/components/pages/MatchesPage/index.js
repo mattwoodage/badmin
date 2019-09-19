@@ -9,11 +9,6 @@ import Panel from '../../Panel'
 import styles from './Matches.scss'
 
 import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import List from '@material-ui/core/List';
-
-import Typography from '@material-ui/core/Typography';
 
 import { LeagueContext } from '../../Root'
 import DB from '../../../helpers/DB'
@@ -95,8 +90,7 @@ class Page extends Component {
       let lastWeek = mthDiff===0 && lastDayOfMonth - thisDate < 7
 
       let fromToday = this.moment().isSame(date, 'day')
-      console.log(fromToday)
-
+ 
       return (<Day today={fromToday} firstWeek={firstWeek} lastWeek={lastWeek} firstDayOfMonth={first} lastDayOfMonth={last} before={mthDiff === -1} after={mthDiff === 1} dayOfWeek={dayOfWeek} key={date} date={date} matches={this.matchesOnDay(date)} />)
     })
   }
@@ -147,18 +141,14 @@ class Page extends Component {
       }
 
       return (
-        <Button className={styles.monthLink} onClick={() => {this.gotoDate(date)}} size="small" {...props}>{mthLbl}</Button>
+        <Button className='monthLink' onClick={() => {this.gotoDate(date)}} size="small" {...props}>{mthLbl}</Button>
       )
     })
-
   }
 
   renderList () {
-
-    const { classes } = this.props;
-
     return (
-      <List>
+      <div>
       {
         this.state.matches && this.state.matches.map(match => {
           return (
@@ -166,50 +156,25 @@ class Page extends Component {
           )
         })
       }
-      </List>
+      </div>
     )
   }
 
   render () {
     this.initialise()
 
-    const { classes } = this.props;
-
+    
     return (
-      <Panel>
+      <div>
+        <h1>{this.props.layout === 'CALENDAR' ? 'CALENDAR' : 'MATCHES'}</h1>
 
-        <Typography variant="display3" gutterBottom>{this.props.layout === 'CALENDAR' ? 'CALENDAR' : 'MATCHES'}</Typography>
+        <div className='menu'>{this.renderMenu()}</div>
 
-        <div className={styles.menu}>{this.renderMenu()}</div>
-
-        <Typography className={styles.monthName} variant="display2">{this.state.current && this.state.current.format("MMMM YYYY").toUpperCase()}</Typography>
-        <Grid className={styles.calendar} container spacing={8}>
-
-          <Grid className={styles.weekday} item xs={12}>
-            <Typography variant="title">Mon</Typography>
-          </Grid>
-          <Grid className={styles.weekday} item xs={12}>
-            <Typography variant="title">Tue</Typography>
-          </Grid>
-          <Grid className={styles.weekday} item xs={12}>
-            <Typography variant="title">Wed</Typography>
-          </Grid>
-          <Grid className={styles.weekday} item xs={12}>
-            <Typography variant="title">Thu</Typography>
-          </Grid>
-          <Grid className={styles.weekday} item xs={12}>
-            <Typography variant="title">Fri</Typography>
-          </Grid>
-          <Grid className={styles.weekday} item xs={12}>
-            <Typography variant="title">Sat</Typography>
-          </Grid>
-          <Grid className={styles.weekday} item xs={12}>
-            <Typography variant="title">Sun</Typography>
-          </Grid>
-
-        {this.props.layout === 'CALENDAR' ? this.renderCalendar() : this.renderList()}
-        </Grid>
-      </Panel>
+        <h2>{this.state.current && this.state.current.format("MMMM YYYY").toUpperCase()}</h2>
+        <div class='calendar'>
+          {this.props.layout === 'CALENDAR' ? this.renderCalendar() : this.renderList()}
+        </div>
+      </div>
     )
   }
 }

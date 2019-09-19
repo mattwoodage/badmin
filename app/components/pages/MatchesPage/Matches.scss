@@ -1,33 +1,28 @@
 
 
-:local(.calendar) {
-  border-collapse: collapse;
+.calendar {
+  display: flex;
+  flex-wrap: wrap;
 }
 
-:local(.monthLink) {
+.monthLink {
   margin-right: 10px !important;
 }
 
-:local(.monthName) {
+.monthName {
   padding-bottom: 20px;
-}
-
-:local(.menu) {
-  margin: 20px 0px;
-  background: #fff;
 }
 
 
 @media (min-width: 900px) {
-  :local(.weekday) {
+  .weekday {
       color: #666;
-      max-width: 14.285% !important;
-      flex-basis: 14.285% !important;
+      
   }
 }
 
 @media (max-width: 900px) {
-  :local(.weekday) {
+  .weekday {
     display: none;
   }
 }

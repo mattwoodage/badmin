@@ -23,7 +23,7 @@ class Club extends Component {
 
   render () {
 
-    const { club } = this.props
+    const { club, onSelect } = this.props
 
     return (
       <Panel high marginBottom>
@@ -34,7 +34,9 @@ class Club extends Component {
             </Col>
 
             <Col md={3}>
-              <NavLink to={`./club/${club._id}`} >EDIT
+              <NavLink onClick={onSelect} className='button' to={`./club/${club._id}`} >EDIT
+              </NavLink>
+              <NavLink onClick={onSelect} className='button' to={`./club/${club._id}/members`} >MEMBERS
               </NavLink>
             </Col>
           </Row>

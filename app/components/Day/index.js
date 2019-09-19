@@ -4,11 +4,6 @@ import Match from '../Match'
 
 import styles from './Day.scss'
 
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-
 
 
 class Day extends Component {
@@ -21,38 +16,28 @@ class Day extends Component {
   }
 
   render () {
-    const { classes, before, after, firstDayOfMonth, lastDayOfMonth, firstWeek, lastWeek, today } = this.props;
+    const { date, dayOfWeek, classes, before, after, firstDayOfMonth, lastDayOfMonth, firstWeek, lastWeek, today } = this.props;
 
-    let cls = styles.day + ' ' + styles['day' + this.props.dayOfWeek]
+    let cls = ['day', 'day' + dayOfWeek]
 
-    if (before) cls += ' ' + styles.before
-    if (after) cls += ' ' + styles.after
+    if (before) cls.push('before')
+    if (after) cls.push('after')
 
-    if (firstDayOfMonth) cls += ' ' + styles.firstDayOfMonth
-    if (lastDayOfMonth) cls += ' ' + styles.lastDayOfMonth
+    if (firstDayOfMonth) cls.push('firstDayOfMonth')
+    if (lastDayOfMonth) cls.push('lastDayOfMonth')
 
-    if (firstWeek) cls += ' ' + styles.firstWeek
-    if (lastWeek) cls += ' ' + styles.lastWeek
-    if (today) cls += ' ' + styles.today 
+    if (firstWeek) cls.push('firstWeek')
+    if (lastWeek) cls.push('lastWeek')
+    if (today) cls.push('today') 
 
-    const fmt = this.props.date.date() === 1 ? 'DD MMM' : 'DD'
+    const showMth = date.date() === 1 || (before && dayOfWeek === 1)
+    const fmt = showMth ? 'ddd DD MMM' : 'ddd DD'
 
     return (
-
-      <Grid className={cls} item xs={12}>
-
-        <Typography className={styles.weekday} variant="title">
-          <Moment format='ddd'>{this.props.date}</Moment>
-        </Typography>
-
-        <Typography variant="title">
-          <Moment format={fmt}>{this.props.date}</Moment>
-        </Typography>
-        <List className={styles.list}>
-          {this.renderMatches()}
-        </List>
-
-      </Grid>
+      <div className={cls.join(' ')}>
+        <Moment className='dt' format={fmt}>{this.props.date}</Moment>
+        {this.renderMatches()}
+      </div>
     )
   }
 }

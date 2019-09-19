@@ -48,7 +48,9 @@
     "react-moment": "^0.7.0",
     "react-router-dom": "^4.2.2",
     "regenerator-runtime": "^0.13.3",
-    "reset-css": "^4.0.1"
+    "reset-css": "^4.0.1",
+    "typeface-open-sans": "0.0.75",
+    "typeface-open-sans-condensed": "0.0.72"
   },
   "devDependencies": {
     "@babel/core": "^7.6.0",

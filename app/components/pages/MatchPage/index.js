@@ -12,12 +12,6 @@ import MatchCard from '../../MatchCard'
 import styles from './Match.scss'
 
 
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import List from '@material-ui/core/List';
-
-import Typography from '@material-ui/core/Typography';
-
 import { LeagueContext } from '../../Root'
 import DB from '../../../helpers/DB'
 
@@ -55,7 +49,7 @@ class Page extends Component {
         this.props.stopLoad()
       })
 
-      
+ 
   }
 
 
@@ -88,8 +82,8 @@ class Page extends Component {
 
     return (
       <Panel>
-        <Typography variant="display1" gutterBottom>{this.state.match.division.labelLocal}</Typography>
-        <Typography variant="display2" gutterBottom>{this.state.match.label}</Typography>
+        <h1>{this.state.match.division.labelLocal}</h1>
+        <h2>{this.state.match.label}</h2>
         <div>{this.state.match.venue.name}</div>
         <div>{this.state.match.startAt}</div>
         {this.renderCards()}

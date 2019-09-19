@@ -6,7 +6,7 @@
 }
 
 .inner {
-  max-width: 1024px;
+  max-width: 1300px;
   margin: 0 auto;
 }
 
@@ -16,10 +16,19 @@
   background-color: $color-inner-background;
 
   h1 {
+    font-size: 40px;
+    line-height: 80px;
+    text-transform: uppercase;
+    font-family: 'Open Sans Condensed';
+    font-weight: bold
+  }
+
+  h2 {
     font-size: 30px;
     line-height: 70px;
-    color: #999;
     text-transform: uppercase;
+    font-family: 'Open Sans Condensed';
+    font-weight: bold
   }
 
   h3 {
@@ -27,6 +36,28 @@
     line-height:30px;
   }
 
+}
+
+.button {
+  background-color: $color-primary;
+  color: #000;
+  border-radius: 6px;
+  position: relative;
+  font-weight: bold;
+  padding: 5px 10px;
+  margin: 0 10px 0 0;
+  border-bottom: 3px solid darken( $color-primary, 10% );
+}
+
+.button:hover {
+  background-color: darken( $color-primary, 2% );
+  border-bottom: 3px solid darken( $color-primary, 12% );
+}
+
+.button:active {
+  background-color: darken( $color-primary, 2% );
+  border-bottom: 0px transparent;
+  top:3px;
 }
 
 a.current {
@@ -39,13 +70,17 @@ body {
   background-color: $color-outer-background;
 }
 
-* {
-  box-sizing: border-box;
+body {
+    font-family: 'Open Sans Condensed';
+    font-size: 20px;
+    line-height: 20px;
 }
 
-a, span, div {
-  font: 14px/19px Arial, sans-serif !important
+* {
+  box-sizing: border-box;
+  font-size: 11px;
 }
+
 
 h1 {
   font: 30px/40px !important

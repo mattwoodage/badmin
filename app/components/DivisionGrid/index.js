@@ -39,7 +39,7 @@ class DivisionGrid extends Component {
             <td>HOME TEAM</td>
             {
               division.teams.map(team => {
-                return (<td key={team._id}>{team.labelClub}</td>)
+                return (<td key={team._id}>{team.labelClubShort}</td>)
               })
             }
           </tr>

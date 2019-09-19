@@ -437,7 +437,7 @@ class ImportData {
                     team._old = cols[0]
                     team.key = key
                     team.label = uid
-                    team.labelLocal = teamName
+                    team.labelClub = teamName
                     team.labelDivision = labelDivision
                     team.division = division._id
                     team.prefix = cols[2]
@@ -585,7 +585,7 @@ class ImportData {
                     this.findOrCreate(Team, { _old: cols[5] } )
                       .then(awayTeam => {
 
-                        const uid = homeTeam.labelLocal + ' vs ' + awayTeam.labelLocal + ' ' + String(division.key)
+                        const uid = homeTeam.labelClub + ' vs ' + awayTeam.labelClub + ' ' + String(division.key)
                         const key = uid.toLowerCase().split(' ').join('-')
                         this.findOrCreate(Match, { _old: cols[0] } )
                           .then(match => {
@@ -599,7 +599,7 @@ class ImportData {
                             match.homeTeam = homeTeam._id
                             match.awayTeam = awayTeam._id
                             match.startAt = new Date(dt)
-                            match.label = homeTeam.labelLocal + ' vs ' + awayTeam.labelLocal
+                            match.label = homeTeam.labelClub + ' vs ' + awayTeam.labelClub
 
                             this.saveOrUpdate(match, 'matches', log)
                               .then((result) => {

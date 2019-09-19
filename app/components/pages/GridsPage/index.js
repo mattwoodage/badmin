@@ -12,12 +12,18 @@ import DB from '../../../helpers/DB'
 class Page extends Component {
 
   state = {
-    loaded: false
+    loaded: false,
+    loading: false
   }
 
   initialise () {
+
     const { league, season } = this.props
-    if (this.state.loaded || !league || !season) return
+    if (!league || !season) return
+
+    this.setState({
+      loading: true
+    })
 
     DB.get(`/api/${season.period}/divisions`)
       .then(divisionsResponse => {
@@ -39,8 +45,6 @@ class Page extends Component {
   }
 
   renderGrids () {
-    const { classes } = this.props;
-
     return (
       <div>
       {
@@ -54,9 +58,15 @@ class Page extends Component {
     )
   }
 
+  componentDidMount () {
+    if (!this.state.loading) this.initialise()
+  }
+
+  componentDidUpdate () {
+    if (!this.state.loading) this.initialise()
+  }
+
   render () {
-    const { classes } = this.props;
-    this.initialise()
     return (
       <div>
         <h1>GRIDS</h1>

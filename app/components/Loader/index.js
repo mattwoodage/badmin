@@ -7,11 +7,11 @@ class Loader extends Component {
   
   render() {
 
-    const style = this.props.loading ? { opacity:0.3 } : {}
+    if (!this.props.loading) return null
 
     return (
       <div className="loading animated fadeIn">
-        <div className="bg" style={style}></div>
+        <div className="bg" style={{ opacity:0.3 }}></div>
       </div>
     );
 

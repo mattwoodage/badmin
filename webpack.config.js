@@ -65,7 +65,7 @@ var config = {
             loader: 'url-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: BUILD_DIR + '/fonts/'
+              outputPath: 'fonts/'
             }
           }
         ]

@@ -49,8 +49,6 @@ class Player extends Component {
 
   render () {
     const { player } = this.props
-    console.log(player)
-
     return (
       <ListItem>
         {this.renderIcon()}

@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import Club from '../../Club'
 
-import { NavLink } from 'react-router-dom'
-
 import ReactMoment from 'react-moment'
 import Moment from 'moment'
 
@@ -106,11 +104,13 @@ class Page extends Component {
     return (
       <div>
 
-        <Breadcrumb>
-          <NavLink to={'../clubs'} >Clubs</NavLink>
-          <b>{club.name || '*NEW*'}</b>
-        </Breadcrumb>
-
+        <Breadcrumb list={
+          [
+            {lbl:'Clubs', url:'../clubs'},
+            {lbl:club.name || 'NEW CLUB'}
+          ]
+        } />
+          
         <Panel high marginBottom>  
           <ClubForm season={season} club={club} venues={venues} />
         </Panel>

@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import Moment from 'react-moment'
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+
 import Avatar from '@material-ui/core/Avatar';
-import { withStyles } from '@material-ui/core/styles';
+
 import Hidden from '@material-ui/core/Hidden';
 import ImageIcon from '@material-ui/icons/Image';
 import { NavLink } from 'react-router-dom'
@@ -15,16 +14,9 @@ import pink from '@material-ui/core/colors/pink';
 
 import FolderIcon from '@material-ui/icons/Folder';
 
-import matchStyles from './Match.scss';
+import styles from './Match.scss';
 
 Moment.globalFormat = 'D MMM YYYY HH:mm'
-
-const styles = {
-  row: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-};
 
 class Match extends Component {
   
@@ -41,7 +33,7 @@ class Match extends Component {
       startAt.pop()
     }
     return (
-      <div className={matchStyles.time}>
+      <div className='time'>
         {startAt.join(':')}
       </div>
     )
@@ -50,29 +42,23 @@ class Match extends Component {
   render () {
 
     const { match, classes } = this.props
-    let cls = matchStyles.ladiesMatch
-    if (match.division.labelLocal.toUpperCase().indexOf('MIXED')>-1) cls = matchStyles.mixedMatch
-    if (match.division.labelLocal.toUpperCase().indexOf('MENS')>-1) cls = matchStyles.mensMatch
+    let lbl = match.label.toUpperCase()
+    lbl = lbl.split(' VS ').join(' vs ')
 
+    const cls = 'match ' + match.division.category.toLowerCase() + 'Match'
     return (
-      <div className={cls}>
-        <NavLink to={`./match/${match._id}`} >
-          <span>
-            <span className={matchStyles.div}>
-              {match.division.labelLocal}
-            </span>
-            {this.startTime()}
-          </span>
+      <NavLink className={cls} to={`./match/${match._id}`} >
 
-          <span className={matchStyles.content} >
-            <b>{match.label}</b>
-            
-          </span>
-          <span className={matchStyles.venue} >{match.venue.name}</span>
-        </NavLink>
-      </div>
+        <span className='division'>
+          {match.division.labelLocal}
+        </span>
+        {this.startTime()}
+
+        <div className='label'>{lbl}</div>
+        <div className='venue' >{match.venue.name}</div>
+      </NavLink>
     )
   }
 }
 
-export default  withStyles(styles)(Match)
+export default Match

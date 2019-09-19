@@ -1,64 +1,85 @@
-@import 'reset-css';
 @import '../../styles/global.scss';
 
 
-
-
-@mixin _match {
+.match {
+  
   position:relative;
   border-radius: 6px;
-  padding: 6px;
   display: inline-block;
   margin: 0px 0px 5px 0px;
   width: 100%;
+  color: #000;
 
   @media (max-width: 850px) {
     width:46% !important;
     margin: 5px !important;
   }
 
+
+  .division {
+    font-size: 11px !important;
+    width: 50%;
+    padding: 5px;
+    text-align: left;
+    display: inline-block;
+    border-radius: 6px 0 0 0;
+  }
+
+  .time {
+    font-size:11px !important;
+    width: 50%;
+    padding: 5px;
+    text-align: right;
+    display: inline-block;
+    border-radius: 0 6px 0 0;
+  }
+
+  .label {
+    padding: 7px 5px 0px 5px;
+    font: 20px/20px 'Open Sans Condensed';
+    text-align: center;
+    word-break: break-word;
+  }
+
+  .venue {
+    padding: 5px;
+    font: 13px/14px 'Open Sans Condensed';
+    text-align: center;
+  }
 }
 
-:local(.mensMatch) {
-  @include _match;
-  color: $color-mens-foreground;
+.match:hover {
+  background: $color-primary;
+  border-bottom: 3px solid darken( $color-primary, 10% );
+
+  .division, .time {
+    background: darken( $color-primary, 6% );
+  }
+}
+
+.mensMatch {
   background: $color-mens-background;
+  border-bottom: 3px solid darken( $color-mens-background, 10% );
+
+  .division, .time {
+    background: darken( $color-mens-background, 6% );
+  }
 }
 
-:local(.ladiesMatch) {
-  @include _match;
-  color: $color-ladies-foreground;
+.ladiesMatch {
   background: $color-ladies-background;
+  border-bottom: 3px solid darken( $color-ladies-background, 10%);
+
+  .division, .time {
+    background: darken( $color-ladies-background, 6% );
+  }
 }
 
-
-:local(.mixedMatch) {
-  @include _match;
-  color: $color-mixed-foreground;
+.mixedMatch {
   background: $color-mixed-background;
-}
+  border-bottom: 3px solid darken( $color-mixed-background, 10%);
 
-:local(.div) {
-  font-size:11px !important;
-  width:48%;
-  text-align:left;
-  display:inline-block;
+  .division, .time {
+    background: darken( $color-mixed-background, 6% );
+  }
 }
-
-:local(.time) {
-  font-size:11px !important;
-  width:48%;
-  text-align:right;
-  display:inline-block;
-}
-
-:local(.content) {
-  font: 18px/18px 'open_sanscondensed_light';
-  text-align: center;
-}
-
-:local(.venue) {
-  text-align: center;
-  font-weight: bold;
-}
-

@@ -16,13 +16,18 @@ import DB from '../../../helpers/DB'
 class Page extends Component {
 
   state = {
+    loading: false,
     loaded: false
   }
 
   initialise () {
-    const { league, season } = this.props
-    if (this.state.loaded || !league || !season) return
 
+    const { league, season } = this.props
+    if (!league || !season) return
+
+    this.setState({
+      loading: true
+    })
     this.props.startLoad()
 
     DB.get(`/api/${season.period}/clubs`)
@@ -35,8 +40,16 @@ class Page extends Component {
       })
   }
 
+  handleSelectClub (club) {
+    this.props.selectClub(club)
+  }
+
   componentDidMount () {
-    this.initialise()
+    if (!this.state.loading) this.initialise()
+  }
+
+  componentDidUpdate () {
+    if (!this.state.loading) this.initialise()
   }
 
   renderList () {
@@ -45,7 +58,7 @@ class Page extends Component {
       {
         this.state.clubs && this.state.clubs.map(club => {
           return (
-            <Club key={club.key} club={club} />
+            <Club key={club.key} club={club} onSelect={() => this.handleSelectClub(club)} />
           )
         })
       }
@@ -57,7 +70,7 @@ class Page extends Component {
     return (
       <div>
         <h1>CLUBS</h1>
-        <NavLink to="./club/new">CREATE NEW CLUB</NavLink>
+        <NavLink className='button' to="./club/new">CREATE NEW CLUB</NavLink>
         {this.renderList()}
       </div>
     )

@@ -9,6 +9,9 @@ import Paper from '@material-ui/core/Paper'
 import {Helmet} from "react-helmet";
 import styles from './Root.scss'
 import regeneratorRuntime from "regenerator-runtime";
+import "typeface-open-sans"
+import "typeface-open-sans-condensed"
+
 import "core-js";
 
 export const LeagueContext = React.createContext()
@@ -28,6 +31,8 @@ class Root extends Component {
       loginLoading: false,
       registerLoading: false
     }
+
+    this.context = {}
   }
 
   componentDidMount () {
@@ -42,7 +47,6 @@ class Root extends Component {
     if (seasonPeriod.length === 0) seasonPeriod='x'
     DB.get(`/api/${seasonPeriod}/seasons`)
       .then(response => {
-        console.log('-league loaded-')
         this.setState({
           league: response.league,
           season: response.season,
@@ -51,44 +55,10 @@ class Root extends Component {
       })
   }
 
-  checkLogin = () => {
-    console.log('check login...')
-    const token = localStorage.getItem('jwtToken')
-    const nickname = localStorage.getItem('nickname')
-    console.log(token, nickname)
-    if (token && nickname) {
-      this.doLogIn(nickname)
-    }
-  }
-
-  doLogIn = (nickname) => {
-    console.log('do log in')
-    this.setState({
-      nickname: nickname,
-      isLoggedIn: true,
-      loginLoading: false
-    })
-  }
-
-  doLogOut = () => {
-    localStorage.removeItem('jwtToken');    
-    this.setState({
-      isLoggedIn: false,
-      loginError: {}
-    })
-  }
-
-  doRegister = (email) => {
-    console.log('do register')
-    this.setState({
-      email: email,
-      registerLoading: false
-    })
-  }
-
-  render () {
-    const context = {
+  getContext () {
+    return {
       league: this.state.league,
+      club: this.state.club,
       season: this.state.season,
       seasons: this.state.seasons,
       startLoad: () => {
@@ -145,6 +115,11 @@ class Root extends Component {
 
           });
       },
+      selectClub: (club) => {
+        this.setState({
+          club: club
+        })
+      },
       isLoggedIn: this.state.isLoggedIn,
       nickname: this.state.nickname,
       loginError: this.state.loginError,
@@ -155,12 +130,46 @@ class Root extends Component {
       user: {}
     }
 
-    console.log('>>>>>>>', styles)
-    console.log('>>>>>>>', styles.outer)
+  }
 
+  checkLogin = () => {
+    console.log('check login...')
+    const token = localStorage.getItem('jwtToken')
+    const nickname = localStorage.getItem('nickname')
+    console.log(token, nickname)
+    if (token && nickname) {
+      this.doLogIn(nickname)
+    }
+  }
 
+  doLogIn = (nickname) => {
+    console.log('do log in')
+    this.setState({
+      nickname: nickname,
+      isLoggedIn: true,
+      loginLoading: false
+    })
+  }
+
+  doLogOut = () => {
+    localStorage.removeItem('jwtToken');    
+    this.setState({
+      isLoggedIn: false,
+      loginError: {}
+    })
+  }
+
+  doRegister = (email) => {
+    console.log('do register')
+    this.setState({
+      email: email,
+      registerLoading: false
+    })
+  }
+
+  render () {
     return (
-      <LeagueContext.Provider value={context}>
+      <LeagueContext.Provider value={this.getContext()}>
         {
           this.state.league && 
           <Helmet>

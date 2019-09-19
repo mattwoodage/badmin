@@ -15,6 +15,7 @@ import GridsPage from '../app/components/pages/GridsPage'
 import LoginPage from '../app/components/pages/LoginPage'
 import MatchPage from '../app/components/pages/MatchPage'
 import ClubPage from '../app/components/pages/ClubPage'
+import MembersPage from '../app/components/pages/MembersPage'
 import AdminPage from '../app/components/pages/AdminPage'
 
 
@@ -32,10 +33,11 @@ render((
       <Route path='/:season/players' component={PlayersPage} />
       <Route path='/:season/tables' component={TablesPage} />
       <Route path='/:season/match/:match' component={MatchPage} />
-      <Route path='/:season/club/:club' component={ClubPage} />
-      <Route path='/:season/grids' component={GridsPage} />
-      <Route path='/:season/login' component={LoginPage} />
-      <Route path='/:season/admin' component={AdminPage} />
+      <Route exact path='/:season/club/:club' component={ClubPage} />
+      <Route exact path='/:season/club/:club/members' component={MembersPage} />
+      <Route exact path='/:season/grids' component={GridsPage} />
+      <Route exact path='/:season/login' component={LoginPage} />
+      <Route exact path='/:season/admin' component={AdminPage} />
     </Root>
   </BrowserRouter>
 ), document.getElementById('app'));
