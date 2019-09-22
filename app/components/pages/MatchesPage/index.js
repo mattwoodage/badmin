@@ -163,7 +163,6 @@ class Page extends Component {
   render () {
     this.initialise()
 
-    
     return (
       <div>
         <h1>{this.props.layout === 'CALENDAR' ? 'CALENDAR' : 'MATCHES'}</h1>

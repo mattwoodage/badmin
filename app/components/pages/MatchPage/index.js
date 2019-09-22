@@ -7,10 +7,9 @@ import { extendMoment } from 'moment-range';
 import Panel from '../../Panel'
 import Notification from '../../Notification'
 import MatchCard from '../../MatchCard'
-
+import Breadcrumb from '../../Breadcrumb'
 
 import styles from './Match.scss'
-
 
 import { LeagueContext } from '../../Root'
 import DB from '../../../helpers/DB'
@@ -21,7 +20,8 @@ class Page extends Component {
     loaded: false,
     error: false,
     match: undefined,
-    cards: []
+    cards: {},
+    members: []
   }
 
   initialise () {
@@ -34,60 +34,74 @@ class Page extends Component {
     DB.get(`/api/${season.period}/match/${matchID}`)
       .then(response => {
         if (response.match) {
-          this.setState({
-            match: response.match,
-            cards: response.cards,
-            loaded: true
-          })
+
+          DB.get(`/api/${season.period}/members/${response.match.homeTeam.club}/${response.match.awayTeam.club}`)
+            .then(members => {
+              this.setState({
+                match: response.match,
+                cards: response.cards,
+                loaded: true,
+                members: members
+              })
+              this.props.stopLoad()
+            })
+
         }
         else {
           this.setState({
             error: true,
             loaded: true
           })
+          this.props.stopLoad()
         }
-        this.props.stopLoad()
       })
-
- 
   }
 
-
   renderCards () {
-    const cards = this.state.cards
+    const { cards } = this.state
+    
+    cards['new'] = {
+      enteredBy: {
+        email: 'current user'
+      },
+      homePlayers: [],
+      awayPlayers: [],
+      scores: []
+    }
+
     return Object.keys(cards).map(key => {
       return this.renderScoreCard(cards[key])
     })
   }
 
   renderScoreCard (card) {
+    const { match, members } = this.state
     return (
       <div>
-        <MatchCard match={this.state.match} card={card}/>
+        <MatchCard match={match} card={card} members={members}/>
         <br /><br />
       </div>
     )
   }
 
-  
-
   render () {
     this.initialise()
 
-    console.log(this.state.match)
-    console.log(this.state.cards)
-    if (this.state.error) return <Panel><Notification text='Match not found' /></Panel>
+    if (this.state.error) return <div><Notification text='Match not found' /></div>
 
-    if (!this.state.match) return <Panel>Loading...</Panel>
+    if (!this.state.match) return <div>Loading...</div>
 
     return (
-      <Panel>
-        <h1>{this.state.match.division.labelLocal}</h1>
-        <h2>{this.state.match.label}</h2>
-        <div>{this.state.match.venue.name}</div>
-        <div>{this.state.match.startAt}</div>
+      <div>
+        <Breadcrumb list={
+          [
+            {lbl:'Calendar', url:'../calendar'},
+            {lbl:this.state.match.label}
+          ]
+        } />
+
         {this.renderCards()}
-      </Panel>
+      </div>
     )
   }
 }

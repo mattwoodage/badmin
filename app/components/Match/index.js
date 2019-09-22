@@ -1,25 +1,15 @@
 import React, { Component } from 'react'
 import Moment from 'react-moment'
 
-
-import Avatar from '@material-ui/core/Avatar';
-
 import Hidden from '@material-ui/core/Hidden';
 import ImageIcon from '@material-ui/icons/Image';
 import { NavLink } from 'react-router-dom'
-
-import lightBlue from '@material-ui/core/colors/lightBlue';
-import lightGreen from '@material-ui/core/colors/lightGreen';
-import pink from '@material-ui/core/colors/pink';
-
-import FolderIcon from '@material-ui/icons/Folder';
 
 import styles from './Match.scss';
 
 Moment.globalFormat = 'D MMM YYYY HH:mm'
 
 class Match extends Component {
-  
 
   startTime () {
     const { match, cal } = this.props
@@ -43,7 +33,18 @@ class Match extends Component {
 
     const { match, classes } = this.props
     let lbl = match.label.toUpperCase()
-    lbl = lbl.split(' VS ').join(' vs ')
+    lbl = lbl.split(' VS ')
+    let footer = <div className='venue' >{match.venue.name}</div>
+    if (match.scoreCard && match.scoreCard.status === 1) {
+      const { homePts, homeRubbers, awayPts, awayRubbers } = match.scoreCard
+      
+      lbl = <span>{lbl[0]}<br />{homeRubbers} : {awayRubbers}<br />{lbl[1]}</span>
+      footer = null
+      
+    }
+    else {
+      lbl = lbl.join(' vs ')
+    }
 
     const cls = 'match ' + match.division.category.toLowerCase() + 'Match'
     return (
@@ -55,7 +56,7 @@ class Match extends Component {
         {this.startTime()}
 
         <div className='label'>{lbl}</div>
-        <div className='venue' >{match.venue.name}</div>
+        {footer}
       </NavLink>
     )
   }

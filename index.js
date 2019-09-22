@@ -10,6 +10,8 @@ var settings = require('./config/settings');
 require('./config/passport')(passport);
 var jwt = require('jsonwebtoken');
 
+import to from 'await-to-js';
+
 import User from './app/models/User'
 
 import League from './app/models/League'
@@ -22,6 +24,7 @@ import Venue from './app/models/Venue'
 import Player from './app/models/Player'
 import ScoreCard from './app/models/ScoreCard'
 import Score from './app/models/Score'
+import Member from './app/models/Member'
 
 import ImportData from './app/services/ImportData'
 import UpdateAll from './app/services/UpdateAll'
@@ -351,9 +354,7 @@ router.post('/api/:seasonPeriod/team', function(req, res) {
     // create
     const team = new Team(req.body);
 
-    console.log('create ', team)
     team.save((err, _team) => {
-      console.log('>>>>', err, _team)
       if (err) return res.json({error: err})
       res.status(201);
       res.json(_team);
@@ -361,7 +362,6 @@ router.post('/api/:seasonPeriod/team', function(req, res) {
   }
 
 });
-
 
 
 // PLAYERS
@@ -374,6 +374,30 @@ router.get('/api/:seasonPeriod/players', (req, res, next) => {
   .sort({ lastName: 1 })
 })
 
+
+// MEMBERS FOR MATCH
+
+router.get('/api/:seasonPeriod/members/:home/:away', async (req, res, next) => {
+  const same = req.params.home === req.params.away
+  const doNothing = Promise.resolve()
+
+  const getHome = Club.findOne({_id: req.params.home})
+  const getAway = same ? doNothing : Club.findOne({_id: req.params.away})
+
+  const [ homeErr, homeClub ] = await to(getHome)
+  const [ awayErr, awayClub ] = await to(getAway)
+
+  if (homeErr || awayErr) return res.json({home: [], away: []})
+
+  const getHomeMembers = Member.find({ club: homeClub._id }).populate({ path: 'player', model: Player })
+  const getAwayMembers = same ? doNothing : Member.find({ club: awayClub._id }).populate({ path: 'player', model: Player })
+
+  const [ homeMembersErr, homeMembers ] = await to(getHomeMembers)
+  const [ awayMembersErr, awayMembers ] = await to(getAwayMembers)
+
+  return res.json({home: homeMembers || [], away: same ? homeMembers : (awayMembers || [])})
+
+})
 
 
 // VENUES
@@ -424,6 +448,7 @@ router.get('/api/:seasonPeriod/match/:match', (req, res, next) => {
 
   Match.findOne({_id: req.params.match}, (err, match) => {
     if (err) return res.json({match: null})
+
     ScoreCard.find({ match: match._id }, (err, scoreCards) => {
       if (err) return res.json({match: match, e:1})
       const cards = {}
@@ -436,7 +461,6 @@ router.get('/api/:seasonPeriod/match/:match', (req, res, next) => {
       Score.find({scoreCard: { $in: cardsArray }}, (err, scores) => {
         if (err) return res.json({match: match, e:2})
         scores.map((score) => {
-          console.log(score, score.players.length)
           cards[score.scoreCard].scores.push(score)
         })
         res.json({match: match, cards:cards})

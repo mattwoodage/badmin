@@ -457,20 +457,13 @@ class ImportData {
                     team.pos = 0
                     team.pts = 0
 
-                    console.log('TEAM = ', team)
-                    
                     this.saveOrUpdate(team, 'teams', log)
                       .then((result) => {
                         if (result.done) resolve()
                       })
                       .catch((err) => {
-                        console.log('---------')
-                        console.log('---------')
-                        console.log('---------')
                         console.log(err)
-                        console.log('---------')
-                        console.log('---------')
-                        console.log('---------')
+                        
                       })
                   })
               })
@@ -642,7 +635,7 @@ class ImportData {
 
   processNextRubber (idx, rows, log, _resolve) {
     
-    console.log('pnr', idx)
+    console.log('* * * pnr', idx)
 
     return new Promise((resolve, reject) => {
 
@@ -653,89 +646,92 @@ class ImportData {
       this.findOrCreate(Match, { _old: cols[1] } )
         .then(match => {
 
-          this.findOrCreate(Player, { _old: cols[3] } )
-            .then(player_h1 => {
+          this.findOrCreate(Division, { _id: match.division } )
+            .then(division => {
 
-              this.findOrCreate(Player, { _old: cols[4] } )
-                .then(player_h2 => {
+              this.findOrCreate(Player, { _old: cols[3] } )
+                .then(player_h1 => {
 
-                  this.findOrCreate(Player, { _old: cols[5] } )
-                    .then(player_a1 => {
+                  this.findOrCreate(Player, { _old: cols[4] } )
+                    .then(player_h2 => {
 
-                      this.findOrCreate(Player, { _old: cols[6] } )
-                        .then(player_a2 => {
+                      this.findOrCreate(Player, { _old: cols[5] } )
+                        .then(player_a1 => {
 
-                          const uid = String(match.key) + ' CARD' 
-                          const key = uid.toLowerCase().split(' ').join('-')
-                          this.findOrCreate(ScoreCard, { key: key } )
-                            .then(scoreCard => {
+                          this.findOrCreate(Player, { _old: cols[6] } )
+                            .then(player_a2 => {
 
-                              scoreCard.match = match._id
-                              scoreCard._old = cols[0]
-                              scoreCard.enteredAt = new Date(),
-                              scoreCard.enteredBy = this.superadmin._id,
-                              scoreCard.enteredByTeam = undefined,
-                              scoreCard.confirmedAt = new Date(),
-                              scoreCard.confirmedBy = this.superadmin._id,
-                              scoreCard.confirmedByTeam = undefined,
-                              scoreCard.status = 1
+                              const uid = String(match.key) + ' CARD' 
+                              const key = uid.toLowerCase().split(' ').join('-')
+                              this.findOrCreate(ScoreCard, { key: key } )
+                                .then(scoreCard => {
 
-                              if (cols[2] == 1) {
-                                scoreCard.homePlayers = [player_h1._id, player_h2._id]
-                                scoreCard.awayPlayers = [player_a1._id, player_a2._id]
-                              }
-                              else if (cols[2] == 2) {
-                                scoreCard.homePlayers.push(player_h1._id)
-                                scoreCard.homePlayers.push(player_h2._id)
-                                scoreCard.awayPlayers.push(player_a1._id)
-                                scoreCard.awayPlayers.push(player_a2._id)
-                              }
-                              else if (cols[2] == 3) {
-                                console.log('game 3', match.division)
-                                if (match.division.numPlayers>4) {
-                                  console.log('-')
-                                  scoreCard.homePlayers.push(player_h1._id)
-                                  scoreCard.homePlayers.push(player_h2._id)
-                                  scoreCard.awayPlayers.push(player_a1._id)
-                                  scoreCard.awayPlayers.push(player_a2._id)
-                                }
-                              }
+                                  scoreCard.match = match._id
+                                  scoreCard._old = cols[0]
+                                  scoreCard.enteredAt = new Date(),
+                                  scoreCard.enteredBy = this.superadmin._id,
+                                  scoreCard.enteredByTeam = undefined,
+                                  scoreCard.confirmedAt = new Date(),
+                                  scoreCard.confirmedBy = this.superadmin._id,
+                                  scoreCard.confirmedByTeam = undefined,
+                                  scoreCard.status = 1
 
-                              
-                              match.scoreCard = scoreCard._id
-                              match.save()
-
-                              const scoreCardLog = this.newLog([1])
-
-                              console.log('==',scoreCard.homePlayers.length)
-
-                              this.saveOrUpdate(scoreCard, 'scorecards', scoreCardLog)
-                                .then((result) => {
-                                  scoreCard = result.obj
-                                  return this.processNextGame (match, scoreCard, player_h1, player_h2, player_a1, player_a2, cols, 1)
-                                  .then(() => {
-                                    return this.processNextGame (match, scoreCard, player_h1, player_h2, player_a1, player_a2, cols, 2)
-                                    .then(() => {
-                                      return this.processNextGame (match, scoreCard, player_h1, player_h2, player_a1, player_a2, cols, 3)
-                                    })
-                                  })
-                                })
-                                .then( () => {
-                                  idx += 1
-                                  if (rows[idx]) {
-                                    return this.processNextRubber(idx, rows, log, _resolve)
-                                  } else {
-                                    console.log('pnr DONE')
-                                    resolve()
+                                  if (cols[2] == 1) {
+                                    scoreCard.homePlayers = [player_h1._id, player_h2._id]
+                                    scoreCard.awayPlayers = [player_a1._id, player_a2._id]
                                   }
-                                })
+                                  else if (cols[2] == 2) {
+                                    scoreCard.homePlayers.push(player_h1._id)
+                                    scoreCard.homePlayers.push(player_h2._id)
+                                    scoreCard.awayPlayers.push(player_a1._id)
+                                    scoreCard.awayPlayers.push(player_a2._id)
+                                  }
+                                  else if (cols[2] == 3) {
+                                    console.log('* * * game 3', division.numPlayers, division.numPlayers>4)
+                                    if (division.numPlayers>4) {
+                                      console.log('* * * * * * * * * * 6 created')
+                                      scoreCard.homePlayers.push(player_h1._id)
+                                      scoreCard.homePlayers.push(player_h2._id)
+                                      scoreCard.awayPlayers.push(player_a1._id)
+                                      scoreCard.awayPlayers.push(player_a2._id)
+                                    }
+                                  }
 
+                                  
+                                  match.scoreCard = scoreCard._id
+                                  match.save()
+
+                                  const scoreCardLog = this.newLog([1])
+
+                                  console.log('* * * player count now equals =  ',scoreCard.homePlayers.length,scoreCard.awayPlayers.length)
+
+                                  this.saveOrUpdate(scoreCard, 'scorecards', scoreCardLog)
+                                    .then((result) => {
+                                      scoreCard = result.obj
+                                      return this.processNextGame (match, scoreCard, player_h1, player_h2, player_a1, player_a2, cols, 1)
+                                      .then(() => {
+                                        return this.processNextGame (match, scoreCard, player_h1, player_h2, player_a1, player_a2, cols, 2)
+                                        .then(() => {
+                                          return this.processNextGame (match, scoreCard, player_h1, player_h2, player_a1, player_a2, cols, 3)
+                                        })
+                                      })
+                                    })
+                                    .then( () => {
+                                      idx += 1
+                                      if (rows[idx]) {
+                                        return this.processNextRubber(idx, rows, log, _resolve)
+                                      } else {
+                                        console.log('pnr DONE')
+                                        resolve()
+                                      }
+                                    })
+
+                                })
                             })
                         })
                     })
                 })
             })
-            
         })
         
     })

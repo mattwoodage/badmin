@@ -14,3 +14,24 @@
 }
 
 
+.sub td {
+  padding: 10px;
+}
+
+.homeTeam {
+  width: 25%;
+  text-align: left;
+  
+}
+
+.homeTeam, .awayTeam, .gap {
+  background-color: #333;
+  color:#fff;
+}
+
+.fixture {
+  display: block;
+  margin: 5px;
+  padding: 5px;
+  border-radius: 5px;
+}

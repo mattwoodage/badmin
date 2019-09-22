@@ -10,6 +10,10 @@
   margin: 0 auto;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 .content {
   padding: 20px 70px 140px 70px;
   min-height: 100vh;
@@ -17,7 +21,8 @@
 
   h1 {
     font-size: 40px;
-    line-height: 80px;
+    line-height: 40px;
+    margin: 20px 0;
     text-transform: uppercase;
     font-family: 'Open Sans Condensed';
     font-weight: bold
@@ -25,7 +30,8 @@
 
   h2 {
     font-size: 30px;
-    line-height: 70px;
+    line-height: 30px;
+    margin: 20px 0;
     text-transform: uppercase;
     font-family: 'Open Sans Condensed';
     font-weight: bold
@@ -45,7 +51,7 @@
   position: relative;
   font-weight: bold;
   padding: 5px 10px;
-  margin: 0 10px 0 0;
+  margin: 0 8px 8px 0;
   border-bottom: 3px solid darken( $color-primary, 10% );
 }
 
@@ -54,8 +60,29 @@
   border-bottom: 3px solid darken( $color-primary, 12% );
 }
 
+input {
+  font-size: 20px;
+  padding: 4px;
+}
+
 .button:active {
   background-color: darken( $color-primary, 2% );
+  border-bottom: 0px transparent;
+  top:3px;
+}
+
+.button.buttonOff {
+  background-color: #ccc;
+  border-bottom: 3px solid darken( #ccc, 10% );
+}
+
+.button.buttonOff:hover {
+  background-color: darken( #ccc, 4% );;
+  border-bottom: 3px solid darken( #ccc, 14% );
+}
+
+.button.buttonOff:active {
+  background-color: darken( #ccc, 4% );;
   border-bottom: 0px transparent;
   top:3px;
 }
@@ -86,8 +113,6 @@ h1 {
   font: 30px/40px !important
 }
 
-
-
 a {
   color: $color-link;
   text-decoration: none;
@@ -98,15 +123,7 @@ a:hover {
   text-decoration: none;
 }
 
-:global(h1) {
-  font-size: 30px;
-  line-height: 40px;
-}
 
-:global(h2) {
-  font-size: 20px;
-  line-height: 25px;
-}
 
 
 table {
@@ -114,57 +131,56 @@ table {
   
   thead {
     th, td {
-      padding:4px 6px 4px 6px !important;
+      padding:4px 6px 4px 6px;
       background:#f0f0f0;
       text-align: center;
+      border: 1px solid #eee
     }
   }
 
   tbody {
     th, td {
-      padding:4px 6px 4px 6px !important;
+      padding:4px 6px 4px 6px;
       background-color: #fff;
       text-align: center;
+      border: 1px solid #eee;
     }
   }
 }
 
 
 .table-Ladies {
-  border: 2px solid $color-ladies;
-  border-left:10px solid darken( $color-ladies, 10% )
+  border-bottom:5px solid darken( $color-ladies-background, 10% )
 }
 
 .table-Mens {
-  border: 2px solid $color-mens;
-  border-left:10px solid darken( $color-mens, 10% )
+  border-bottom:5px solid darken( $color-mens, 10% )
 }
 
 .table-Mixed {
-  border: 2px solid $color-mixed;
-  border-left:10px solid darken( $color-mixed, 10% )
+  border-bottom:5px solid darken( $color-mixed, 10% )
 }
 
 .bg-Ladies, .bg-Ladies * {
-  background-color: $color-ladies;
+  background-color: $color-ladies-background;
 }
 
 .bg-Mens, .bg-Mens * {
-  background-color: $color-mens;
+  background-color: $color-mens-background;
 }
 
 .bg-Mixed, .bg-Mixed * {
-  background-color: $color-mixed;
+  background-color: $color-mixed-background;
 }
 
 .fg-Ladies {
-  background-color: $color-ladies;
+  background-color: $color-ladies-foreground;
 }
 
 .fg-Mens {
-  background-color: $color-mens;
+  background-color: $color-mens-foreground;
 }
 
 .fg-Mixed {
-  background-color: $color-mixed;
+  background-color: $color-mixed-foreground;
 }

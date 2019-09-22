@@ -5,58 +5,97 @@
 
 @mixin _card {
   position:relative;
-  border:1px solid #000;
-  padding: 6px;
+  background-color:#fff;
+  border-radius: 10px;
+  border-bottom:5px solid #ccc;
+
+  padding: 0px;
   display: inline-block;
   margin: 0px 0px 5px 0px;
   width: 100%;
 
-  @media (max-width: 850px) {
-    width:46% !important;
-    margin: 5px !important;
+  .match-header {
+    border-radius: 10px 10px 0 0;
+    padding: 10px;
+  }
+
+  .match-page {
+    padding: 20px;
+  }
+
+  h2 {
+    margin-top: 0px;
+    font-weight: normal;
+  }
+
+  table.scores {
+    margin: 20px 0px 0px 0px;
+  }
+
+  table td {
+    text-align: center;
+    line-height: 35px;
+  }
+
+  tr.labels td {
+    line-height: 15px;
+    font-size: 15px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+
+  select {
+    width:100%;
   }
 
 }
 
-:local(.mensCard) {
+.mensCard {
   @include _card;
-  color: $color-mens-foreground;
-  background: $color-mens-background;
+
+  .match-header {
+    background: $color-mens-background;
+  }
 }
 
-:local(.ladiesCard) {
+.ladiesCard {
   @include _card;
-  color: $color-ladies-foreground;
-  background: $color-ladies-background;
+
+  .match-header {
+    background: $color-ladies-background;
+  }
 }
 
-
-:local(.mixedCard) {
+.mixedCard {
   @include _card;
-  color: $color-mixed-foreground;
-  background: $color-mixed-background;
+
+  .match-header {
+    background: $color-mixed-background;
+  }
 }
 
-:local(.div) {
+.score { 
+  width: 50px;
+  font-size: 17px;
+  text-align: center;
+}
+
+.div {
   font-size:11px !important;
   width:48%;
   text-align:left;
   display:inline-block;
 }
 
-:local(.time) {
+.time {
   font-size:11px !important;
   width:48%;
   text-align:right;
   display:inline-block;
 }
 
-:local(.content) {
-  font: 18px/18px 'open_sanscondensed_light';
-  text-align: center;
-}
-
-:local(.venue) {
+.venue {
   text-align: center;
   font-weight: bold;
 }

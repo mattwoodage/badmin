@@ -27,30 +27,30 @@ class DivisionGrid extends Component {
         <thead>
           <tr className={cellClass}>
             <td>
-              <h3>{division.labelLocal}</h3>
+              <h2>{division.labelLocal}</h2>
             </td>
             <td colspan={division.teams.length} >
               <h3>AWAY TEAM</h3>
             </td>
           </tr>
-        </thead>
-        <tbody>
-          <tr className={cellClass}>
+          <tr className={`sub ${cellClass}`}>
             <td>HOME TEAM</td>
             {
               division.teams.map(team => {
-                return (<td key={team._id}>{team.labelClubShort}</td>)
+                return (<td className='awayTeam' key={team._id}>{team.labelClubShort}</td>)
               })
             }
           </tr>
+        </thead>
+        <tbody>
           {
             division.teams.map((homeTeam, h) => {
               return (
                 <tr>
-                  <td className={cellClass} key={homeTeam._id}>{homeTeam.labelClub}</td>
+                  <td className={`homeTeam`} key={homeTeam._id}>{homeTeam.labelClub}</td>
                   {
                     division.teams.map((awayTeam, a) => {
-                      const cls = (h === a) ? {className: cellClass} : {}
+                      const cls = (h === a) ? {className: 'gap'} : {}
                       const match = this.getMatch(homeTeam, awayTeam)
         
                       return (
@@ -80,23 +80,21 @@ class DivisionGrid extends Component {
   }
 
   displayMatch (match) {
-    if (match.scoreCard) {
+
+    const cls = match.division.category.toLowerCase() + 'Match'
+
+    if (match.scoreCard && match.scoreCard.status === 1) {
       return (
-        <span>
-          <NavLink to={`./match/${match._id}`} >
-            {match.scoreCard.homeRubbers} - {match.scoreCard.awayRubbers}
-          </NavLink>
-        </span>
+        <NavLink className={`button fixture ${cls}`} to={`./match/${match._id}`} >
+          {match.scoreCard.homeRubbers} - {match.scoreCard.awayRubbers}
+        </NavLink>
       )
     }
 
     return (
-      <span>
-        <NavLink to={`./match/${match._id}`} >
-          <Moment format="Do MMM">{match.startAt}</Moment>
-          <Moment className='time' format="HH:mm">{match.startAt}</Moment>
-        </NavLink>
-      </span>
+      <NavLink className={`button fixture ${cls}`} to={`./match/${match._id}`} >
+        <Moment format="Do MMM">{match.startAt}</Moment>
+      </NavLink>
     )
   }
 

@@ -44,14 +44,24 @@ class Page extends Component {
     this.updateTables()
   }
 
+  sendMail = () => {
+
+    alert('use nodemailer and gmail')
+  }
+
+
+
   render () {
     const log = this.state.log.join('-----')
     return (
       <Panel>
         <div>
           <h1>ADMIN {this.state.active}</h1>
+
+          <a className='button' onClick={this.sendMail} >SEND EMAIL</a>
+
           <a href='#' onClick={this.start}>{this.state.active ? 'STARTED...' : 'START'}</a>
-          <textarea cols="150" rows="200">
+          <textarea cols="50" rows="50">
           {log}
           </textarea>
         </div>

@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-
 import Player from '../Player'
-
 import Panel from '../Panel'
-
 import DB from '../../helpers/DB'
+import styles from './PlayerSearch.scss'
 
 
 class PlayerSearch extends Component {
@@ -14,7 +12,7 @@ class PlayerSearch extends Component {
     loaded: false,
     loading: false,
     search : '',
-    surname: ''
+    searchLetter: ''
   }
 
   initialise () {
@@ -35,26 +33,31 @@ class PlayerSearch extends Component {
   }
 
   renderList () {
-    const { players, search, surname} = this.state
-
+    const { players, search, searchLetter} = this.state
+    
     let total = players
 
-    if (search.length > 1) total = players.filter(p => p.name.toUpperCase().includes(search))
-    if (surname !== '') total = total.filter(p => p.lastName.slice(0,1).toUpperCase() === surname)
+    if (search !== '') total = players.filter(p => p.name.toUpperCase().includes(search))
+    if (searchLetter !== '') total = total.filter(p => p.lastName.slice(0,1).toUpperCase() === searchLetter || p.firstName.slice(0,1).toUpperCase() === searchLetter)
     
     const filtered = total.slice(0,30)
 
+    let title = 'SHOWING ' + filtered.length + ' OF ' + total.length + ' PLAYERS'
+    if (searchLetter!=='') title += ' starting with \'' + searchLetter + '\''
+    if (search!=='') title += ' containing \'' + search + '\''
+
     return (
       <div>
-      {total.length} matches
-      {
-        filtered.map(player => {
-          return (
-            <Player key={player.key} player={player} />
-          )
-        })
-      }
-      {filtered.length < total.length ? 'plus ' + (total.length-filtered.length) + ' more' : ''}
+        <h2>{title}</h2>
+        <div>
+        {
+          filtered.map(player => {
+            return (
+              <Player key={player.key} player={player} />
+            )
+          })
+        }
+        </div>
       </div>
     )
   }
@@ -71,25 +74,32 @@ class PlayerSearch extends Component {
     this.setState({search: e.target.value.toUpperCase()});
   }
 
-  selectLetter = (l) => {
-    this.setState({surname: l});
+  selectLetter = (l, e) => {
+    e.preventDefault()
+    const newLetter = this.state.searchLetter === l ? '' : l
+    this.setState({searchLetter: newLetter});
   }
 
   render () {
-    const { search, surname } = this.state
+    const { search, searchLetter } = this.state
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    let title = 'PLAYERS'
-    if (search.length>1) title += ' containing \'' + search + '\''
+    
     return (
       <form>
-        <h2>{title}</h2>
+        <div className='letters'>
         {
-          letters.split('').map(l => (
-            <a href='#' className='button' onClick={() => this.selectLetter(l)}>{l}</a>
-          ))
+          letters.split('').map(l => {
+            let cls = 'button'
+            if (l !== searchLetter) cls += ' buttonOff'
+            return (
+            <a href='#' className={cls} onClick={(e) => this.selectLetter(l, e)}>{l}</a>
+            )
+          })
         }
+        </div>
         <input type="text" onChange={this.handleChange} />
         <hr />
+        
         {this.renderList()}
 
       </form>

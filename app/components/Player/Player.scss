@@ -1,0 +1,42 @@
+@import '../../styles/global.scss';
+
+
+
+.player {
+  background-color: #fff;
+  margin:0px 5px 5px 0px;
+  display: inline-block;
+  width: 200px;
+  
+  border-radius: 10px;
+
+  > div {
+    display:inline-block;
+    padding: 5px;
+    vertical-align:top;
+  }
+
+  .player-text {
+    width:80%;
+  }
+
+  .player-icon {
+    height: 100px;
+    width:20%;
+    text-align:center;
+    border-radius: 10px 0 0 10px;
+  }
+}
+
+
+.player-F {
+  .player-icon {
+    background-color: $color-F
+  }
+}
+
+.player-M {
+  .player-icon {
+    background-color: $color-M
+  }
+}
