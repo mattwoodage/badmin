@@ -9,19 +9,22 @@
 .high {
   padding: 20px 20px;
   background-color: $color-high-background;
-  border-left:10px solid #ddd;
+  border-radius: 10px;
+  border-bottom: 5px solid #ccc;
 }
 
 .low {
   padding: 20px 20px;
   background-color: $color-low-background;
-  border-left:10px solid #ddd;
+  border-radius: 10px;
+  border-bottom: 5px solid #ddd;
 }
 
 .create {
   padding: 20px 20px;
   background-color: $color-create;
-  border-left:10px solid $color-primary;
+  border-radius: 10px;
+  border-bottom: 5px solid $color-primary;
 }
 
 .marginBottom {

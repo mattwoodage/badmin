@@ -1,6 +1,12 @@
 @import 'reset-css';
 @import '../../styles/global.scss';
 
+
+::selection {
+  color: rgb(7, 7, 7);
+  background: $color-primary;
+}
+
 .outer {
   width:100%;
 }
@@ -10,8 +16,8 @@
   margin: 0 auto;
 }
 
-.bold {
-  font-weight: bold;
+.bold, b {
+  font-weight: bold !important;
 }
 
 .content {
@@ -23,7 +29,6 @@
     font-size: 40px;
     line-height: 40px;
     margin: 20px 0;
-    text-transform: uppercase;
     font-family: 'Open Sans Condensed';
     font-weight: bold
   }
@@ -32,14 +37,13 @@
     font-size: 30px;
     line-height: 30px;
     margin: 20px 0;
-    text-transform: uppercase;
     font-family: 'Open Sans Condensed';
     font-weight: bold
   }
 
   h3 {
     font-size: 20px;
-    line-height:30px;
+    line-height: 30px;
   }
 
 }

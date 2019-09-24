@@ -17,6 +17,35 @@
   .match-header {
     border-radius: 10px 10px 0 0;
     padding: 10px;
+
+    h2 {
+      font-weight: bold;
+      margin: 0px;
+      text-transform: uppercase;
+    }
+
+    
+
+  }
+
+  .match-footer {
+    padding: 0px 20px 20px 20px;
+
+    .match-footer-left {
+      width: 90%;
+      display:inline-block;
+      text-align:right;
+      padding-right:20px;
+    }
+    .match-footer-right {
+      width: 10%;
+      float:right;
+      text-align:right;
+    }
+  }
+
+  .match-player {
+    margin: 4px 0;
   }
 
   .match-page {
@@ -24,12 +53,31 @@
   }
 
   h2 {
-    margin-top: 0px;
-    font-weight: normal;
+    margin: 0px 0px 5px 0px;
+    font-size: 32px;
+    text-transform: uppercase;
+    line-height: 32px;
   }
 
   table.scores {
     margin: 20px 0px 0px 0px;
+    border-bottom: 1px solid #333;
+
+    tbody td {
+      border: none;
+      padding: 0;
+    }
+
+    tbody td.line {
+      border-right: 1px solid #333;
+    }
+
+    input {
+      background-color: $color-inner-background;
+      border: 0;
+      border-top: 1px solid #999;
+    }
+
   }
 
   table td {
@@ -37,16 +85,25 @@
     line-height: 35px;
   }
 
-  tr.labels td {
-    line-height: 15px;
-    font-size: 15px;
+  .right {
+    text-align: right;
+  }
+
+  tr.labels td, div.label {
+    line-height: 17px;
+    font-size: 17px;
     text-transform: uppercase;
     font-weight: bold;
   }
 
+  tr.totals td {
+    font-size: 32px;
+    line-height: 50px;
+  }
 
   select {
-    width:100%;
+    width: 100%;
+    background: $color-inner-background;
   }
 
 }
@@ -72,6 +129,24 @@
 
   .match-header {
     background: $color-mixed-background;
+  }
+}
+
+.card-result {
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px 10px;
+  text-align:center;
+  margin-bottom: 20px;
+  border-bottom: 5px solid #ccc;
+
+  h2 {
+    margin: 0;
+    text-transform: uppercase;
+  }
+  h3 {
+    font-weight: normal;
+    text-transform: uppercase;
   }
 }
 

@@ -5,6 +5,9 @@ import ImageIcon from '@material-ui/icons/Image';
 import { NavLink } from 'react-router-dom'
 import { Container, Row, Col } from 'react-grid-system';
 
+import Icon from '@mdi/react'
+import { mdiTrophy, mdiAutorenew, mdiCheckDecagram, mdiCloseBox } from '@mdi/js'
+
 Moment.globalFormat = 'D MMM YYYY HH:mm'
 
 import styles from './MatchCard.scss';
@@ -16,24 +19,6 @@ class MatchCard extends Component {
     this.form = React.createRef()
   }
 
-  startTime () {
-    const { match, cal } = this.props
-    let startAt = String(new Date(this.props.match.startAt)).split(' ')
-    if (cal) {
-      startAt = startAt[4].split(":")
-      startAt.pop()
-    }
-    else {
-      startAt.pop()
-      startAt.pop()
-    }
-    return (
-      <div className='time'>
-        {startAt.join(':')}
-      </div>
-    )
-  }
-
   renderRubber (card, rubber, oop) {
 
     const { match } = this.props
@@ -43,11 +28,7 @@ class MatchCard extends Component {
     const games = Array.from(Array(gamesPerRubber).keys())
 
     let displayOop = oop.split('')
-    displayOop = `H ${oop[0]}+${oop[1]} v ${oop[2]}+${oop[3]} A`
-
-    console.log('-----------------------')
-    console.log(rubber)
-    console.log(scores)
+    displayOop = `${oop[0]}+${oop[1]} v ${oop[2]}+${oop[3]}`
 
     const gameCols = []
     let homeGames = 0
@@ -56,15 +37,13 @@ class MatchCard extends Component {
 
       const gameScore = scores.filter(s => s.gameNum === i)
 
-      console.log('GAME SCORE = ', gameScore)
-
       if (gameScore.length !== 0) {
         if (gameScore[0].win) homeGames += 1
         if (gameScore[1].win) awayGames += 1
         gameCols.push (
           <React.Fragment>
             <td><input name={`H-${rubber}-${i}`} class='score' type='text' value={gameScore[0].points} /></td>
-            <td><input name={`A-${rubber}-${i}`} class='score' type='text' value={gameScore[1].points} /></td>
+            <td className='line'><input name={`A-${rubber}-${i}`} class='score' type='text' value={gameScore[1].points} /></td>
           </React.Fragment>
         )
       }
@@ -72,28 +51,34 @@ class MatchCard extends Component {
         gameCols.push (
           <React.Fragment>
             <td><input name={`H-${rubber}-${i}`} class='score' type='text' value='' /></td>
-            <td><input name={`A-${rubber}-${i}`} class='score' type='text' value='' /></td>
+            <td className='line'><input name={`A-${rubber}-${i}`} class='score' type='text' value='' /></td>
           </React.Fragment>
         )
       }
     }
 
-    let rubberWinner = 'Draw'
-    if (homeGames > awayGames) rubberWinner = match.homeTeam.labelClubShort
-    else if (homeGames < awayGames) rubberWinner = match.awayTeam.labelClubShort
+    let homeRubbers = 0
+    let awayRubbers = 0
+    if (homeGames > awayGames) homeRubbers = 1
+    else if (homeGames < awayGames) awayRubbers = 1
+    else {
+      homeRubbers = 0.5
+      awayRubbers = 0.5
+    }
 
     gameCols.push (
       <React.Fragment>
         <td>{homeGames}</td>
-        <td>{awayGames}</td>
-        <td>{rubberWinner}</td>
+        <td className='line'>{awayGames}</td>
+        <td>{homeRubbers}</td>
+        <td>{awayRubbers}</td>
       </React.Fragment>
     )
 
 
     return (
       <tr>
-        <td>{displayOop}</td>
+        <td className='line'><b>{rubber}.</b> {displayOop}</td>
         {gameCols}
       </tr>
     )
@@ -115,10 +100,10 @@ class MatchCard extends Component {
     const rows = []
 
     for (let i = 0; i < playerPos; i++) {
-      const gender = playerGender[i] === 'F' ? 'Lady' : 'Man'
+      //const gender = playerGender[i] === 'F' ? 'Lady' : 'Man'
       rows.push(
-        <Row>
-          <Col md={2}>{`${gender} ${i+1}`}</Col>
+        <Row className='match-player'>
+          <Col md={2} className='label right'>{`PLAYER ${i+1}`}</Col>
           <Col md={4}>{this.renderPlayerList(i, true, card.homePlayers[i])}</Col>
           <Col md={4}>{this.renderPlayerList(i, false, card.awayPlayers[i])}</Col>
           <Col md={2}></Col>
@@ -169,31 +154,119 @@ class MatchCard extends Component {
     })
 
     console.log(data)
-
-   // for(let i=0; i<this.form.elements.length; i++){
-   // var alertText = ""
-   // alertText += "Element Type: " + this.form.elements[i].type + "\n"
-
-   //    if(this.form.elements[i].type == "text" || this.form.elements[i].type == "textarea" || this.form.elements[i].type == "button"){
-   //    alertText += "Element Value: " + this.form.elements[i].value + "\n"
-   //    }
-   //    else if(this.form.elements[i].type == "checkbox"){
-   //    alertText += "Element Checked? " + this.form.elements[i].checked + "\n"
-   //    }
-   //    else if(this.form.elements[i].type == "select-one"){
-   //    alertText += "Selected Option's Text: " + this.form.elements[i].options[this.form.elements[i].selectedIndex].text + "\n"
-   //    }
-   // alert(alertText)
-   // }
-
-    
   }
 
+  renderSubmitted () {
+    const { card } = this.props
+    if (card._id) {
+      return (
+        <div class='card-result'>
+          <b>RESULT SUBMITTED</b><br/>
+          by: {card.enteredBy.firstName + ' ' + card.enteredBy.lastName}<br/>
+          on: <Moment format="ddd DD MMM HH:mm">{card.enteredAt}</Moment>
+        </div>
+      )
+    }
+    return null
+  }
+
+  renderConfirmed () {
+    const { card } = this.props
+    if (card._id) {
+      return (
+        <div class='card-result'>
+          <If condition={ card.status === 0 }>
+            <Icon path={mdiAutorenew}
+                  title="Pending"
+                  size={2}
+                  color="orange"
+                  spin
+                  />
+            <h1>AWAITING CONFIRMATION</h1>
+          </If>
+          <If condition={ card.status === 1 }>
+            <Icon path={mdiCheckDecagram}
+                  title="Confirmed"
+                  size={2}
+                  color="green"
+                  />
+            <h1>CONFIRMED</h1>
+            by: {card.confirmedBy.firstName + ' ' + card.enteredBy.lastName}<br/>
+            on: <Moment format="ddd DD MMM HH:mm">{card.confirmedAt}</Moment>
+          </If>
+          <If condition={ card.status === -1 }>
+            <Icon path={mdiCloseBox}
+                title="Rejected"
+                size={2}
+                color="red"
+                />
+            <h1>REJECTED</h1>
+          </If>
+        </div>
+      )
+    }
+    return null
+  }
+
+  renderPoints (num) {
+    return (
+      <span>awarded <b>{num}</b> point{num !== 1 && 's'}</span>
+    )
+  }
+
+  renderWinner () {
+    const { card, match } = this.props
+    if (card._id) {
+      return (
+        <Choose>
+          <When condition={ card.winner === 2 }>
+            <div class='card-result'>
+              <h3>MATCH DRAWN</h3>
+              <h2>{match.homeTeam.labelClub}</h2>
+              {this.renderPoints(card.homePts)}
+              
+              <h2>{match.awayTeam.labelClub}</h2>
+              {this.renderPoints(card.awayPts)}
+            </div>
+          </When>
+          <Otherwise>
+            <div class='card-result'>
+              <h3>WINNER</h3>
+              <Icon path={mdiTrophy}
+                title="Winner"
+                size={2}
+                color="gold"
+                />
+              <If condition={ card.winner === 1 }>
+                <h2>{match.homeTeam.labelClub}</h2>
+                {this.renderPoints(card.homePts)}
+              </If>
+              <If condition={ card.winner === 3 }>
+                <h2>{match.awayTeam.labelClub}</h2>
+                {this.renderPoints(card.awayPts)}
+              </If>
+            </div>
+            <div class='card-result'>
+              <If condition={ card.winner === 1 }>
+                <h2>{match.awayTeam.labelClub}</h2>
+                {this.renderPoints(card.awayPts)}
+              </If>
+              <If condition={ card.winner === 3 }>
+                <h2>{match.homeTeam.labelClub}</h2>
+                {this.renderPoints(card.homePts)}
+              </If>
+            </div>
+
+          </Otherwise>
+        </Choose>
+      )
+    }
+    return null
+  }
 
   render () {
-
     console.log('render match card')
-    
+
     const { match, classes, card } = this.props
     let cls = 'ladiesCard'
     if (match.division.labelLocal.toUpperCase().indexOf('MIXED')>-1) cls = 'mixedCard'
@@ -207,11 +280,11 @@ class MatchCard extends Component {
       gameCols.push (
         <React.Fragment>
           <td>{match.homeTeam.labelClubShort}</td>
-          <td>{match.awayTeam.labelClubShort}</td>
+          <td className='line'>{match.awayTeam.labelClubShort}</td>
         </React.Fragment>
       )
       gameHeaders.push (
-        <td colspan='2'>{`Game ${i}`}</td>
+        <td colspan='2' className='line'>{`Game ${i}`}</td>
       )
     }
 
@@ -225,9 +298,10 @@ class MatchCard extends Component {
                 <div class='match-header'>
                   <Container>
                    <Row>
-                     <Col md={4}><h2>{match.division.labelLocal}</h2></Col>
-                     <Col md={4}>{this.startTime()} {match.venue.name}</Col>
-                     <Col md={4}>entered by: {card.enteredBy.email}</Col>
+                     <Col md={4}><h2>{match.division.category}</h2><b>DIVISION {match.division.position}</b></Col>
+                     <Col md={4}>
+                     <input name='startAt' value={match.startAt} />{match.venue.name}</Col>
+                     <Col md={4}></Col>
                    </Row>
                   </Container>
                 </div>
@@ -236,47 +310,63 @@ class MatchCard extends Component {
                   <Container>
                     <Row>
                       <Col md={2}></Col>
-                      <Col md={4} className='bold'>HOME</Col>
-                      <Col md={4} className='bold'>AWAY</Col>
+                      <Col md={4}>HOME</Col>
+                      <Col md={4}>AWAY</Col>
                       <Col md={2}></Col>
                     </Row>
                     <Row>
-                      <Col md={2}><h2>Players</h2></Col>
+                      <Col md={2}></Col>
                       <Col md={4}><h2>{match.homeTeam.labelClub}</h2></Col>
                       <Col md={4}><h2>{match.awayTeam.labelClub}</h2></Col>
-                      <Col md={2}>x</Col>
+                      <Col md={2}></Col>
                     </Row>
                     {this.renderPlayers()}
                   </Container>
                   <table className='scores'>
+                    <tbody>
                     <tr className='labels'>
-                      <td>Order of</td>
+                      <td className='line'>Order of</td>
                       {gameHeaders}
-                      <td>Home</td>
-                      <td>Away</td>
-                      <td></td>
+                      <td colspan={2} >Games</td>
+                      <td colspan={2} >Rubbers</td>
                     </tr>
                     <tr className='labels'>
-                      <td>Play</td>
+                      <td className='line'>Play</td>
                       {gameCols}
-                      <td>Games</td>
-                      <td>Games</td>
-                      <td>Winner</td>
+                      <td>{match.homeTeam.labelClubShort}</td>
+                      <td className='line'>{match.awayTeam.labelClubShort}</td>
+                      <td>{match.homeTeam.labelClubShort}</td>
+                      <td>{match.awayTeam.labelClubShort}</td>
                     </tr>
                   {
                     match.division.orderOfPlay.map((oop, rubber) => {
                       return this.renderRubber(card, rubber+1, oop)
                     })
                   }
+                  <tr className='totals'>
+                    <td colspan={1 + gamesPerRubber*2} className='line'></td>
+                    <td>{card.homeGames}</td>
+                    <td className='line'>{card.awayGames}</td>
+                    <td><b>{card.homeRubbers}</b></td>
+                    <td><b>{card.awayRubbers}</b></td>
+                  </tr>
+                  </tbody>
                   </table>
-                  <a href='#' className='button' onClick={(e) => this.validate(e)}>SAVE</a>
+                  
+                </div>
+
+                <div className='match-footer'>
+                  <span className='match-footer-left'>MESSAGE GOES HERE</span>
+                  <span className='match-footer-right'><a href='#' className='button' onClick={(e) => this.validate(e)}>SAVE</a></span>
                 </div>
 
               </form>
             </div>
           </Col>
           <Col md={3}>
-            CCCCCCCCCCCCCC
+            {this.renderWinner()}
+            {this.renderSubmitted()}
+            {this.renderConfirmed()}
           </Col>
         </Row>
       </Container>

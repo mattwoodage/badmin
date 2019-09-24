@@ -15,6 +15,14 @@ var userSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
+        type: String,
+        required: true
+    },
     status: {
         type: Number,
         default: 0

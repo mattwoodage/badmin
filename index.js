@@ -126,7 +126,11 @@ router.post('/api/auth/login', function(req, res) {
 
 router.post('/api/auth/register', (req, res) => {
 
-  if (!req.body.nickname) {
+  if (!req.body.firstName) {
+    res.status(401).send({success: false, field: 'firstName', msg: 'Please enter a first name'});
+  } else if (!req.body.lastName) {
+    res.status(401).send({success: false, field: 'lastName', msg: 'Please enter a last name'});
+  } else if (!req.body.nickname) {
     res.status(401).send({success: false, field: 'nickname', msg: 'Please enter a nickname'});
   } else if (!req.body.email) {
     res.status(401).send({success: false, field: 'email', msg: 'Please enter a valid email address'});
@@ -136,7 +140,9 @@ router.post('/api/auth/register', (req, res) => {
     var newUser = new User({
       email: req.body.email,
       password: req.body.password,
-      nickname: req.body.nickname
+      nickname: req.body.nickname,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName
     });
     // save the user
     newUser.save(function(err) {
@@ -180,14 +186,81 @@ router.get('/api/:seasonPeriod/seasons', (req, res, next) => {
         if (s.period === req.params.seasonPeriod) return s
       })
 
-      seasons = seasons.map((s) => {
-        return s.period
-      })
-
       res.json({league: league, season: season, seasons: seasons})
     })
+    .sort({ startYear: 1 })
   })
 })
+
+
+
+// SEASON POST
+
+router.post('/api/season', async function(req, res) {
+
+  const leagueShort = req.headers.host.split('.')[0].toUpperCase()
+  const getLeague = League.findOne({ short: leagueShort })  
+  const [ leagueErr, league ] = await to(getLeague)
+
+
+  if (req.body._id) {
+    // edit
+
+    Season.findOneAndUpdate(
+      { _id: req.body._id },
+      { $set: req.body },
+      { new: true }
+    ).exec((err, _season) => {
+      if (err) return res.json({error: err})
+      res.status(200);
+      res.json({season:_season});
+    })
+
+  } else {
+    // create
+    const season = new Season({...req.body, league: league._id});
+    season.save((err, _season) => {
+      if (err) return res.json({error: err})
+      res.status(201);
+      res.json(_season);
+    });
+  }
+
+});
+
+
+// SEASON POST
+
+router.post('/api/division', function(req, res) {
+
+  if (req.body._id) {
+    // edit
+
+    Division.findOneAndUpdate(
+      { _id: req.body._id },
+      { $set: req.body },
+      { new: true }
+    ).exec((err, _division) => {
+      if (err) return res.json({error: err})
+      _division.save((err, _division) => {
+        res.status(200);
+        res.json({division:_division});
+      })
+     }
+    )
+
+  } else {
+    // create
+    const division = new Division(req.body);
+    division.save((err, _division) => {
+      if (err) return res.json({error: err})
+      res.status(201);
+      res.json(_division);
+    });
+  }
+
+});
+
 
 router.get('/api/import-all', (req, res, next) => {
   new ImportData(req, res)
@@ -210,7 +283,7 @@ router.get('/api/:seasonPeriod/divisions', (req, res, next) => {
           $match: { season: season._id }
       },
       {
-          $sort: { labelLocal: 1 }
+          $sort: { category: 1, position: 1 }
       },
       {
           $lookup: {
@@ -306,12 +379,12 @@ router.post('/api/:seasonPeriod/club', function(req, res) {
     Club.findOneAndUpdate(
       { _id: req.body._id },
       { $set: req.body },
-      function(err, _club) {
-        if (err) return res.json({error: err})
-        res.status(200);
-        res.json({club:_club});
-      }
-    )
+      { new: true }
+    ).exec((err, _club) => {
+      if (err) return res.json({error: err})
+      res.status(200);
+      res.json({club:_club});
+    })
 
   } else {
     // create
@@ -329,7 +402,7 @@ router.post('/api/:seasonPeriod/club', function(req, res) {
 
 // TEAM POST
 
-router.post('/api/:seasonPeriod/team', function(req, res) {
+router.post('/api/team', function(req, res) {
 
   console.log('TEAM POST')
     

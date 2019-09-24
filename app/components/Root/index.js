@@ -96,11 +96,11 @@ class Root extends Component {
 
           });
       },
-      register: (nickname, email, password) => {
+      register: (firstName, lastName, nickname, email, password) => {
         this.setState({
           registerLoading: true
         })
-        axios.post('/api/auth/register', { nickname, email, password })
+        axios.post('/api/auth/register', { firstName, lastName, nickname, email, password })
           .then((result) => {
             this.doRegister(email)
           })

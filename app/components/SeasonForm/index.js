@@ -17,12 +17,12 @@ import { Container, Row, Col } from 'react-grid-system';
 
 import DB from '../../helpers/DB'
 
-class TeamForm extends Component {
+class SeasonForm extends Component {
 
   constructor () {
     super()
     this.state = {
-      team: {},
+      season: {},
       submitting: false,
       status: 0
     }
@@ -30,10 +30,10 @@ class TeamForm extends Component {
 
   static getDerivedStateFromProps(props, state) {
 
-    const teamForState = props.team
-    //teamForState.division = teamForState.division._id
+    const seasonForState = props.season
+
     return {
-      team: teamForState,
+      season: seasonForState,
       submitting: false,
       status: 0
     }
@@ -42,14 +42,16 @@ class TeamForm extends Component {
   handleSubmit = (evt) => {
     evt.preventDefault()
 
+    const { season } = this.props
+
     const _this = this
 
     this.setState({ submitting: true, status: 0 });
 
-    fetch(`/api/team`,
+    fetch(`/api/season`,
     {
         method: "POST",
-        body: JSON.stringify( this.state.team ),
+        body: JSON.stringify( this.state.season ),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -65,63 +67,59 @@ class TeamForm extends Component {
     return false
   }
 
-  handleDateChange = (field, date) => {
-    console.log(field, date)
-    this.state.team[field] = date.toDate()
-    this.setState({ team: this.state.team });
-  }
-
   handleChange = (field, event) => {
     console.log(field, event)
-    console.error('THIS IS WRONG')
-    this.state.team[field] = event.target.value
-    this.setState({ team: this.state.team });
+    const newSeason = this.state.season
+    newSeason[field] = event.target.value
+    this.setState({ season: newSeason });
   }
-
-
 
   render () {
 
-    const { team, submitting } = this.state
-    const { divisions } = this.props
+    const { season, submitting } = this.state
 
-    const btnLabel = team._id ? 'Save changes' : 'Create new' 
+    const btnLabel = season._id ? 'Save changes' : 'Create new' 
     
-    const props = team._id ? {high:true} : {create:true}
+    const props = season._id ? {high:true} : {create:true}
 
     return (
       <Panel {...props} marginBottom>
         <form onSubmit={this.handleSubmit}>
           <Container>
             <Row>
-              <Col md={6}>
+              <Col md={4}>
+                <TextField
+                  label="Period"
+                  onChange={(evt) => this.handleChange('period', evt)}
+                  value={season.period}
+                  margin="normal"
+                  fullWidth
+                />
+              </Col>
+              <Col md={4}>
+                <TextField
+                  label="Start Year"
+                  onChange={(evt) => this.handleChange('startYear', evt)}
+                  value={season.startYear}
+                  margin="normal"
+                  fullWidth
+                />
+              </Col>
+              <Col md={4}>
                 <TextField
                   select
-                  label="Division"
-                  value={team.division}
-                  onChange={(evt) => this.handleChange('division', evt)}
+                  label="Current?"
+                  value={season.current}
+                  onChange={(evt) => this.handleChange('current', evt)}
                   margin="normal"
                   fullWidth
                   SelectProps={{
                     native: true
                   }}
                 >
-                  <option key='-1' value=''></option>
-                  {divisions.map(division => (
-                    <option key={division._id} value={division._id}>
-                      {division.labelLocal}
-                    </option>
-                  ))}
+                  <option key='1' value={true}>Yes</option>
+                  <option key='2' value={false}>No</option>
                 </TextField>
-              </Col>
-              <Col md={6}>
-                <TextField
-                  label="Prefix"
-                  onChange={(evt) => this.handleChange('prefix', evt)}
-                  value={team.prefix}
-                  margin="normal"
-                  fullWidth
-                />
               </Col>
             </Row>
 
@@ -129,11 +127,12 @@ class TeamForm extends Component {
 
           <Button disabled={ submitting } type="submit" variant="contained" color="primary">{btnLabel}</Button>
 
+          <a class='button' href={`../${season.period}/divisions`}>DIVISIONS</a>
         </form>
       </Panel>
     )
   }
 }
 
-export default TeamForm
+export default SeasonForm
 

@@ -277,7 +277,7 @@ class ImportData {
                 division.ptsLoseBy1 = cols[16]
                 division.ptsLoseBy2 = cols[15]
                 division.ptsFullTeam = cols[17]
-                division.canDraw = cols[19]
+                division.canDraw = cols[19]==='1' ? true : false
 
                 this.saveOrUpdate(division, 'divisions', log)
                   .then((result) => {
@@ -592,7 +592,7 @@ class ImportData {
                             match.homeTeam = homeTeam._id
                             match.awayTeam = awayTeam._id
                             match.startAt = new Date(dt)
-                            match.label = homeTeam.labelClub + ' vs ' + awayTeam.labelClub
+                            match.label = homeTeam.labelClub.toUpperCase() + ' v ' + awayTeam.labelClub.toUpperCase()
 
                             this.saveOrUpdate(match, 'matches', log)
                               .then((result) => {

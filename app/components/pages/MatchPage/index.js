@@ -95,7 +95,7 @@ class Page extends Component {
       <div>
         <Breadcrumb list={
           [
-            {lbl:'Calendar', url:'../calendar'},
+            {lbl:'CALENDAR', url:'../calendar'},
             {lbl:this.state.match.label}
           ]
         } />

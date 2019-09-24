@@ -5,7 +5,7 @@ var seasonSchema = mongoose.Schema({
   period: String,
   current: Boolean,
   _old: Number,
-  league: Object,
+  league: { type: mongoose.Schema.Types.ObjectId, ref: 'League' },
   startYear: Number,
   createdAt: Date,
   key: String

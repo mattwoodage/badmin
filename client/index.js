@@ -17,6 +17,8 @@ import MatchPage from '../app/components/pages/MatchPage'
 import ClubPage from '../app/components/pages/ClubPage'
 import MembersPage from '../app/components/pages/MembersPage'
 import AdminPage from '../app/components/pages/AdminPage'
+import SeasonsPage from '../app/components/pages/SeasonsPage'
+import DivisionsPage from '../app/components/pages/DivisionsPage'
 
 
 function onRouterUpdate () {
@@ -26,6 +28,8 @@ function onRouterUpdate () {
 render((
   <BrowserRouter history={browserHistory} onUpdate={onRouterUpdate}>
     <Root>
+
+      
       <Route path='/:season/home' component={HomePage} />
       <Route path='/:season/calendar' component={CalendarPage} />
       <Route path='/:season/matches' component={MatchesPage} />
@@ -36,8 +40,11 @@ render((
       <Route exact path='/:season/club/:club' component={ClubPage} />
       <Route exact path='/:season/club/:club/members' component={MembersPage} />
       <Route exact path='/:season/grids' component={GridsPage} />
+
       <Route exact path='/:season/login' component={LoginPage} />
       <Route exact path='/:season/admin' component={AdminPage} />
+      <Route exact path='/:season/seasons' component={SeasonsPage} />
+      <Route exact path='/:season/divisions' component={DivisionsPage} />
     </Root>
   </BrowserRouter>
 ), document.getElementById('app'));

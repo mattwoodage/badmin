@@ -6,7 +6,7 @@ var divisionSchema = mongoose.Schema({
   _fmt: Number,
   labelLocal: String,
   label: String,
-  season: Object,
+  season: { type: mongoose.Schema.Types.ObjectId, ref: 'Season' },
   position: Number,
   alias: String,
   category: String,
@@ -29,8 +29,15 @@ var divisionSchema = mongoose.Schema({
   ptsLoseBy1: Number,
   ptsLoseBy2: Number,
   ptsFullTeam: Number,
-  canDraw: Number
+  canDraw: Boolean
 })
+
+divisionSchema.pre('save', function (next) {
+  this.labelLocal = [this.category,this.alias || this.position].join(' ')
+
+  this.orderOfPlay = this.orderOfPlay[0].split(',')
+  return next();
+});
 
 var Division = mongoose.model('Division', divisionSchema)
 

@@ -119,7 +119,7 @@ class Page extends Component {
         
 
         {teams.map(team => (
-          <TeamForm season={season} team={team} divisions={divisions}  />
+          <TeamForm team={team} divisions={divisions}  />
         ))}
       </div>
     )

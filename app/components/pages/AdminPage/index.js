@@ -1,19 +1,7 @@
 import React, { Component } from 'react'
-import { withStyles } from '@material-ui/core/styles';
-import { LeagueContext } from '../../Root'
-import Panel from '../../Panel'
+import { NavLink } from 'react-router-dom'
 
-const materialStyles = theme => ({
-  paper: {
-    padding: 30,
-    color: theme.palette.text.secondary
-  },
-  row: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  }
-});
+import { LeagueContext } from '../../Root'
 
 class Page extends Component {
 
@@ -53,19 +41,14 @@ class Page extends Component {
 
   render () {
     const log = this.state.log.join('-----')
+
     return (
-      <Panel>
-        <div>
-          <h1>ADMIN {this.state.active}</h1>
+      <div>
+        <h1>ADMIN {this.state.active}</h1>
 
-          <a className='button' onClick={this.sendMail} >SEND EMAIL</a>
-
-          <a href='#' onClick={this.start}>{this.state.active ? 'STARTED...' : 'START'}</a>
-          <textarea cols="50" rows="50">
-          {log}
-          </textarea>
-        </div>
-      </Panel>
+        <NavLink className='button' to='./seasons'>SEASONS</NavLink>
+        
+      </div>
     )
   }
 }
@@ -81,6 +64,6 @@ class AdminPage extends Component {
   }
 }
 
-export default withStyles(materialStyles)(AdminPage)
+export default AdminPage
 
 

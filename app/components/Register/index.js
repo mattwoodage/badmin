@@ -14,6 +14,8 @@ class RegisterWithContext extends Component {
     super();
     this.state = {
       nickname: '',
+      firstName: '',
+      lastName: '',
       email: '',
       password: ''
     };
@@ -27,17 +29,41 @@ class RegisterWithContext extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     const { register } = this.props
-    const { nickname, email, password } = this.state;
-    register(nickname, email, password)
+    const { firstName, lastName, nickname, email, password } = this.state;
+    register(firstName, lastName, nickname, email, password)
   }
 
   render() {
-    const { nickname, email, password } = this.state;
+    const { firstName, lastName, nickname, email, password } = this.state;
     const { registerError, registerLoading } = this.props;
 
     return (
       <div>
         <form onSubmit={this.onSubmit}>
+
+          <TextField
+            error={ registerError && registerError.field === 'firstName'}
+            name="firstName"
+            label="first name"
+            className={styles.textField}
+            value={firstName}
+            onChange={this.onChange}
+            margin="normal"
+            helperText={ registerError && registerError.field === 'firstName' ? registerError.msg : '' }
+            required
+          />
+
+          <TextField
+            error={ registerError && registerError.field === 'lastName'}
+            name="lastName"
+            label="lastName"
+            className={styles.textField}
+            value={lastName}
+            onChange={this.onChange}
+            margin="normal"
+            helperText={ registerError && registerError.field === 'lastName' ? registerError.msg : '' }
+            required
+          />
 
           <TextField
             error={ registerError && registerError.field === 'nickname'}

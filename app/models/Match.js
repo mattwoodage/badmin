@@ -3,14 +3,14 @@ import mongoose from 'mongoose'
 var matchSchema = mongoose.Schema({
   label: String,
   startAt: Date,
-  division: Object,
-  homeTeam: Object,
-  awayTeam: Object,
+  division: { type: mongoose.Schema.Types.ObjectId, ref: 'Division' },
+  homeTeam: { type: mongoose.Schema.Types.ObjectId, ref: 'Team' },
+  awayTeam: { type: mongoose.Schema.Types.ObjectId, ref: 'Team' },
   numCourts: Number,
-  venue: Object,
+  venue: { type: mongoose.Schema.Types.ObjectId, ref: 'Venue' },
   startAt: Date,
   key: String,
-  scoreCard: Object,
+  scoreCard: { type: mongoose.Schema.Types.ObjectId, ref: 'ScoreCard' },
   _old: Number
 })
 

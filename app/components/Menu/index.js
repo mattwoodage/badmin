@@ -205,7 +205,7 @@ class Menu extends Component {
     return (
       <select className='selectSeason' onChange={this.selectSeason}>
         { seasons.map((s) => {
-          return <option selected={(season.period === s)}>{s}</option>
+          return <option selected={(season.period === s.period)}>{s.period}</option>
           })
         }
       </select>
