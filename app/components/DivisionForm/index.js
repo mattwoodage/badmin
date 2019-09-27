@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Club from '../Club'
 import Panel from '../Panel'
+import to from 'await-to-js'
 
 import { NavLink } from 'react-router-dom'
 
@@ -8,8 +9,6 @@ import ReactMoment from 'react-moment'
 import Moment from 'moment'
 
 import { extendMoment } from 'moment-range';
-
-import Button from '@material-ui/core/Button';
 
 import TextField from '@material-ui/core/TextField';
 
@@ -19,54 +18,41 @@ import DB from '../../helpers/DB'
 
 class DivisionForm extends Component {
 
-  constructor () {
+  constructor (props) {
     super()
     this.state = {
-      division: {},
+      division: props.division,
       submitting: false,
       status: 0
     }
   }
 
-  static getDerivedStateFromProps(props, state) {
-
-    let divisionForState = props.division
-    return {
-      division: divisionForState,
-      submitting: false,
-      status: 0
-    }
-  }
-
-  handleSubmit = (evt) => {
+  handleSubmit = async (evt) => {
     evt.preventDefault()
     const { division } = this.state
 
-    const _this = this
-
     this.setState({ submitting: true, status: 0 });
 
-    fetch(`/api/division`,
-    {
+    const [ err, response ] = await to(
+      fetch('/api/division',
+      {
         method: "POST",
         body: JSON.stringify( division ),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }
-    })
-    .then(function(res) {
-      _this.setState({ submitting: false, status: 1 });
-    })
-    .catch(function(err) {
-      _this.setState({ submitting: false, status: -1 });
-    })
+      })
+    )
 
-    return false
+    const json = await response.json()
+
+    if (err) return this.setState({ submitting: false, status: -1 });
+    else return this.setState({ division: json.division, submitting: false, status: 1 });
+
   }
 
   handleChange = (field, event) => {
-    console.log(field, event)
     const newDivision = this.state.division
     newDivision[field] = event.target.value
     this.setState({ division: newDivision });
@@ -76,14 +62,16 @@ class DivisionForm extends Component {
 
     const { division, submitting } = this.state
 
-    const btnLabel = division._id ? 'Save changes' : 'Create new' 
+    let btnLabel = division._id ? 'Save changes' : 'Create new' 
     
+    if (submitting) btnLabel = 'Saving...'
+
     const props = division._id ? {high:true} : {create:true}
 
     return (
       <Panel {...props} marginBottom>
-        <h2>{division.labelLocal}</h2>
-        <form onSubmit={this.handleSubmit}>
+        <h2>{division.labelLocal ? division.labelLocal.toUpperCase() : 'NEW'}</h2>
+        <form onSubmit={(evt) => this.handleSubmit(evt)}>
           <Container>
             <Row>
               <Col md={4}>
@@ -98,6 +86,7 @@ class DivisionForm extends Component {
                     native: true
                   }}
                 >
+                  <option key='0'></option>
                   <option key='1' value='Ladies'>Ladies</option>
                   <option key='2' value='Mens'>Mens</option>
                   <option key='3' value='Mixed'>Mixed</option>
@@ -136,6 +125,7 @@ class DivisionForm extends Component {
                     native: true
                   }}
                 >
+                  <option key='0'></option>
                   <option key='1' value={true}>Yes</option>
                   <option key='2' value={false}>No</option>
                 </TextField>
@@ -152,6 +142,7 @@ class DivisionForm extends Component {
                     native: true
                   }}
                 >
+                  <option key='0'></option>
                   <option key='1' value={true}>Yes</option>
                   <option key='2' value={false}>No</option>
                 </TextField>
@@ -236,6 +227,7 @@ class DivisionForm extends Component {
                     native: true
                   }}
                 >
+                  <option key='0'></option>
                   <option key='1' value={true}>Yes</option>
                   <option key='2' value={false}>No</option>
                 </TextField>
@@ -325,9 +317,9 @@ class DivisionForm extends Component {
               </Col>
             </Row>
           </Container>
-
-          <Button disabled={ submitting } type="submit" variant="contained" color="primary">{btnLabel}</Button>
-
+          <div className='right'>
+            <button className='button' disabled={ submitting } type="submit" >{btnLabel}</button>
+          </div>
         </form>
       </Panel>
     )

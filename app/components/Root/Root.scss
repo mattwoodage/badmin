@@ -48,6 +48,11 @@
 
 }
 
+.right {
+  text-align: right;
+}
+
+
 .button {
   background-color: $color-primary;
   color: #000;
@@ -64,6 +69,10 @@
   border-bottom: 3px solid darken( $color-primary, 12% );
 }
 
+.button:focus {
+    outline: none !important;
+}
+
 input {
   font-size: 20px;
   padding: 4px;
@@ -72,7 +81,7 @@ input {
 .button:active {
   background-color: darken( $color-primary, 2% );
   border-bottom: 0px transparent;
-  top:3px;
+  top: 3px;
 }
 
 .button.buttonOff {
@@ -117,9 +126,14 @@ h1 {
   font: 30px/40px !important
 }
 
-a {
+a, button {
   color: $color-link;
+  font-family: 'Open Sans Condensed';
+  font-size: 20px;
+  border: none;
   text-decoration: none;
+  cursor: pointer;
+  text-transform: uppercase;
 }
 
 a:hover {

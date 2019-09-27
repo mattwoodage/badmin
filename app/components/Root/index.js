@@ -27,6 +27,7 @@ class Root extends Component {
       isLoggedIn: false,
       nickname: '',
       loginError: {},
+      xxx: '-',
       loading: false,
       loginLoading: false,
       registerLoading: false
@@ -118,6 +119,12 @@ class Root extends Component {
       selectClub: (club) => {
         this.setState({
           club: club
+        })
+      },
+      xxx: this.state.xxx,
+      setXXX: (v) => {
+        this.setState({
+          xxx: v
         })
       },
       isLoggedIn: this.state.isLoggedIn,

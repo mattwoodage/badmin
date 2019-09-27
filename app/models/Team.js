@@ -34,16 +34,16 @@ teamSchema.pre('save', function (next) {
   Division.findOne({_id: team.division}).exec((err, division) => {
     if (division) {
       let lbl = division.category
-      if (team.prefix.length>0) lbl += ' ' + team.prefix
+      if (team.prefix && team.prefix.length>0) lbl += ' ' + team.prefix
       team.key = (lbl + '-' + division.key).toLowerCase().split(' ').join('-')
       team.labelDivision = lbl
       Club.findOne({_id: team.club}).exec((err, club) => {
         if (club) {
           let lbl = club.name
-          if (team.prefix.length>0) lbl += ' ' + team.prefix
+          if (team.prefix && team.prefix.length>0) lbl += ' ' + team.prefix
           team.labelClub = lbl
           lbl = club.short
-          if (team.prefix.length>0) lbl += ' ' + team.prefix
+          if (team.prefix && team.prefix.length>0) lbl += ' ' + team.prefix
           team.labelClubShort = lbl
           return next();
         }

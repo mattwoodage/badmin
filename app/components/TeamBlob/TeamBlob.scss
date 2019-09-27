@@ -3,17 +3,19 @@
 .teamBlob {
   display: inline-block;
   padding: 0;
+  font-size: 18px;
   border-radius: 22px;
   margin: 0 4px 0 0;
   color: #fff;
+  text-transform: uppercase;
   font-weight: bold;
-
+  border-bottom: 2px solid #999;
   b {
     display: inline-block;
-    width: 23px;
+    width: 29px;
     text-align: center;
     color: #fff;
-    padding: 2px 6px;
+    padding: 4px 6px;
     border-radius: 22px;
     background-color: rgba(0,0,0,0.3);
     font-weight: bold;
@@ -21,7 +23,7 @@
 
   span {
     font-weight: bold;
-    padding: 2px 15px 2px 8px;
+    padding: 2px 10px 2px 6px;
     border-radius: 22px;
   }
 }

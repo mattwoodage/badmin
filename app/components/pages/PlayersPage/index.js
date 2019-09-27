@@ -1,32 +1,20 @@
-import React, { Component } from 'react'
-
-
+import React, { useContext } from 'react'
 import PlayerSearch from '../../PlayerSearch'
-
-
 import { LeagueContext } from '../../Root'
 
 
-class Page extends Component {
+function PlayersPage() {
 
-  render () {
-    return (
-      <div>
-        <h1>PLAYERS</h1>
-        <PlayerSearch league={this.props.league} season={this.props.season} />
-      </div>
-    )
-  }
-}
+  const leagueContext = useContext(LeagueContext);
+  const { league, season } = leagueContext
 
-class PlayersPage extends Component {
-  render () {
-    return (
-      <LeagueContext.Consumer>
-        {props => <Page {...this.props} {...props} />}
-      </LeagueContext.Consumer>
-    )
-  }
+  return (
+    <div>
+      <h1>PLAYERS</h1>
+      <PlayerSearch league={league} season={season} />
+    </div>
+  )
+
 }
 
 export default PlayersPage

@@ -12,11 +12,12 @@ import styles from './Club.scss'
 
 class Club extends Component {
   
-
   clubTeams = () => {
-
     const { club } = this.props
-    return club.teams.map(team => {
+    const teams = club.teams.sort((a,b) => {
+      return (a.labelDivision > b.labelDivision ? 1 : -1)
+    })
+    return teams.map(team => {
       return <TeamBlob key={team.key} club={club} team={team} />
     })
   }

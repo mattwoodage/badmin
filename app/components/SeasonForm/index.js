@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Club from '../Club'
 import Panel from '../Panel'
+import to from 'await-to-js'
 
 import { NavLink } from 'react-router-dom'
 
@@ -19,56 +20,41 @@ import DB from '../../helpers/DB'
 
 class SeasonForm extends Component {
 
-  constructor () {
+  constructor (props) {
     super()
     this.state = {
-      season: {},
+      season: props.season,
       submitting: false,
       status: 0
     }
   }
 
-  static getDerivedStateFromProps(props, state) {
-
-    const seasonForState = props.season
-
-    return {
-      season: seasonForState,
-      submitting: false,
-      status: 0
-    }
-  }
-
-  handleSubmit = (evt) => {
+  handleSubmit = async (evt) => {
     evt.preventDefault()
-
-    const { season } = this.props
-
-    const _this = this
+    const { season } = this.state
 
     this.setState({ submitting: true, status: 0 });
 
-    fetch(`/api/season`,
-    {
+    const [ err, response ] = await to(
+      fetch('/api/season',
+      {
         method: "POST",
-        body: JSON.stringify( this.state.season ),
+        body: JSON.stringify( season ),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }
-    })
-    .then(function(res) {
-      _this.setState({ submitting: false, status: 1 });
-    })
-    .catch(function(err) {
-      _this.setState({ submitting: false, status: -1 });
-    })
+      })
+    )
 
-    return false
+    const json = await response.json()
+
+    if (err) return this.setState({ submitting: false, status: -1 });
+    else return this.setState({ season: json.season, submitting: false, status: 1 });
+
   }
 
   handleChange = (field, event) => {
-    console.log(field, event)
     const newSeason = this.state.season
     newSeason[field] = event.target.value
     this.setState({ season: newSeason });
@@ -78,25 +64,18 @@ class SeasonForm extends Component {
 
     const { season, submitting } = this.state
 
-    const btnLabel = season._id ? 'Save changes' : 'Create new' 
-    
+    let btnLabel = season._id ? 'Save changes' : 'Create new' 
+    if (submitting) btnLabel = 'Saving...'
+
     const props = season._id ? {high:true} : {create:true}
 
     return (
       <Panel {...props} marginBottom>
         <form onSubmit={this.handleSubmit}>
+          <h1>{season.period}</h1>
           <Container>
             <Row>
-              <Col md={4}>
-                <TextField
-                  label="Period"
-                  onChange={(evt) => this.handleChange('period', evt)}
-                  value={season.period}
-                  margin="normal"
-                  fullWidth
-                />
-              </Col>
-              <Col md={4}>
+              <Col md={6}>
                 <TextField
                   label="Start Year"
                   onChange={(evt) => this.handleChange('startYear', evt)}
@@ -105,7 +84,7 @@ class SeasonForm extends Component {
                   fullWidth
                 />
               </Col>
-              <Col md={4}>
+              <Col md={6}>
                 <TextField
                   select
                   label="Current?"
@@ -116,7 +95,8 @@ class SeasonForm extends Component {
                   SelectProps={{
                     native: true
                   }}
-                >
+                > 
+                  <option key='0' ></option>
                   <option key='1' value={true}>Yes</option>
                   <option key='2' value={false}>No</option>
                 </TextField>
@@ -125,9 +105,12 @@ class SeasonForm extends Component {
 
           </Container>
 
-          <Button disabled={ submitting } type="submit" variant="contained" color="primary">{btnLabel}</Button>
+          <div class='right'>
+            <a class='button' href={`../${season.period}/divisions`}>VIEW DIVISIONS</a>
+            &nbsp;&nbsp;&nbsp;
+            <button className='button' disabled={ submitting } type="submit" >{btnLabel}</button>
+          </div>
 
-          <a class='button' href={`../${season.period}/divisions`}>DIVISIONS</a>
         </form>
       </Panel>
     )

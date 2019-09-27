@@ -35,7 +35,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import CalendarIcon from '@material-ui/icons/DateRange';
 import EventIcon from '@material-ui/icons/Event';
 import TableIcon from '@material-ui/icons/ViewList';
-import GridIcon from '@material-ui/icons/ViewModule';
+import ResultsIcon from '@material-ui/icons/ViewModule';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LockIcon from '@material-ui/icons/Lock';
 import AdminIcon from '@material-ui/icons/Settings';
@@ -47,7 +47,7 @@ import LogoHWBA from '../../images/hwba_logo.png';
 import LogoRBA from '../../images/rba_logo.png';
 import LogoWMBL from '../../images/wmbl_logo.png';
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 const logos = {
   hwba: LogoHWBA,
@@ -107,12 +107,8 @@ const pages = [
     icon: <CalendarIcon />
   },
   {
-    name: 'Matches',
-    icon: <EventIcon />
-  },
-  {
-    name: 'Grids',
-    icon: <GridIcon />
+    name: 'Results',
+    icon: <ResultsIcon />
   },
   {
     name: 'Tables',
@@ -173,7 +169,7 @@ class Menu extends Component {
       return (
         <li>
           <NavLink className='horizItem' activeClassName='horizCurrent' to={`/${this.path()}/${p.name.toLowerCase()}`} >
-            {p.name.toLowerCase()}
+            {p.name}
           </NavLink>
         </li>
       )

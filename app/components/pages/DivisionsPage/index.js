@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 
 import { LeagueContext } from '../../Root'
 
@@ -8,72 +8,65 @@ import DivisionForm from '../../DivisionForm'
 import Breadcrumb from '../../Breadcrumb'
 
 
-class Page extends Component {
 
-  constructor () {
-    super()
-    this.state = {
-      loaded: false,
-      divisions: []
-    }
-  }
+function useData() {
+  const [loading, setLoading] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+  const [divisions, setDivisions] = useState([])
+  const leagueContext = useContext(LeagueContext);
 
-  componentDidMount () {
-    if (!this.state.loaded && this.props.season) this.initialise()
-  }
-
-  componentDidUpdate () {
-    if (!this.state.loaded && this.props.season) this.initialise()
-  }
-
-  initialise () {
-    const { season } = this.props
+  useEffect(() => {
     
-    DB.get(`/api/${season.period}/divisions`)
-      .then(response => {
-        if (response.divisions) {
-          this.setState({
-            loaded: true,
-            divisions: response.divisions
-          })
-        }
-      })
-  }
+    async function initialise() {
 
-  render () {
-    const { season } = this.props
+      const { season } = leagueContext
+      if (!season) return
 
-    if (!this.state.loaded) return <h1>loading...</h1>
+      setLoading(true)
+      leagueContext.startLoad()
 
-    return (
-      <div>
-        <Breadcrumb list={
-          [
-            {lbl:'SEASONS', url:'./seasons'},
-            {lbl:season.period}
-          ]
-        } />
+      const response = await DB.get(`/api/${season.period}/divisions`)
       
-        {this.state.divisions.map((d) => {
-        return <DivisionForm division={d} />
-        })}
+      const divisionsArray = response.divisions
+      divisionsArray.push({ season: season._id })
 
-      </div>
-    )
-  }
+      setDivisions(divisionsArray)
+      setLoaded(true)
+      leagueContext.stopLoad()
+
+    }
+    if (!loading) initialise()
+  });
+
+  return [divisions, loaded]
 }
 
+function DivisionsPage(props) {
 
-class DivisionPage extends Component {
-  render () {
-    return (
-      <LeagueContext.Consumer>
-        {props => <Page {...this.props} {...props} />}
-      </LeagueContext.Consumer>
-    )
-  }
+  const leagueContext = useContext(LeagueContext);
+  const { season } = leagueContext
+  const [divisions, loaded] = useData()
+
+  if (!loaded) return <div>Loading...</div>
+
+  return (
+    <div>
+      <Breadcrumb list={
+        [
+          {lbl:'SEASONS', url:'./seasons'},
+          {lbl:season.period + ' DIVISIONS'}
+        ]
+      } />
+    
+      {divisions.map((d) => {
+      return <DivisionForm division={d} />
+      })}
+
+    </div>
+  )
+
 }
 
-export default DivisionPage
+export default DivisionsPage
 
 

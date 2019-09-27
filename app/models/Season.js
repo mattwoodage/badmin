@@ -11,6 +11,11 @@ var seasonSchema = mongoose.Schema({
   key: String
 })
 
+seasonSchema.pre('save', function (next) {
+  this.period = this.startYear.toString() + '-' + ((this.startYear+1)-2000).toString()
+  return next();
+});
+
 const Season = mongoose.model('Season', seasonSchema)
 
 export default Season

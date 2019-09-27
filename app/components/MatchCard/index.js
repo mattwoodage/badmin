@@ -17,11 +17,21 @@ class MatchCard extends Component {
   constructor(props) {
     super(props)
     this.form = React.createRef()
+
+    this.state = {
+      match: {}
+    }
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    return {
+      match: props.match || {}
+    }
   }
 
   renderRubber (card, rubber, oop) {
 
-    const { match } = this.props
+    const { match } = this.state
 
     const gamesPerRubber = match.division.numGamesPerRubber
     const scores = card.scores.filter(score => score.rubberNum === rubber)
@@ -37,24 +47,39 @@ class MatchCard extends Component {
 
       const gameScore = scores.filter(s => s.gameNum === i)
 
+      let homePoints = 0
+      let awayPoints = 0
+
       if (gameScore.length !== 0) {
         if (gameScore[0].win) homeGames += 1
         if (gameScore[1].win) awayGames += 1
-        gameCols.push (
-          <React.Fragment>
-            <td><input name={`H-${rubber}-${i}`} class='score' type='text' value={gameScore[0].points} /></td>
-            <td className='line'><input name={`A-${rubber}-${i}`} class='score' type='text' value={gameScore[1].points} /></td>
-          </React.Fragment>
-        )
+        homePoints = gameScore[0].points
+        awayPoints = gameScore[1].points
       }
-      else {
-        gameCols.push (
-          <React.Fragment>
-            <td><input name={`H-${rubber}-${i}`} class='score' type='text' value='' /></td>
-            <td className='line'><input name={`A-${rubber}-${i}`} class='score' type='text' value='' /></td>
-          </React.Fragment>
-        )
-      }
+
+      gameCols.push (
+        <React.Fragment>
+          <td>
+            <input
+              name={`H-${rubber}-${i}`} 
+              className='score'
+              type='text'
+              value={homePoints}
+              onChange={(evt) => this.handleChange(evt)}
+            />
+          </td>
+          <td className='line'>
+            <input
+              name={`A-${rubber}-${i}`}
+              className='score'
+              type='text'
+              value={awayPoints} 
+              onChange={(evt) => this.handleChange(evt)}
+            />
+          </td>
+        </React.Fragment>
+      )
+
     }
 
     let homeRubbers = 0
@@ -114,7 +139,8 @@ class MatchCard extends Component {
   }
 
   renderPlayerList(pos, isHome, selectedPlayer) {
-    const { match, members, card } = this.props
+    const { members, card } = this.props
+    const { match } = this.state
     const playerGender = match.division.genders.split('')[pos]
 
     let list = isHome ? members.home : members.away
@@ -134,7 +160,7 @@ class MatchCard extends Component {
           list.map(member => {
             if (!member.active) return
             return (
-              <option>{member.player.name}</option>
+              <option key={member.player._id}>{member.player.name}</option>
             )
           })
         }
@@ -156,11 +182,26 @@ class MatchCard extends Component {
     console.log(data)
   }
 
+
+  handleStartAtChange = (date) => {
+    console.log(date)
+    this.state.club[field] = date.toDate()
+    this.setState({ club: this.state.club });
+  }
+
+  handleChange = (field, event) => {
+    console.log(field, event)
+    console.error('THIS IS WRONG')
+    this.state.club[field] = event.target.value
+    this.setState({ club: this.state.club });
+  }
+
+
   renderSubmitted () {
     const { card } = this.props
     if (card._id) {
       return (
-        <div class='card-result'>
+        <div className='card-result'>
           <b>RESULT SUBMITTED</b><br/>
           by: {card.enteredBy.firstName + ' ' + card.enteredBy.lastName}<br/>
           on: <Moment format="ddd DD MMM HH:mm">{card.enteredAt}</Moment>
@@ -174,7 +215,7 @@ class MatchCard extends Component {
     const { card } = this.props
     if (card._id) {
       return (
-        <div class='card-result'>
+        <div className='card-result'>
           <If condition={ card.status === 0 }>
             <Icon path={mdiAutorenew}
                   title="Pending"
@@ -215,12 +256,14 @@ class MatchCard extends Component {
   }
 
   renderWinner () {
-    const { card, match } = this.props
+    const { card } = this.props
+    const { match } = this.state
+
     if (card._id) {
       return (
         <Choose>
           <When condition={ card.winner === 2 }>
-            <div class='card-result'>
+            <div className='card-result'>
               <h3>MATCH DRAWN</h3>
               <h2>{match.homeTeam.labelClub}</h2>
               {this.renderPoints(card.homePts)}
@@ -230,7 +273,7 @@ class MatchCard extends Component {
             </div>
           </When>
           <Otherwise>
-            <div class='card-result'>
+            <div className='card-result'>
               <h3>WINNER</h3>
               <Icon path={mdiTrophy}
                 title="Winner"
@@ -246,7 +289,7 @@ class MatchCard extends Component {
                 {this.renderPoints(card.awayPts)}
               </If>
             </div>
-            <div class='card-result'>
+            <div className='card-result'>
               <If condition={ card.winner === 1 }>
                 <h2>{match.awayTeam.labelClub}</h2>
                 {this.renderPoints(card.awayPts)}
@@ -267,7 +310,9 @@ class MatchCard extends Component {
   render () {
     console.log('render match card')
 
-    const { match, classes, card } = this.props
+    const { card } = this.props
+    const { match } = this.state
+
     let cls = 'ladiesCard'
     if (match.division.labelLocal.toUpperCase().indexOf('MIXED')>-1) cls = 'mixedCard'
     if (match.division.labelLocal.toUpperCase().indexOf('MENS')>-1) cls = 'mensCard'
@@ -284,7 +329,7 @@ class MatchCard extends Component {
         </React.Fragment>
       )
       gameHeaders.push (
-        <td colspan='2' className='line'>{`Game ${i}`}</td>
+        <td colSpan='2' className='line'>{`Game ${i}`}</td>
       )
     }
 
@@ -295,18 +340,18 @@ class MatchCard extends Component {
             <div className={cls}>
               <form ref={this.form}>
                 
-                <div class='match-header'>
+                <div className='match-header'>
                   <Container>
                    <Row>
                      <Col md={4}><h2>{match.division.category}</h2><b>DIVISION {match.division.position}</b></Col>
                      <Col md={4}>
-                     <input name='startAt' value={match.startAt} />{match.venue.name}</Col>
+                     <input name='startAt' value={match.startAt} onChange={(evt) => this.handleStartAtChange(evt)} />{match.venue.name}</Col>
                      <Col md={4}></Col>
                    </Row>
                   </Container>
                 </div>
 
-                <div class='match-page'>
+                <div className='match-page'>
                   <Container>
                     <Row>
                       <Col md={2}></Col>
@@ -327,8 +372,8 @@ class MatchCard extends Component {
                     <tr className='labels'>
                       <td className='line'>Order of</td>
                       {gameHeaders}
-                      <td colspan={2} >Games</td>
-                      <td colspan={2} >Rubbers</td>
+                      <td colSpan={2} >Games</td>
+                      <td colSpan={2} >Rubbers</td>
                     </tr>
                     <tr className='labels'>
                       <td className='line'>Play</td>
@@ -344,7 +389,7 @@ class MatchCard extends Component {
                     })
                   }
                   <tr className='totals'>
-                    <td colspan={1 + gamesPerRubber*2} className='line'></td>
+                    <td colSpan={1 + gamesPerRubber*2} className='line'></td>
                     <td>{card.homeGames}</td>
                     <td className='line'>{card.awayGames}</td>
                     <td><b>{card.homeRubbers}</b></td>

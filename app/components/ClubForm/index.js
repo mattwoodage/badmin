@@ -8,8 +8,6 @@ import Moment from 'moment'
 
 import { extendMoment } from 'moment-range';
 
-import Button from '@material-ui/core/Button';
-
 import { Container, Row, Col } from 'react-grid-system';
 
 //import DateTimePicker from 'material-ui-pickers/DateTimePicker';
@@ -288,8 +286,9 @@ class ClubForm extends Component {
           </Row>
         </Container>
 
-        <Button disabled={ submitting } type="submit" variant="contained" color="primary">Save</Button>
-        { submitting && <CircularProgress /> }
+        <div className='right'>
+          <button className='button' disabled={ submitting } type="submit" >Save</button>
+        </div>
 
       </form>
         

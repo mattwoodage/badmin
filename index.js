@@ -211,9 +211,12 @@ router.post('/api/season', async function(req, res) {
       { $set: req.body },
       { new: true }
     ).exec((err, _season) => {
-      if (err) return res.json({error: err})
-      res.status(200);
-      res.json({season:_season});
+      if (err) return res.json({a:1,error: err})
+      _season.save((err, _season) => {
+        if (err) return res.json({b:1,error: err})
+        res.status(200);
+        res.json({season:_season});
+      })
     })
 
   } else {
@@ -243,6 +246,7 @@ router.post('/api/division', function(req, res) {
     ).exec((err, _division) => {
       if (err) return res.json({error: err})
       _division.save((err, _division) => {
+        if (err) return res.json({error: err})
         res.status(200);
         res.json({division:_division});
       })

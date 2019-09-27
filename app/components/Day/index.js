@@ -4,8 +4,6 @@ import Match from '../Match'
 
 import styles from './Day.scss'
 
-
-
 class Day extends Component {
 
   renderMatches () {

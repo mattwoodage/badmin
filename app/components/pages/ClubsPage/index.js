@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect, useContext, Component } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import Club from '../../Club'
@@ -13,78 +13,60 @@ import { LeagueContext } from '../../Root'
 import DB from '../../../helpers/DB'
 
 
-class Page extends Component {
+function useData() {
+  const [loading, setLoading] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+  const [clubs, setClubs] = useState([])
+  const leagueContext = useContext(LeagueContext);
 
-  state = {
-    loading: false,
-    loaded: false
-  }
+  useEffect(() => {
+    
+    async function initialise() {
+      console.log('initialise')
 
-  initialise () {
+      const { season } = leagueContext
+      if (!season) return
 
-    const { league, season } = this.props
-    if (!league || !season) return
+      setLoading(true)
+      leagueContext.startLoad()
 
-    this.setState({
-      loading: true
-    })
-    this.props.startLoad()
+      const response = await DB.get(`/api/${season.period}/clubs`)
+      
+      setClubs(response.clubs)
+      setLoaded(true)
+      leagueContext.stopLoad()
 
-    DB.get(`/api/${season.period}/clubs`)
-      .then(response => {
-        this.setState({
-          clubs: response.clubs,
-          loaded: true
-        })
-        this.props.stopLoad()
-      })
-  }
+    }
+    if (!loading) initialise()
+  });
 
-  handleSelectClub (club) {
-    this.props.selectClub(club)
-  }
+  return [clubs, loaded]
+}
 
-  componentDidMount () {
-    if (!this.state.loading) this.initialise()
-  }
 
-  componentDidUpdate () {
-    if (!this.state.loading) this.initialise()
-  }
+function ClubsPage(props) {
 
-  renderList () {
-    return (
+  const leagueContext = useContext(LeagueContext);
+  const [clubs, loaded] = useData()
+
+  if (!loaded) return <div>Loading...</div>
+
+  return (
+    <div>
+      <h1>CLUBS</h1>
+      <NavLink className='button' to="./club/new">CREATE NEW CLUB</NavLink>
       <div>
       {
-        this.state.clubs && this.state.clubs.map(club => {
+        clubs.map(club => {
           return (
-            <Club key={club.key} club={club} onSelect={() => this.handleSelectClub(club)} />
+            <Club key={club.key} club={club} onSelect={() => leagueContext.selectClub(club)} />
           )
         })
       }
       </div>
-    )
-  }
+    </div>
+  )
 
-  render () {
-    return (
-      <div>
-        <h1>CLUBS</h1>
-        <NavLink className='button' to="./club/new">CREATE NEW CLUB</NavLink>
-        {this.renderList()}
-      </div>
-    )
-  }
-}
-
-class ClubsPage extends Component {
-  render () {
-    return (
-      <LeagueContext.Consumer>
-        {props => <Page {...this.props} {...props} />}
-      </LeagueContext.Consumer>
-    )
-  }
 }
 
 export default ClubsPage

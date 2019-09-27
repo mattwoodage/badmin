@@ -9,8 +9,6 @@ import Moment from 'moment'
 
 import { extendMoment } from 'moment-range';
 
-import Button from '@material-ui/core/Button';
-
 import TextField from '@material-ui/core/TextField';
 
 import { Container, Row, Col } from 'react-grid-system';
@@ -127,7 +125,9 @@ class TeamForm extends Component {
 
           </Container>
 
-          <Button disabled={ submitting } type="submit" variant="contained" color="primary">{btnLabel}</Button>
+          <div className='right'>
+            <button className='button' disabled={ submitting } type="submit" >{btnLabel}</button>
+          </div>
 
         </form>
       </Panel>

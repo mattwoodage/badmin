@@ -1,4 +1,7 @@
 {
+  "plugins": [
+    "react-hooks"
+  ],
   "rules": {
     "indent": [
       2,
@@ -16,7 +19,9 @@
       2,
       "always"
     ],
-    "no-console": 1
+    "no-console": 1,
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   },
   "env": {
     "node": true,

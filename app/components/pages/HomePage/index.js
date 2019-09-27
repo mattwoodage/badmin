@@ -1,32 +1,16 @@
-import React, { Component } from 'react'
-import Root from '../../Root'
+import React, { useContext } from 'react'
 
 import { LeagueContext } from '../../Root'
-import Typography from '@material-ui/core/Typography';
 import Panel from '../../Panel'
 
-class Page extends Component {
+function HomePage() {
 
-  render () {
-  
-    console.log('render page......')
-    return (
-      <Panel>
-        <Typography variant="display3" gutterBottom>{this.props.league ? this.props.league.name : ''}</Typography>
-      </Panel>
-    )
-  }
-}
+  const leagueContext = useContext(LeagueContext);
 
-class HomePage extends Component {
-  render () {
-    console.log('render homepage')
-    return (
-      <LeagueContext.Consumer>
-        {props => <Page {...this.props} {...props} />}
-      </LeagueContext.Consumer>
-    )
-  }
+  return (
+      <h1>{leagueContext.league ? leagueContext.league.name : ''}</h1>
+  )
+
 }
 
 export default HomePage

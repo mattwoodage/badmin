@@ -1,63 +1,46 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 
 import { LeagueContext } from '../../Root'
 import SeasonForm from '../../SeasonForm'
 
-class Page extends Component {
 
-  constructor () {
-    super()
-    this.state = {
-      loaded: false,
-      seasonsArray: []
-    }
-  }
+function useData() {
 
-  componentDidMount () {
-    this.initialise()
-  }
+  const [loaded, setLoaded] = useState(false)
+  const [seasons, setSeasons] = useState([])
+  const leagueContext = useContext(LeagueContext);
 
-  componentDidUpdate () {
-    this.initialise()
-  }
-
-  initialise () {
-    const { seasons } = this.props;
-    if (seasons && seasons.length && !this.state.loaded) {
+  useEffect(() => {
+    const { seasons } = leagueContext;
+    if (seasons && seasons.length && !loaded) {
       let seasonsArray = seasons.slice(0)
       seasonsArray.push({})
-      this.setState({
-        loaded: true,
-        seasonsArray: seasonsArray
-      })
+      setSeasons(seasonsArray)
+      setLoaded(true)
     }
-  }
+  });
 
-  render () {
-    return (
-      <div>
-        <h1>SEASONS</h1>
-      
-        {this.state.seasonsArray.map((s) => {
-        return <SeasonForm season={s} />
-        })}
-
-      </div>
-    )
-  }
+  return [seasons, loaded]
 }
 
 
-class SeasonPage extends Component {
-  render () {
-    return (
-      <LeagueContext.Consumer>
-        {props => <Page {...this.props} {...props} />}
-      </LeagueContext.Consumer>
-    )
-  }
+function SeasonsPage() {
+
+  const [seasons, loaded] = useData()
+
+  return (
+    <div>
+      <h1>SEASONS</h1>
+    
+      {seasons.map((s) => {
+      return <SeasonForm season={s} />
+      })}
+
+    </div>
+  )
+
 }
 
-export default SeasonPage
+export default SeasonsPage
 
 

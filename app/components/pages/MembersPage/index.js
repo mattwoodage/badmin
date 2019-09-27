@@ -55,13 +55,11 @@ class Page extends Component {
 
         <Breadcrumb list={
           [
-            {lbl:'Clubs', url:'../../clubs'},
-            {lbl:club.name, url: `../../club/${club._id}`},
-            {lbl:'Members'}
+            {lbl:'CLUBS', url:'../../clubs'},
+            {lbl:club.name.toUpperCase(), url: `../../club/${club._id}`},
+            {lbl:'MEMBERS'}
           ]
         } />
-
-        xxxxx
 
       </div>
     )

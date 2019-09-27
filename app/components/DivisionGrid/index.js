@@ -55,7 +55,7 @@ class DivisionGrid extends Component {
         
                       return (
                         <td {...cls} key={awayTeam._id}>
-                        {match ? this.displayMatch(match) : ''}
+                        {match ? this.displayMatch(match) : this.displayNew()}
                         </td>
                       )
                     })
@@ -95,6 +95,12 @@ class DivisionGrid extends Component {
       <NavLink className={`button fixture ${cls}`} to={`./match/${match._id}`} >
         <Moment format="Do MMM">{match.startAt}</Moment>
       </NavLink>
+    )
+  }
+
+  displayNew() {
+    return (
+      <a href='#' class='button'>CREATE</a>
     )
   }
 
