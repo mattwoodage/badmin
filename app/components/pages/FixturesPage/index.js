@@ -1,9 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 
 import DivisionGrid from '../../DivisionGrid'
-import ReactMoment from 'react-moment'
-import Moment from 'moment'
-import { extendMoment } from 'moment-range';
+
 import Panel from '../../Panel'
 
 import { LeagueContext } from '../../Root'
@@ -44,12 +42,9 @@ function useData() {
 }
 
 
-function ResultsPage() {
+function FixturesPage() {
 
   const [divisions, matches, loaded] = useData()
-
-  console.log('--', divisions, matches, loaded)
-
 
   const matchesInDivision = (division) => {
     return matches.filter(match => {
@@ -75,11 +70,11 @@ function ResultsPage() {
 
   return (
     <div>
-      <h1>RESULTS</h1>
+      <h1>FIXTURES</h1>
       {renderGrids()}
     </div>
   )
 
 }
 
-export default ResultsPage
+export default FixturesPage

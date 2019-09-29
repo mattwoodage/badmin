@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
-import Moment from 'react-moment'
 
 import Hidden from '@material-ui/core/Hidden';
 import ImageIcon from '@material-ui/icons/Image';
 import { NavLink } from 'react-router-dom'
 
 import styles from './Match.scss';
-
-Moment.globalFormat = 'D MMM YYYY HH:mm'
 
 class Match extends Component {
 
@@ -48,7 +45,7 @@ class Match extends Component {
 
     const cls = 'match ' + match.division.category.toLowerCase() + 'Match'
     return (
-      <NavLink className={cls} to={`./match/${match._id}`} >
+      <NavLink className={cls} to={`./match/${match.homeTeam}/${match.awayTeam}/${match._id}`} >
 
         <span className='division'>
           {match.division.labelLocal}

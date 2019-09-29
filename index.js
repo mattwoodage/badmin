@@ -396,7 +396,7 @@ router.post('/api/:seasonPeriod/club', function(req, res) {
     club.save((err, _club) => {
       if (err) return res.json({error: err})
       res.status(201);
-      res.json(_club);
+      res.json({club:_club});
     });
   }
 
@@ -404,9 +404,40 @@ router.post('/api/:seasonPeriod/club', function(req, res) {
 
 
 
+
+// FIXTURE/MATCH POST
+
+router.post('/api/:seasonPeriod/match', function(req, res) {
+
+  if (req.body._id) {
+    // edit
+    Match.findOneAndUpdate(
+      { _id: req.body._id },
+      { $set: req.body },
+      { new: true }
+    ).exec((err, _match) => {
+      if (err) return res.json({error: err})
+      res.status(200);
+      res.json({match:_match});
+    })
+    
+
+  } else {
+    // create
+    const match = new Match(req.body);
+    match.save((err, _match) => {
+      if (err) return res.json({error: err})
+      res.status(201);
+      res.json({match:_match});
+    });
+  }
+
+});
+
+
 // TEAM POST
 
-router.post('/api/team', function(req, res) {
+router.post('/api/:seasonPeriod/team', function(req, res) {
 
   console.log('TEAM POST')
     
@@ -480,11 +511,22 @@ router.get('/api/:seasonPeriod/members/:home/:away', async (req, res, next) => {
 // VENUES
 
 router.get('/api/:seasonPeriod/venues', (req, res, next) => {
-  Venue.find({}, (err, venues) => {
-    if (err) return res.json({venues: null})
-    res.json({venues: venues})
-  })
-  .sort({ name: 1 })
+  Venue.aggregate([
+    {
+        $sort: { name: 1 }
+    },
+    {
+        $lookup: {
+           from: "clubs",
+           localField: "_id",
+           foreignField: "matchVenue",
+           as: "clubs"
+        }
+    }
+    ], (err, venues) => {
+      if (err) return res.json({venues: null})
+      res.json({venues: venues})
+    })
 })
 
 
@@ -553,11 +595,25 @@ router.get('/api/:seasonPeriod/match/:match', (req, res, next) => {
   .populate({ path: 'awayTeam', model: Team })
   .populate({ path: 'homeTeam', model: Team })
   .populate({ path: 'division', model: Division })
-  .populate({ path: 'venue', model: Venue })
 })
 
 
 
+// FIXTURE
+
+router.get('/api/:seasonPeriod/fixture/:homeTeam/:awayTeam', async (req, res, next) => {
+
+  const leagueShort = req.headers.host.split('.')[0].toUpperCase()
+
+  const getHome = Team.findOne({_id: req.params.homeTeam}).populate({ path: 'division', model: Division })
+  const getAway = Team.findOne({_id: req.params.awayTeam})
+
+  const [ homeErr, homeTeam ] = await to(getHome)
+  const [ awayErr, awayTeam ] = await to(getAway)
+
+  res.status(200);
+  res.json({home:homeTeam || homeErr, away:awayTeam || awayErr});
+})
 
 
 // CLUB

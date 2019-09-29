@@ -13,20 +13,28 @@
   font-size: 11px;
 }
 
-
-.sub td {
-  padding: 10px;
-}
-
 .homeTeam {
   width: 25%;
-  text-align: left;
+  text-align: center;
   
 }
 
-.homeTeam, .awayTeam, .gap {
-  background-color: #333;
-  color:#fff;
+.homeTeamLabel {
+  width: 50px;
+  position: relative;
+
+  h3 {
+    transform: rotate(-90deg);
+    position: absolute;
+    top: 40%;
+    left: -36px;
+    width: 120px;
+
+  }
+}
+
+thead {
+  border-bottom: 2px solid #333;
 }
 
 .fixture {

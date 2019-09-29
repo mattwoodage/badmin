@@ -3,10 +3,6 @@ import { NavLink } from 'react-router-dom'
 
 import Club from '../../Club'
 
-import ReactMoment from 'react-moment'
-import Moment from 'moment'
-import { extendMoment } from 'moment-range';
-
 import { Container, Row, Col } from 'react-grid-system';
 
 import { LeagueContext } from '../../Root'

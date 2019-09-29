@@ -1,0 +1,18 @@
+.divisionBlob {
+  display: inline-block;
+  padding: 0;
+  font-size: 18px;
+  border-radius: 22px;
+  margin: 0 4px 0 0;
+  color: #000;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-bottom: 2px solid #999;
+  vertical-align: top;
+
+  span {
+    font-weight: bold;
+    padding: 2px 15px 2px 15px;
+    border-radius: 22px;
+  }
+}

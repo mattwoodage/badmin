@@ -146,6 +146,8 @@ class MatchCard extends Component {
     let list = isHome ? members.home : members.away
     if (playerGender!=='O') list = list.filter(m => m.player.gender === playerGender)
 
+    list.sort((a,b) => a.player.lastName > b.player.lastName ? 1 : -1)
+  
     const currentSelection = selectedPlayer ? (
       <option>{selectedPlayer.name}</option>
     ) : ''
@@ -180,13 +182,6 @@ class MatchCard extends Component {
     })
 
     console.log(data)
-  }
-
-
-  handleStartAtChange = (date) => {
-    console.log(date)
-    this.state.club[field] = date.toDate()
-    this.setState({ club: this.state.club });
   }
 
   handleChange = (field, event) => {
@@ -344,8 +339,7 @@ class MatchCard extends Component {
                   <Container>
                    <Row>
                      <Col md={4}><h2>{match.division.category}</h2><b>DIVISION {match.division.position}</b></Col>
-                     <Col md={4}>
-                     <input name='startAt' value={match.startAt} onChange={(evt) => this.handleStartAtChange(evt)} />{match.venue.name}</Col>
+                     <Col md={4}></Col>
                      <Col md={4}></Col>
                    </Row>
                   </Container>

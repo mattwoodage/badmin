@@ -5,11 +5,6 @@ import to from 'await-to-js'
 
 import { NavLink } from 'react-router-dom'
 
-import ReactMoment from 'react-moment'
-import Moment from 'moment'
-
-import { extendMoment } from 'moment-range';
-
 import TextField from '@material-ui/core/TextField';
 
 import { Container, Row, Col } from 'react-grid-system';
@@ -74,7 +69,7 @@ class DivisionForm extends Component {
         <form onSubmit={(evt) => this.handleSubmit(evt)}>
           <Container>
             <Row>
-              <Col md={4}>
+              <Col md={3}>
                 <TextField
                   select
                   label="Category"
@@ -92,7 +87,16 @@ class DivisionForm extends Component {
                   <option key='3' value='Mixed'>Mixed</option>
                 </TextField>
               </Col>
-              <Col md={4}>
+              <Col md={3}>
+                <TextField
+                  label="category short"
+                  onChange={(evt) => this.handleChange('categoryShort', evt)}
+                  value={division.categoryShort}
+                  margin="normal"
+                  fullWidth
+                />
+              </Col>
+              <Col md={3}>
                 <TextField
                   label="Position"
                   onChange={(evt) => this.handleChange('position', evt)}
@@ -101,7 +105,7 @@ class DivisionForm extends Component {
                   fullWidth
                 />
               </Col>
-              <Col md={4}>
+              <Col md={3}>
                 <TextField
                   label="Alias"
                   onChange={(evt) => this.handleChange('alias', evt)}
@@ -149,9 +153,9 @@ class DivisionForm extends Component {
               </Col>
               <Col md={4}>
                 <TextField
-                  label="category short"
-                  onChange={(evt) => this.handleChange('categoryShort', evt)}
-                  value={division.categoryShort}
+                  label="Genders"
+                  onChange={(evt) => this.handleChange('genders', evt)}
+                  value={division.genders}
                   margin="normal"
                   fullWidth
                 />

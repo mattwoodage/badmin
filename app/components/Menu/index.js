@@ -35,7 +35,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import CalendarIcon from '@material-ui/icons/DateRange';
 import EventIcon from '@material-ui/icons/Event';
 import TableIcon from '@material-ui/icons/ViewList';
-import ResultsIcon from '@material-ui/icons/ViewModule';
+import FixturesIcon from '@material-ui/icons/ViewModule';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LockIcon from '@material-ui/icons/Lock';
 import AdminIcon from '@material-ui/icons/Settings';
@@ -107,8 +107,8 @@ const pages = [
     icon: <CalendarIcon />
   },
   {
-    name: 'Results',
-    icon: <ResultsIcon />
+    name: 'Fixtures',
+    icon: <FixturesIcon />
   },
   {
     name: 'Tables',

@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 
 import Player from '../../Player'
-import ReactMoment from 'react-moment'
-import Moment from 'moment'
-import { extendMoment } from 'moment-range';
+
 import Panel from '../../Panel'
 import Breadcrumb from '../../Breadcrumb'
 import { NavLink } from 'react-router-dom'

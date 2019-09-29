@@ -68,9 +68,7 @@ function ClubPage(props) {
   const { season } = leagueContext
   const [venues, divisions, club, teams, loaded] = useData(props)
 
-  console.log('CLUB PAGE RENDER', club, season)
-
-  if (!loaded) return <Panel>Loading...</Panel>
+  if (!loaded) return <div>Loading...</div>
 
   return (
     <div>

@@ -35,7 +35,10 @@ var divisionSchema = mongoose.Schema({
 divisionSchema.pre('save', function (next) {
   this.labelLocal = [this.category,this.alias || this.position].join(' ')
 
-  this.orderOfPlay = this.orderOfPlay[0].split(',')
+  if (this.orderOfPlay && this.orderOfPlay[0] && this.orderOfPlay[0].indexOf(',') !== -1) {
+    this.orderOfPlay = this.orderOfPlay[0].split(',')
+  }
+
   return next();
 });
 

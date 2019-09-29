@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 
 import DivisionTable from '../../DivisionTable'
-import ReactMoment from 'react-moment'
-import Moment from 'moment'
-import { extendMoment } from 'moment-range';
+
 import Panel from '../../Panel'
 
 import Grid from '@material-ui/core/Grid';

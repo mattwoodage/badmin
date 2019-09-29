@@ -5,11 +5,6 @@ import to from 'await-to-js'
 
 import { NavLink } from 'react-router-dom'
 
-import ReactMoment from 'react-moment'
-import Moment from 'moment'
-
-import { extendMoment } from 'moment-range';
-
 import Button from '@material-ui/core/Button';
 
 import TextField from '@material-ui/core/TextField';

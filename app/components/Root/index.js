@@ -121,12 +121,12 @@ class Root extends Component {
           club: club
         })
       },
-      xxx: this.state.xxx,
-      setXXX: (v) => {
+      selectFixture: (division, homeTeam, awayTeam) => {
         this.setState({
-          xxx: v
+          fixture: {division, homeTeam, awayTeam}
         })
       },
+      fixture: this.state.fixture,
       isLoggedIn: this.state.isLoggedIn,
       nickname: this.state.nickname,
       loginError: this.state.loginError,

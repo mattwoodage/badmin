@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import Moment from 'react-moment'
+
 import Match from '../Match'
+import { format } from 'date-fns'
 
 import styles from './Day.scss'
 
@@ -29,11 +30,11 @@ class Day extends Component {
     if (today) cls.push('today') 
 
     const showMth = date.date() === 1 || (before && dayOfWeek === 1)
-    const fmt = showMth ? 'ddd DD MMM' : 'ddd DD'
+    const fmt = showMth ? 'EEE d MMM' : 'EEE d'
 
     return (
       <div className={cls.join(' ')}>
-        <Moment className='dt' format={fmt}>{this.props.date}</Moment>
+        {format(new Date(this.props.date),fmt)}
         {this.renderMatches()}
       </div>
     )
