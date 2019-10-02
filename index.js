@@ -259,7 +259,7 @@ router.post('/api/division', function(req, res) {
     division.save((err, _division) => {
       if (err) return res.json({error: err})
       res.status(201);
-      res.json(_division);
+      res.json({division:_division});
     });
   }
 
@@ -439,17 +439,8 @@ router.post('/api/:seasonPeriod/match', function(req, res) {
 
 router.post('/api/:seasonPeriod/team', function(req, res) {
 
-  console.log('TEAM POST')
-    
-  Team.find({}, (err, teams) => {
-    teams.forEach(t => {
-      t.save()
-    })
-  })
-
   if (req.body._id) {
     // edit
-
     Team.findOne({_id: req.body._id}, (err, team) => {
       team.save(req.body, (err, _team) => {
         if (err) return res.json({error: err})
@@ -465,7 +456,7 @@ router.post('/api/:seasonPeriod/team', function(req, res) {
     team.save((err, _team) => {
       if (err) return res.json({error: err})
       res.status(201);
-      res.json(_team);
+      res.json({team:_team});
     });
   }
 
@@ -485,12 +476,15 @@ router.get('/api/:seasonPeriod/players', (req, res, next) => {
 
 // MEMBERS FOR MATCH
 
-router.get('/api/:seasonPeriod/members/:home/:away', async (req, res, next) => {
+router.get('/api/:seasonPeriod/members/:home/:away?', async (req, res, next) => {
+  
+  const homeOnly = !req.params.away
   const same = req.params.home === req.params.away
+
   const doNothing = Promise.resolve()
 
   const getHome = Club.findOne({_id: req.params.home})
-  const getAway = same ? doNothing : Club.findOne({_id: req.params.away})
+  const getAway = (same || homeOnly) ? doNothing : Club.findOne({_id: req.params.away})
 
   const [ homeErr, homeClub ] = await to(getHome)
   const [ awayErr, awayClub ] = await to(getAway)
@@ -498,13 +492,13 @@ router.get('/api/:seasonPeriod/members/:home/:away', async (req, res, next) => {
   if (homeErr || awayErr) return res.json({home: [], away: []})
 
   const getHomeMembers = Member.find({ club: homeClub._id }).populate({ path: 'player', model: Player })
-  const getAwayMembers = same ? doNothing : Member.find({ club: awayClub._id }).populate({ path: 'player', model: Player })
+  const getAwayMembers = (same || homeOnly) ? doNothing : Member.find({ club: awayClub._id }).populate({ path: 'player', model: Player })
 
   const [ homeMembersErr, homeMembers ] = await to(getHomeMembers)
   const [ awayMembersErr, awayMembers ] = await to(getAwayMembers)
 
+  if (homeOnly) res.json({members: homeMembers || []})
   return res.json({home: homeMembers || [], away: same ? homeMembers : (awayMembers || [])})
-
 })
 
 

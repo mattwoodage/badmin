@@ -29,7 +29,6 @@ function useData(props) {
   useEffect(() => {
     
     async function initialise() {
-      console.log('initialise')
 
       const { season } = leagueContext
       if (!season) return
@@ -76,18 +75,18 @@ function ClubPage(props) {
       <Breadcrumb list={
         [
           {lbl:'CLUBS', url:'../clubs'},
-          {lbl:club.name.toUpperCase() || 'NEW CLUB'}
+          {lbl: (club && club.name && club.name.toUpperCase()) || 'NEW CLUB'}
         ]
       } />
-        
+
       <Panel high marginBottom>  
-        <ClubForm season={season} club={club} venues={venues} />
+        <ClubForm season={season} originalClub={club} venues={venues} />
       </Panel>
 
       <h1>Teams this season</h1>
       
       {teams.map(team => (
-        <TeamForm team={team} divisions={divisions}  />
+        <TeamForm originalTeam={team} divisions={divisions}  />
       ))}
     </div>
   )

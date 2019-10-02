@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 
 import Player from '../../Player'
 
@@ -6,73 +6,81 @@ import Panel from '../../Panel'
 import Breadcrumb from '../../Breadcrumb'
 import { NavLink } from 'react-router-dom'
 
+import PlayerSearch from '../../PlayerSearch'
 
 import { LeagueContext } from '../../Root'
 import DB from '../../../helpers/DB'
 
 
-class Page extends Component {
 
-  state = {
-    loaded: false
-  }
+function useData(props) {
+  const [loading, setLoading] = useState(false)
+  const [loaded, setLoaded] = useState(false)
 
-  initialise () {
-    const { league, season } = this.props
-    if (this.state.loaded || !league || !season) return
+  const [club, setClub] = useState({})
+  const [members, setMembers] = useState([])
 
-    DB.get(`/api/${season.period}/players`)
-      .then(response => {
-        this.setState({
-          players: response.players,
-          loaded: true
-        })
-      })
-  }
+  const leagueContext = useContext(LeagueContext);
 
-  renderList () {
-    const { classes } = this.props;
-    return (
-      <List>
-      {
-        this.state.players && this.state.players.map(player => {
-          return (
-            <Player key={player.key} player={player} />
-          )
-        })
-      }
-      </List>
-    )
-  }
+  const { match } = props
+  const clubID = match.params.club
 
-  render () {
-    const { classes, club } = this.props;
-    this.initialise()
-    return (
-      <div>
+  useEffect(() => {
+    
+    async function initialise() {
 
-        <Breadcrumb list={
-          [
-            {lbl:'CLUBS', url:'../../clubs'},
-            {lbl:club.name.toUpperCase(), url: `../../club/${club._id}`},
-            {lbl:'MEMBERS'}
-          ]
-        } />
+      const { season } = leagueContext
+      if (!season) return
 
-      </div>
-    )
-  }
+      setLoading(true)
+      leagueContext.startLoad()
+
+      const clubResponse = await DB.get(`/api/${season.period}/club/${clubID}`)
+      setClub(clubResponse.club)
+        
+      const membersResponse = await DB.get(`/api/${season.period}/members/${clubID}`)
+      setMembers(membersResponse.members)
+
+      setLoaded(true)
+      leagueContext.stopLoad()
+
+    }
+    if (!loading) initialise()
+  });
+
+  return [club, members, loaded]
 }
 
-class MembersPage extends Component {
-  render () {
-    return (
-      <LeagueContext.Consumer>
-        {props => <Page {...this.props} {...props} />}
-      </LeagueContext.Consumer>
-    )
-  }
+
+function MembersPage(props) {
+
+  const leagueContext = useContext(LeagueContext);
+  const { league, season } = leagueContext
+
+  const [club, members, loaded] = useData(props)
+
+  if (!loaded) return <div>Loading...</div>
+
+  return (
+    <div>
+      <Breadcrumb list={
+        [
+          {lbl:'CLUBS', url:'../../clubs'},
+          {lbl:club.name.toUpperCase(), url: `../../club/${club._id}`},
+          {lbl:'MEMBERS'}
+        ]
+      } />
+
+      {members.map(m => <b>{m.player.name}</b>)}
+
+      <hr />
+
+      <h1>SEARCH PLAYERS</h1>
+      <PlayerSearch league={league} season={season} />
+      
+    </div>
+  )
+
 }
 
 export default MembersPage
-

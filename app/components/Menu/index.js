@@ -13,8 +13,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 
 import Loader from '../Loader'
 
-import yellow from '@material-ui/core/colors/yellow';
-import grey from '@material-ui/core/colors/grey';
 
 import MenuIcon from '@material-ui/icons/Menu';
 

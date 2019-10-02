@@ -5,13 +5,14 @@ import Panel from '../Panel'
 import { NavLink } from 'react-router-dom'
 
 import TextField from '@material-ui/core/TextField';
+import { LeagueContext } from '../Root'
 
 import { Container, Row, Col } from 'react-grid-system';
 import to from 'await-to-js'
 import DB from '../../helpers/DB'
 
 
-function TeamForm({originalTeam}) {
+function TeamForm({originalTeam, divisions}) {
 
   const leagueContext = useContext(LeagueContext)
   const { season } = leagueContext
@@ -49,7 +50,7 @@ function TeamForm({originalTeam}) {
   }
 
   
-  const btnLabel = team._id ? 'Save changes' : 'Create new' 
+  const btnLabel = team._id ? 'Save' : 'Create new' 
   const panelProps = team._id ? {high:true} : {create:true}
 
   return (
@@ -57,7 +58,8 @@ function TeamForm({originalTeam}) {
       <form onSubmit={handleSubmit}>
         <Container>
           <Row>
-            <Col md={6}>
+            <Col md={4}><h2>{team.labelDivision || 'NEW'}</h2></Col>
+            <Col md={4}>
               <TextField
                 select
                 label="Division"
@@ -77,7 +79,7 @@ function TeamForm({originalTeam}) {
                 ))}
               </TextField>
             </Col>
-            <Col md={6}>
+            <Col md={4}>
               <TextField
                 label="Prefix"
                 onChange={(evt) => handleChange('prefix', evt)}
@@ -91,7 +93,7 @@ function TeamForm({originalTeam}) {
         </Container>
 
         <div className='right'>
-          <button className='button' disabled={ submitting } type="submit" >{btnLabel}</button>
+          <button className='button' disabled={ saving } type="submit" >{btnLabel}</button>
         </div>
 
       </form>
